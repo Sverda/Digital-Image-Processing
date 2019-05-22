@@ -5,6 +5,8 @@ import os
 import sys
 
 import cairo
+import djvu.dllpath
+djvu.dllpath.set_dll_search_path()
 import djvu.decode
 import numpy
 
