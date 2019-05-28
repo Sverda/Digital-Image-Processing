@@ -6,6 +6,7 @@
 \usepackage[unicode]{hyperref}
 \usepackage{tabto}
 \usepackage{graphicx}
+\usepackage{pythonhighlight}
 
 \hypersetup{
 	colorlinks=true,
@@ -62,16 +63,61 @@ Algorytm geometrycznego ujednolicenia obrazów ma za zadanie sprowadzić oba obr
 \subsubsection*{Kroki algorytmu}
 \begin{enumerate}
 	\item Porównaj szerokości i wysokości obu obrazów i wybierz największe. 
-	\item Jeśli pierwszy lub drugi obraz mają szerokość lub wysokość mniejszą od największej dostępnej to 
-	wypełnij brakującą przestrzeń czarnymi pikselami. 
+	\item Jeśli pierwszy lub drugi obraz mają szerokość lub wysokość mniejszą od największej dostępnej to:
+	\begin{enumerate}
+		\item Utwórz czarne tło
+		\item Przenieś z wyśrodkowaniem piksle na czarne tło
+	\end{enumerate}
+	\item Jeśli żaden z warunków jest niespełniony to nie rób nic
 \end{enumerate}
 \begin{figure}
 	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 1 (1067x1067, 300dpi), obraz 2 (2133x2133, 300dpi)}
 	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
 	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
 \end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 1 (2133x2133, 300dpi), obraz 2 (2133x2133, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{man-modified.png}
+	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
+\end{figure}
 \subsection*{Kod źródłowy algorytmu}
-
+\begin{python}
+def geometricGray(self):
+	max_width = max([self.firstDecoder.width, self.secondDecoder.width])
+	max_height = max([self.firstDecoder.height, self.secondDecoder.height])
+	print('max size: ' + str(max_width) + 'x' + str(max_height))
+	
+	width, height = self.firstDecoder.width, self.firstDecoder.height
+	if width < max_width or height < max_height:
+		# Create black background
+		firstResult = numpy.zeros((max_height, max_width), numpy.uint8)
+		# Copy smaller image to bigger
+		startWidthIndex = int(round((max_width - width) / 2))
+		startHeightIndex = int(round((max_height - height) / 2))
+		pixelsBuffer = self.firstDecoder.getPixels()
+		for h in range (0, height):
+		for w in range (0, width):
+		firstResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
+		img = Image.fromarray(firstResult, mode='L')
+		img.save('Resources/output_1.png')
+		print('first image done')
+	
+	width, height = self.secondDecoder.width, self.secondDecoder.height
+	if width < max_width or height < max_height:
+		# Create black background
+		secondResult = numpy.zeros((max_height, max_width), numpy.uint8)
+		# Copy smaller image to bigger
+		startWidthIndex = int(round((max_width - width) / 2))
+		startHeightIndex = int(round((max_height - height) / 2))
+		pixelsBuffer = self.secondDecoder.getPixels()
+		for h in range (0, height):
+		for w in range (0, width):
+		secondResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
+		img = Image.fromarray(secondResult, mode='L')
+		img.save('Resources/output_2.png')
+		print('second image done')
+	print('unification done')
+\end{python}
 \section{Ujednolicenie obrazów szarych rozdzielczościowe}
 \section{Ujednolicenie obrazów RGB geometryczne}
 \section{Ujednolicenie obrazów RGB rozdzielczościowe}
