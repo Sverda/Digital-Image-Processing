@@ -38,18 +38,28 @@ class Context(djvu.decode.Context):
         print(str(max_width) + 'x' + str(max_height))
         
         documents = [first_document, second_document]
+        image_number = 0
         for document in documents:
             page = document.pages[0]
             page_job = page.decode(wait=True)
             width, height = page_job.size
-            rect = (0, 0, width, height)
-            bytes_per_line = cairo.ImageSurface.format_stride_for_width(cairo_pixel_format, width)
-            color_buffer = numpy.zeros((height, bytes_per_line), dtype=numpy.uint32)
-            page_job.render(djvu.decode.RENDER_BACKGROUND, rect, rect, djvu_pixel_format, row_alignment=bytes_per_line, buffer=color_buffer)
-            color_buffer ^= 0xFF000000
-            # TODO: Check if image is bigger than max width or height
-            surface = cairo.ImageSurface.create_for_data(color_buffer, cairo_pixel_format, width, height)
-            surface.write_to_png('Resources/output.png')
+            if width < max_width or height < max_height:
+                rect = (0, 0, width, height)
+                bytes_per_line = cairo.ImageSurface.format_stride_for_width(cairo_pixel_format, width)
+                color_buffer = numpy.zeros((height, bytes_per_line), dtype=numpy.uint32)
+                page_job.render(djvu.decode.RENDER_BACKGROUND, rect, rect, djvu_pixel_format, row_alignment=bytes_per_line, buffer=color_buffer)
+                color_buffer ^= 0xFF000000  # Disable alfa channel 
+                # Create black background
+                black_image = numpy.full((max_height, max_width), 0xFF000000, numpy.uint32)
+                # Copy smaller image to bigger
+                start_width_index = int(round((max_width - width) / 2))
+                start_height_index = int(round((max_height - height) / 2))
+                for h in range (0, height):
+                    for w in range (0, width):
+                        black_image[h + start_height_index, w + start_width_index] = color_buffer[h, w]
+                surface = cairo.ImageSurface.create_for_data(black_image, cairo_pixel_format, max_width, max_height)
+                surface.write_to_png('Resources/output_' + str(image_number) + '.png')
+            image_number += 1
 
 def main():
     parser = argparse.ArgumentParser()
