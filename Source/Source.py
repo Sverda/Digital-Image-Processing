@@ -4,14 +4,13 @@ import argparse
 import os
 import sys
 
-import cairo
 import djvu.dllpath
 djvu.dllpath.set_dll_search_path()
 import djvu.decode
 import numpy
+from PIL import Image
 
-cairo_pixel_format = cairo.FORMAT_ARGB32
-djvu_pixel_format = djvu.decode.PixelFormatRgbMask(0xFF0000, 0xFF00, 0xFF, bpp=32)
+djvu_pixel_format = djvu.decode.PixelFormatGrey()
 djvu_pixel_format.rows_top_to_bottom = 1
 djvu_pixel_format.y_top_to_bottom = 0
 
@@ -45,20 +44,18 @@ class Context(djvu.decode.Context):
             width, height = page_job.size
             if width < max_width or height < max_height:
                 rect = (0, 0, width, height)
-                bytes_per_line = cairo.ImageSurface.format_stride_for_width(cairo_pixel_format, width)
-                color_buffer = numpy.zeros((height, bytes_per_line), dtype=numpy.uint32)
-                page_job.render(djvu.decode.RENDER_BACKGROUND, rect, rect, djvu_pixel_format, row_alignment=bytes_per_line, buffer=color_buffer)
-                color_buffer ^= 0xFF000000  # Disable alfa channel 
+                document_image_buffer = numpy.zeros((height, width), dtype=numpy.uint8)
+                page_job.render(djvu.decode.RENDER_BACKGROUND, rect, rect, djvu_pixel_format, buffer=document_image_buffer)
                 # Create black background
-                black_image = numpy.full((max_height, max_width), 0xFF000000, numpy.uint32)
+                black_image = numpy.zeros((max_height, max_width), numpy.uint8)
                 # Copy smaller image to bigger
                 start_width_index = int(round((max_width - width) / 2))
                 start_height_index = int(round((max_height - height) / 2))
                 for h in range (0, height):
                     for w in range (0, width):
-                        black_image[h + start_height_index, w + start_width_index] = color_buffer[h, w]
-                surface = cairo.ImageSurface.create_for_data(black_image, cairo_pixel_format, max_width, max_height)
-                surface.write_to_png('Resources/output_' + str(image_number) + '.png')
+                        black_image[h + start_height_index, w + start_width_index] = document_image_buffer[h, w]
+                img = Image.fromarray(black_image, mode='L')
+                img.save('Resources/output_' + str(image_number) + '.png')
             image_number += 1
 
 def main():
