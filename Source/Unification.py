@@ -71,5 +71,21 @@ class Unification(object):
                     if w%2 == 1:
                         result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
             # Interpolate
+            self._interpolate(result)
             img = Image.fromarray(result, mode='L')
             img.save(outputPath)
+
+    def _interpolate(self, result):
+        for h in range(self.maxHeight):
+            for w in range(self.maxWidth):
+                value = 0
+                count = 0
+                if result[h, w] == 0:
+                    for iOff in range(-1, 2):
+                        for jOff in range(-1, 2):
+                            iSafe = h if ((h + iOff) > (self.maxHeight - 2)) | ((h + iOff) < 0) else (h + iOff)
+                            jSafe = w if ((w + jOff) > (self.maxWidth - 2)) | ((w + jOff) < 0) else (w + jOff)
+                            if result[iSafe, jSafe] != 0:
+                                value += result[iSafe, jSafe]
+                                count += 1
+                    result[h, w] = value / count
