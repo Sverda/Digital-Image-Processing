@@ -59,8 +59,9 @@ W celu uruchomienia kodu źródłowego będzie niezbędny:
 Ujednolicanie obrazów oznacza sprowadzenie ich do wspólnego gruntu pod względem określonego parametru. W tym wypadku będziemy ujednolicać obrazy pod względem geometrycznym (ilości kolumn i wierszy pikseli) i następnie rozdzielczościowym (wypełnienia pikselami). Sekwencyjność tych operacji jak i one same nie są w stanie spowodować spadku jakości obrazu. 
 \section{Ujednolicenie obrazów szarych geometryczne}
 \subsection*{Algorytm}
+\subsubsection*{Opis}
 Algorytm geometrycznego ujednolicenia obrazów ma za zadanie sprowadzić oba obrazy do tej samej liczby pikseli w każdym wierszu i każdej kolumnie. 
-\subsubsection*{Kroki algorytmu}
+\subsubsection*{Kroki}
 \begin{enumerate}
 	\item Porównaj szerokości i wysokości obu obrazów i wybierz największe. 
 	\item Jeśli pierwszy lub drugi obraz mają szerokość lub wysokość mniejszą od największej dostępnej to:
@@ -83,42 +84,111 @@ Algorytm geometrycznego ujednolicenia obrazów ma za zadanie sprowadzić oba obr
 \subsection*{Kod źródłowy algorytmu}
 \begin{python}
 def geometricGray(self):
-	max_width = max([self.firstDecoder.width, self.secondDecoder.width])
-	max_height = max([self.firstDecoder.height, self.secondDecoder.height])
-	print('max size: ' + str(max_width) + 'x' + str(max_height))
-	
+	print('geometric gray unificaiton start')
 	width, height = self.firstDecoder.width, self.firstDecoder.height
-	if width < max_width or height < max_height:
+	if width < self.maxWidth or height < self.maxHeight:
 		# Create black background
-		firstResult = numpy.zeros((max_height, max_width), numpy.uint8)
+		firstResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
 		# Copy smaller image to bigger
-		startWidthIndex = int(round((max_width - width) / 2))
-		startHeightIndex = int(round((max_height - height) / 2))
+		startWidthIndex = int(round((self.maxWidth - width) / 2))
+		startHeightIndex = int(round((self.maxHeight - height) / 2))
 		pixelsBuffer = self.firstDecoder.getPixels()
 		for h in range (0, height):
 		for w in range (0, width):
 		firstResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
 		img = Image.fromarray(firstResult, mode='L')
-		img.save('Resources/output_1.png')
+		img.save('Resources/ggUnification_1.png')
 		print('first image done')
 	
 	width, height = self.secondDecoder.width, self.secondDecoder.height
-	if width < max_width or height < max_height:
+	if width < self.maxWidth or height < self.maxHeight:
 		# Create black background
-		secondResult = numpy.zeros((max_height, max_width), numpy.uint8)
+		secondResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
 		# Copy smaller image to bigger
-		startWidthIndex = int(round((max_width - width) / 2))
-		startHeightIndex = int(round((max_height - height) / 2))
+		startWidthIndex = int(round((self.maxWidth - width) / 2))
+		startHeightIndex = int(round((self.maxHeight - height) / 2))
 		pixelsBuffer = self.secondDecoder.getPixels()
 		for h in range (0, height):
 		for w in range (0, width):
 		secondResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
 		img = Image.fromarray(secondResult, mode='L')
-		img.save('Resources/output_2.png')
+		img.save('Resources/ggUnification_2.png')
 		print('second image done')
-	print('unification done')
+	print('geometric gray unification done')
 \end{python}
 \section{Ujednolicenie obrazów szarych rozdzielczościowe}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+Po użyciu ujednolicenia geometrycznego można użyć ujednolicenia rozdzielczościowego, które przeskaluje obraz z mniejszej postaci do większej dzięki czemu nie zostanie nam czarna ramka wokół obrazu. Wynikiem będzie większy obraz niż początkowo bez czarnego obwodu wokół. 
+Mniejszy obraz można przeskalować do większych wymiarów przenosząc wszystkie piksele z uwzględnieniem luk pomiędzy nimi i następnie użycia interpolacji do zamazania tych luk. 
+Interpolacja działa na zasadzie pobierania wartości z okolicznych pikseli i wyciągania z nich średniej, która posłuży jako baza koloru dla nowego piksela. 
+\subsubsection*{Kroki}
+\begin{enumerate}
+	\item Ustalenie nowych wymiarów obrazu
+	\item Obliczenie odległości pomiędzy pikselami (\textit{scaleFactoryH, scaleFactoryW})
+	\item Naniesienie pikseli z mniejszego obrazu na większy z uwzględnieniem luk
+	\item Interpolacja
+\end{enumerate}
+\begin{figure}
+	\caption{Skutki braku interpolacji}
+	\begin{center}
+		\includegraphics[width=8cm, height=8cm]{man-without-interpolation.png}
+	\end{center}
+\end{figure}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 1 (2133x2133, 300dpi), obraz 2 (2133x2133, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{man-modified.png}
+	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 1 (2133x2133, 300dpi), obraz 2 (2133x2133, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{man-rastar-unification.png}
+	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def rasterGray(self):
+	print('raster gray unification start')
+	self._scaleUp(self.firstDecoder, 'Resources/rgUnification_1.png')
+	print('first image done')
+	self._scaleUp(self.secondDecoder, 'Resources/rgUnification_2.png')
+	print('second image done')
+	print('raster gray unification done')
+
+def _scaleUp(self, decoder, outputPath):
+	width, height = decoder.width, decoder.height
+	scaleFactoryW = float(self.maxWidth) / width
+	scaleFactoryH = float(self.maxHeight) / height
+	if width < self.maxWidth or height < self.maxHeight:
+		pixelsBuffer = decoder.getPixels()
+		result = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
+		# Fill values
+		for h in range(height):
+			for w in range(width):
+				if w%2 == 0:
+					result[int(scaleFactoryH * h), int(round(scaleFactoryW * w)) + 1] = pixelsBuffer[h, w]
+				if w%2 == 1:
+					result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
+		# Interpolate
+		self._interpolate(result)
+		img = Image.fromarray(result, mode='L')
+		img.save(outputPath)
+
+def _interpolate(self, result):
+	for h in range(self.maxHeight):
+		for w in range(self.maxWidth):
+			value = 0
+			count = 0
+			if result[h, w] == 0:
+				for iOff in range(-1, 2):
+					for jOff in range(-1, 2):
+						iSafe = h if ((h + iOff) > (self.maxHeight - 2)) | ((h + iOff) < 0) else (h + iOff)
+						jSafe = w if ((w + jOff) > (self.maxWidth - 2)) | ((w + jOff) < 0) else (w + jOff)
+						if result[iSafe, jSafe] != 0:
+							value += result[iSafe, jSafe]
+							count += 1
+				result[h, w] = value / count
+\end{python}
 \section{Ujednolicenie obrazów RGB geometryczne}
 \section{Ujednolicenie obrazów RGB rozdzielczościowe}
 
