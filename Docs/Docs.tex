@@ -190,7 +190,69 @@ def _interpolate(self, result):
 				result[h, w] = value / count
 \end{python}
 \section{Ujednolicenie obrazów RGB geometryczne}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+Algorytm geometrycznego ujednolicenia obrazów ma za zadanie sprowadzić oba obrazy do tej samej liczby pikseli w każdym wierszu i każdej kolumnie. 
+Różnica pomiędzy tym przypadkiem a szarym sprawia, że ważne jest użycie odpowiednich struktur danych w taki sposób aby każdy z kanałów RGB był w stanie się pomieścić. Niewątpliwie ważne jest struktura danych uwzględniała kolejność w jakim kolory są przechowywane, inaczej może dojść do sytuacji w której nie dostaniemy oczekiwanego rezultatu. 
+\subsubsection*{Kroki}
+\begin{enumerate}
+	\item Porównaj szerokości i wysokości obu obrazów i wybierz największe. 
+	\item Jeśli pierwszy lub drugi obraz mają szerokość lub wysokość mniejszą od największej dostępnej to:
+	\begin{enumerate}
+		\item Utwórz czarne tło
+		\item Przenieś z wyśrodkowaniem piksle na czarne tło z uwzględnieniem każdego z kanałów RGB
+	\end{enumerate}
+	\item Jeśli żaden z warunków jest niespełniony to nie rób nic
+\end{enumerate}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 1 (512x512, 300dpi), obraz 2 (1024x1024, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{sea-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{field-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 1 (1024x1024, 300dpi), obraz 2 (1024x1024, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{sea-geo-modified.png}
+	\includegraphics[width=8cm, height=8cm]{field-unmodified.jpg}
+\end{figure}
+\newpage
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def geometricColor(self):
+	print('geometric color unificaiton start')
+	self.firstDecoder.setColor()
+	width, height = self.firstDecoder.width, self.firstDecoder.height
+	if width < self.maxWidth or height < self.maxHeight:
+		result = self._paintInMiddleColor(self.firstDecoder)
+		img = Image.fromarray(result, 'RGB')
+		img.save('Resources/gcUnification_1.png')
+		print('first image done')
+	
+	self.secondDecoder.setColor()
+	width, height = self.secondDecoder.width, self.secondDecoder.height
+	if width < self.maxWidth or height < self.maxHeight:
+		result = self._paintInMiddleColor(self.secondDecoder)
+		img = Image.fromarray(result, 'RGB')
+		img.save('Resources/gcUnification_2.png')
+		print('second image done')
+	print('geometric color unification done')
+	
+def _paintInMiddleColor(self, decoder):
+	# Create black background
+	result = numpy.full((self.maxHeight, self.maxWidth, 3), 0, numpy.uint8)
+	# Copy smaller image to bigger
+	width, height = decoder.width, decoder.height
+	startWidthIndex = int(round((self.maxWidth - width) / 2))
+	startHeightIndex = int(round((self.maxHeight - height) / 2))
+	pixelsBuffer = decoder.getPixels24Bits()
+	for h in range (0, height):
+		for w in range (0, width):
+			result[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
+	return result
+\end{python}
 \section{Ujednolicenie obrazów RGB rozdzielczościowe}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsection*{Kod źródłowy algorytmu}
 
 \chapter{Operacje sumowania arytmetycznego obrazów szarych}
 \section{Sumowanie (określonej) stałej z obrazem}

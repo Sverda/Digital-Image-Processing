@@ -98,16 +98,16 @@ class Unification(object):
         self.firstDecoder.setColor()
         width, height = self.firstDecoder.width, self.firstDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            result = self._paintInMiddleColor(firstDecoder)
-            img = Image.fromarray(secondResult, 'RGB')
+            result = self._paintInMiddleColor(self.firstDecoder)
+            img = Image.fromarray(result, 'RGB')
             img.save('Resources/gcUnification_1.png')
             print('first image done')
 
         self.secondDecoder.setColor()
         width, height = self.secondDecoder.width, self.secondDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            secondResult = self._paintInMiddleColor(secondDecoder)
-            img = Image.fromarray(secondResult, 'RGB')
+            result = self._paintInMiddleColor(self.secondDecoder)
+            img = Image.fromarray(result, 'RGB')
             img.save('Resources/gcUnification_2.png')
             print('second image done')
         print('geometric color unification done')
