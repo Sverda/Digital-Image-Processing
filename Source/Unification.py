@@ -15,6 +15,7 @@ class Unification(object):
         print('max size: ' + str(self.maxWidth) + 'x' + str(self.maxHeight))
         return self.maxHeight, self.maxWidth
 
+    # Ex1.1
     def geometricGray(self):
         print('geometric gray unificaiton start')
         width, height = self.firstDecoder.width, self.firstDecoder.height
@@ -48,6 +49,7 @@ class Unification(object):
             print('second image done')
         print('geometric gray unification done')
 
+    # Ex1.2
     def rasterGray(self):
         print('raster gray unification start')
         self._scaleUp(self.firstDecoder, 'Resources/rgUnification_1.png')
@@ -89,3 +91,36 @@ class Unification(object):
                                 value += result[iSafe, jSafe]
                                 count += 1
                     result[h, w] = value / count
+
+    # Ex1.3
+    def geometricColor(self):
+        print('geometric color unificaiton start')
+        self.firstDecoder.setColor()
+        width, height = self.firstDecoder.width, self.firstDecoder.height
+        if width < self.maxWidth or height < self.maxHeight:
+            result = self._paintInMiddleColor(firstDecoder)
+            img = Image.fromarray(secondResult, 'RGB')
+            img.save('Resources/gcUnification_1.png')
+            print('first image done')
+
+        self.secondDecoder.setColor()
+        width, height = self.secondDecoder.width, self.secondDecoder.height
+        if width < self.maxWidth or height < self.maxHeight:
+            secondResult = self._paintInMiddleColor(secondDecoder)
+            img = Image.fromarray(secondResult, 'RGB')
+            img.save('Resources/gcUnification_2.png')
+            print('second image done')
+        print('geometric color unification done')
+
+    def _paintInMiddleColor(self, decoder):
+        # Create black background
+        result = numpy.full((self.maxHeight, self.maxWidth, 3), 0, numpy.uint8)
+        # Copy smaller image to bigger
+        width, height = decoder.width, decoder.height
+        startWidthIndex = int(round((self.maxWidth - width) / 2))
+        startHeightIndex = int(round((self.maxHeight - height) / 2))
+        pixelsBuffer = decoder.getPixels24Bits()
+        for h in range (0, height):
+            for w in range (0, width):
+                result[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
+        return result
