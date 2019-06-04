@@ -7,6 +7,7 @@
 \usepackage{tabto}
 \usepackage{graphicx}
 \usepackage{pythonhighlight}
+\usepackage{amsmath}
 
 \hypersetup{
 	colorlinks=true,
@@ -363,14 +364,79 @@ def _interpolateColor(self, result):
 \section{Logarytmowanie obrazu}
 
 \chapter{Operacje geometryczne na obrazie}
+Operacje geometryczne przekształcają położenie pikseli \textit{(x1, y1)} w obrazie wejściowym do nowej lokacji \textit{(x2, y2)} w obrazie wynikowym. Dzięki temu możemy dopasować obraz do odpowiedniego układu współrzędnych lub użyć tych operacji do eliminacji geometrycznych zakłóceń obrazu (dystorsji). 
 \section{Przemieszczenie obrazu o zadany wektor}
+\subsection*{Opis}
+Operacja translacji wykonuje transformację geometryczną polegającą na przeniesieniu każdego z punktów obrazu wejściowego w nowe miejsce na obrazie wynikowym. Pod wpływem translacji element obrazu zlokalizowany na \textit{(x1, y1)} zostanie przesunięty na nową pozycję \textit{(x2, y2)}. Różnicą pomiędzy \textit{(x1, y1)} i \textit{(x2, y2)} jest wektor \textit{(bx, by)}, który jest określony przez użytkownika. 
+\newline
+Operacja przemieszczenia przybiera postać: 
+\begin{gather}
+	x_2 = x_1 + b_x \\
+	y_2 = y_1 + b_y
+\end{gather}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po przesunięciu o wektor [100, 100] (prawy obraz)}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{phone-translate.png}
+\end{figure}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po przesunięciu o wektor [100, -100] (prawy obraz)}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{coffee-translate.png}
+\end{figure}
+\newpage
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def translate(self, deltaX = 0, deltaY = 0):
+	print('translation start')
+	height, width = self.decoder.height, self.decoder.width
+	image = self.decoder.getPixels24Bits()
+	result = numpy.zeros((height, width, 3), numpy.uint8)
+	
+	for y in range(height):
+		for x in range(width):  
+			if 0 < y + deltaY < height and 0 < x + deltaX < width:
+				result[y + deltaY][x + deltaX] = image[y][x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/tGeometric.png')
+print('translation done')
+\end{python}
 \section{Jednorodne skalowanie obrazu}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsubsection*{Kroki}
+\subsection*{Kod źródłowy algorytmu}
 \section{Niejednorodne skalowanie obrazu}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsubsection*{Kroki}
+\subsection*{Kod źródłowy algorytmu}
 \section{Obracanie obrazu o dowolny kąt}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsubsection*{Kroki}
+\subsection*{Kod źródłowy algorytmu}
 \section{Symetrie względem osi układu}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsubsection*{Kroki}
+\subsection*{Kod źródłowy algorytmu}
 \section{Symetrie względem zadanej prostej}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsubsection*{Kroki}
+\subsection*{Kod źródłowy algorytmu}
 \section{Wycinanie fragmentów obrazu}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsubsection*{Kroki}
+\subsection*{Kod źródłowy algorytmu}
 \section{Kopiowanie fragmentów obrazów}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsubsection*{Kroki}
+\subsection*{Kod źródłowy algorytmu}
 
 \chapter{Operacje na histogramie obrazu szarego}
 \section{Obliczanie histogramu}

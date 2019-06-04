@@ -2,15 +2,22 @@ import argparse
 import sys
 
 from Unification import Unification
+from Geometric import Geometric
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('first_djvu_path')
-    parser.add_argument('second_djvu_path')
-    options = parser.parse_args()
+    geometricModule()
 
-    unification = Unification(options.first_djvu_path, options.second_djvu_path)
+def unificationModule():
+    unification = Unification('Resources/cat.djvu', 'Resources/photoman.djvu')
+    unification.geometricGray()
+    unification.rasterGray()
+    unification = Unification('Resources/coffee.djvu', 'Resources/phone.djvu')
+    unification.geometricColor()
     unification.rasterColor()
+
+def geometricModule():
+    geometric = Geometric('Resources/coffee.djvu')
+    geometric.translate(100, -100)
 
 if __name__ == '__main__':
     main()
