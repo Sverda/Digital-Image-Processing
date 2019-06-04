@@ -20,8 +20,8 @@
 6. Pierwiastkowanie obrazu
 7. Logarytmowanie obrazu
 ## **3. Operacje sumowania arytmetycznego obrazów barwowych** 
-- [x] Damian 
-- [ ] Maciej
+- [ ] Damian 
+- [x] Maciej
 
 1. Sumowanie (okreslonej) stałej z obrazem oraz dwóch obrazów
 2. Mnozenie obrazu przez zadaną liczbę oraz przez inny obraz ˙
@@ -31,8 +31,8 @@
 6. Pierwiastkowanie obrazu
 7. Logarytmowanie obrazu
 ## **4. Operacje geometryczne na obrazie**
-- [ ] Damian 
-- [x] Maciej
+- [x] Damian 
+- [ ] Maciej
 
 1. Przemieszczenie obrazu o zadany wektor
 2. Jednorodne i niejednorodne skalowanie obrazu
@@ -41,8 +41,8 @@
 5. Wycinanie fragmentów obrazu
 6. Kopiowanie fragmentów obrazów
 ## **5. Operacje na histogramie obrazu szarego** 
-- [x] Damian 
-- [ ] Maciej
+- [ ] Damian 
+- [x] Maciej
 
 1. Obliczanie histogramu
 2. Przemieszczanie histogramu
@@ -69,8 +69,8 @@
 3. Otwarcie
 4. Zamknięcie
 ## **8. Operacje morfologiczne na obrazach szarych** 
-- [ ] Damian 
-- [x] Maciej
+- [x] Damian 
+- [ ] Maciej
 
 1. Okrawanie(erozja)
 2. Nakładanie (dylatacja)
