@@ -52,13 +52,13 @@ class Unification(object):
     # Ex1.2
     def rasterGray(self):
         print('raster gray unification start')
-        self._scaleUp(self.firstDecoder, 'Resources/rgUnification_1.png')
+        self._scaleUpGray(self.firstDecoder, 'Resources/rgUnification_1.png')
         print('first image done')
-        self._scaleUp(self.secondDecoder, 'Resources/rgUnification_2.png')
+        self._scaleUpGray(self.secondDecoder, 'Resources/rgUnification_2.png')
         print('second image done')
         print('raster gray unification done')
         
-    def _scaleUp(self, decoder, outputPath):
+    def _scaleUpGray(self, decoder, outputPath):
         width, height = decoder.width, decoder.height
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
@@ -73,22 +73,22 @@ class Unification(object):
                     if w%2 == 1:
                         result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
             # Interpolate
-            self._interpolate(result)
+            self._interpolateGray(result)
             img = Image.fromarray(result, mode='L')
             img.save(outputPath)
-
-    def _interpolate(self, result):
+    
+    def _interpolateGray(self, result):
         for h in range(self.maxHeight):
             for w in range(self.maxWidth):
                 value = 0
                 count = 0
                 if result[h, w] == 0:
-                    for iOff in range(-1, 2):
-                        for jOff in range(-1, 2):
-                            iSafe = h if ((h + iOff) > (self.maxHeight - 2)) | ((h + iOff) < 0) else (h + iOff)
-                            jSafe = w if ((w + jOff) > (self.maxWidth - 2)) | ((w + jOff) < 0) else (w + jOff)
-                            if result[iSafe, jSafe] != 0:
-                                value += result[iSafe, jSafe]
+                    for hOff in range(-1, 2):
+                        for wOff in range(-1, 2):
+                            hSafe = h if ((h + hOff) > (self.maxHeight - 2)) | ((h + hOff) < 0) else (h + hOff)
+                            wSafe = w if ((w + wOff) > (self.maxWidth - 2)) | ((w + wOff) < 0) else (w + wOff)
+                            if result[hSafe, wSafe] != 0:
+                                value += result[hSafe, wSafe]
                                 count += 1
                     result[h, w] = value / count
 
@@ -124,3 +124,50 @@ class Unification(object):
             for w in range (0, width):
                 result[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
         return result
+
+    # Ex1.4
+    def rasterColor(self):
+        print('rastar color unification start')
+        self.firstDecoder.setColor()
+        self._scaleUpColor(self.firstDecoder, 'Resources/rcUnification_1.png')
+        print('first image done')
+        self.secondDecoder.setColor()
+        self._scaleUpColor(self.secondDecoder, 'Resources/rcUnification_2.png')
+        print('second image done')
+        print('rastar color unification done')
+
+    def _scaleUpColor(self, decoder, outputPath):
+        width, height = decoder.width, decoder.height
+        scaleFactoryW = float(self.maxWidth) / width
+        scaleFactoryH = float(self.maxHeight) / height
+        if width < self.maxWidth or height < self.maxHeight:
+            pixelsBuffer = decoder.getPixels24Bits()
+            result = numpy.full((self.maxHeight, self.maxWidth, 3), 1, numpy.uint8)
+            # Fill values
+            for h in range(height):
+                for w in range(width):
+                    if w%2 == 0:
+                        result[int(scaleFactoryH * h), int(round(scaleFactoryW * w)) + 1] = pixelsBuffer[h, w]
+                    if w%2 == 1:
+                        result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
+            # Interpolate
+            self._interpolateColor(result)
+            img = Image.fromarray(result, mode='RGB')
+            img.save(outputPath)
+
+    def _interpolateColor(self, result):
+        for h in range(self.maxHeight):
+            for w in range(self.maxWidth):
+                r, g, b = 0, 0, 0
+                n = 0
+                if (result[h, w][0] == 1) & (result[h, w][1] == 1) & (result[h, w][2] == 1):
+                    for hOff in range(-1, 2):
+                        for wOff in range(-1, 2):
+                            hSafe = h if ((h + hOff) > (self.maxHeight - 2)) | ((h + hOff) < 0) else (h + hOff)
+                            wSafe = w if ((w + wOff) > (self.maxWidth - 2)) | ((w + wOff) < 0) else (w + wOff)
+                            if (result[hSafe, wSafe][0] > 1) | (result[hSafe, wSafe][1] > 1) | (result[hSafe, wSafe][2] > 1):
+                                r += result[hSafe, wSafe][0]
+                                g += result[hSafe, wSafe][1]
+                                b += result[hSafe, wSafe][2]
+                                n += 1
+                    result[h, w] = (r/n, g/n, b/n)

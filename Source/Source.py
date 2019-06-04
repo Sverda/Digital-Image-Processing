@@ -10,7 +10,7 @@ def main():
     options = parser.parse_args()
 
     unification = Unification(options.first_djvu_path, options.second_djvu_path)
-    unification.geometricColor()
+    unification.rasterColor()
 
 if __name__ == '__main__':
     main()

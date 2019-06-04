@@ -12,7 +12,7 @@
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId>Global|PythonCore|2.7-32</InterpreterId>
-    <CommandLineArguments>./Resources/field.djvu ./Resources/sea.djvu</CommandLineArguments>
+    <CommandLineArguments>./Resources/coffee.djvu ./Resources/phone.djvu</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
@@ -37,7 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\cat.djvu" />
+    <Content Include="Resources\coffee.djvu" />
     <Content Include="Resources\field.djvu" />
+    <Content Include="Resources\phone.djvu" />
     <Content Include="Resources\photoman.djvu" />
     <Content Include="Resources\sea.djvu" />
   </ItemGroup>
