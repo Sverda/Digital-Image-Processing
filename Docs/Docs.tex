@@ -5,6 +5,16 @@
 \usepackage[polish]{babel}
 \usepackage[unicode]{hyperref}
 \usepackage{tabto}
+\usepackage{graphicx}
+\usepackage{pythonhighlight}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+\graphicspath{ {./images/} }
 
 \title{\Large{\textbf{Przetwarzanie Obrazów: Sprawozdanie}}}
 \author{
@@ -17,9 +27,9 @@
 \begin{document}
 \maketitle
 \tableofcontents
-\chapter{Wstep}
+\chapter{Wstęp}
 \section{Format obrazu}
-Wybranym przez nas formatem obrazów cyfrowych jest DjVu, który jest oparty na zaawansowanej metodzie segmentacji obrazu. Tworzenie pliku DjVu polega na rozdzieleniu dowolnie skomplikowanego obrazu na odrębne warstwy, a następnie poddaniu warst odrębym optymalizacjom i kompresjom. Format ten stosuje ładowanie progresywne, kodowanie arytmetyczne, oraz kompresję stratną dzięki czemu przy minimalnej ilości przestrzeni dyskowej można delektować się obrazami i dokumentami w wysokiej jakości. 
+Wybranym przez nas formatem obrazów cyfrowych jest DjVu, który jest oparty na zaawansowanej metodzie segmentacji obrazu. Tworzenie pliku DjVu polega na rozdzieleniu dowolnie skomplikowanego obrazu na odrębne warstwy, a następnie poddaniu warst odrębnym optymalizacjom i kompresjom. Format ten stosuje ładowanie progresywne, kodowanie arytmetyczne, oraz kompresję stratną dzięki czemu przy minimalnej ilości przestrzeni dyskowej można delektować się obrazami i dokumentami w wysokiej jakości. 
 \subsection{Struktura formatu}
 Pliki DjVu rozpoczynają się od swojej ``Magic number'' potwierdzającej rodzaj pliku i mającej wartość \textit{0x41 0x54 0x26 0x54}. Następnie czerpiąc inspirację ze struktury IFF \textbf{(Interchange File Format)} plik dzieli się na kawałki (\textit{ang. chunks}) zawierające interesujące nas cenne dane. Takie jak szerokość lub wysokość obrazu, dpi, informacje o kolorach, rozmieszczeniu pikseli, etc. Każdy kawałek składając się z ID typu, długości zawartości i samej zawartości tworzy zwarty format. Identyfikator typu określa rolę w jakiej przyjdzie służyć kawałkowi. Do dyspozycji ma ich całkiem sporo, ale uwzględniając najbardziej przydatne w naszym kontekście to ograniczymy liczbę do: 
 \renewcommand{\labelitemi}{$*$}
@@ -35,13 +45,298 @@ FORM:DJVU [14260] \newline
 \tabto{5mm} FG44 [181] \newline
 \tabto{5mm} BG44 [935] \newline
 \newline
-Powyższa struktura przedstawia dokument składający się z jednej strony, na co wskazuje \textit{FORM:DJVU}, wraz z grafiką. Ten znacznik informuje, że mamy do czynienia z kontenerem o długości 14260 bajtów, który może zawierać inne kawałki dokumentu. Zgodnie z konwencją, po identyfikatorze typu i informacji o długości znajduje się zawartość kawałka. W tym wypadku jak i w każdym innym po \textit{FORM:DJVU} powinno znaleźć się \textit{INFO} z podstawowymi informacjami. Jeśli konwencji i wymagań specyfikacyjnych stało się zadość wtedy czas nastał na jakieś wizualne atrakcje takie jak \textit{Sjbz}, czyli masce wyboru pomiędzy kolorami z warstwy przedniej (\textit{FG44}) i tylniej (\textit{BG44}). 
+Powyższa struktura przedstawia dokument składający się z jednej strony, na co wskazuje \textit{FORM:DJVU}, wraz z grafiką. Ten znacznik informuje, że mamy do czynienia z kontenerem o długości 14260 bajtów, który może zawierać inne kawałki dokumentu. Zgodnie z konwencją, po identyfikatorze typu i informacji o długości znajduje się zawartość kawałka. W tym wypadku jak i w każdym innym po \textit{FORM:DJVU} powinno znaleźć się \textit{INFO} z podstawowymi informacjami. Jeśli konwencji i wymagań specyfikacyjnych stało się zadość wtedy czas nastał na jakieś wizualne atrakcje takie jak \textit{Sjbz}, czyli masce wyboru pomiędzy kolorami z warstwy przedniej (\textit{FG44}) i tylnej (\textit{BG44}). 
+\subsection{Instrukcja obsługi programu}
+W celu uruchomienia kodu źródłowego będzie niezbędny: 
+\begin{itemize}
+	\item \href{http://djvu.sourceforge.net/}{DjVuLibre} ($\geq$ 3.5.21)
+	\item \href{https://www.python.org/}{Python} ($\geq$ 2.6 lub 3.X)
+	\item \href{https://cython.org/}{Cython} ($\geq$ 0.19, lub $\geq$ 0.20 dla Python 3)
+	\item \href{https://wiki.freedesktop.org/www/Software/pkg-config/}{pkg-config} (POSIX)
+\end{itemize}
 
 \chapter{Operacje ujednolicania obrazów}
+Ujednolicanie obrazów oznacza sprowadzenie ich do wspólnego gruntu pod względem określonego parametru. W tym wypadku będziemy ujednolicać obrazy pod względem geometrycznym (ilości kolumn i wierszy pikseli) i następnie rozdzielczościowym (wypełnienia pikselami). Sekwencyjność tych operacji jak i one same nie są w stanie spowodować spadku jakości obrazu. 
 \section{Ujednolicenie obrazów szarych geometryczne}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+Algorytm geometrycznego ujednolicenia obrazów ma za zadanie sprowadzić oba obrazy do tej samej liczby pikseli w każdym wierszu i każdej kolumnie. 
+\subsubsection*{Kroki}
+\begin{enumerate}
+	\item Porównaj szerokości i wysokości obu obrazów i wybierz największe. 
+	\item Jeśli pierwszy lub drugi obraz mają szerokość lub wysokość mniejszą od największej dostępnej to:
+	\begin{enumerate}
+		\item Utwórz czarne tło
+		\item Przenieś z wyśrodkowaniem piksle na czarne tło
+	\end{enumerate}
+	\item Jeśli żaden z warunków jest niespełniony to nie rób nic
+\end{enumerate}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 1 (1067x1067, 300dpi), obraz 2 (2133x2133, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 1 (2133x2133, 300dpi), obraz 2 (2133x2133, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{man-modified.png}
+	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def geometricGray(self):
+	print('geometric gray unificaiton start')
+	width, height = self.firstDecoder.width, self.firstDecoder.height
+	if width < self.maxWidth or height < self.maxHeight:
+		# Create black background
+		firstResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
+		# Copy smaller image to bigger
+		startWidthIndex = int(round((self.maxWidth - width) / 2))
+		startHeightIndex = int(round((self.maxHeight - height) / 2))
+		pixelsBuffer = self.firstDecoder.getPixels()
+		for h in range (0, height):
+		for w in range (0, width):
+		firstResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
+		img = Image.fromarray(firstResult, mode='L')
+		img.save('Resources/ggUnification_1.png')
+		print('first image done')
+	
+	width, height = self.secondDecoder.width, self.secondDecoder.height
+	if width < self.maxWidth or height < self.maxHeight:
+		# Create black background
+		secondResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
+		# Copy smaller image to bigger
+		startWidthIndex = int(round((self.maxWidth - width) / 2))
+		startHeightIndex = int(round((self.maxHeight - height) / 2))
+		pixelsBuffer = self.secondDecoder.getPixels()
+		for h in range (0, height):
+		for w in range (0, width):
+		secondResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
+		img = Image.fromarray(secondResult, mode='L')
+		img.save('Resources/ggUnification_2.png')
+		print('second image done')
+	print('geometric gray unification done')
+\end{python}
 \section{Ujednolicenie obrazów szarych rozdzielczościowe}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+Po użyciu ujednolicenia geometrycznego można użyć ujednolicenia rozdzielczościowego, które przeskaluje obraz z mniejszej postaci do większej dzięki czemu nie zostanie nam czarna ramka wokół obrazu. Wynikiem będzie większy obraz niż początkowo bez czarnego obwodu wokół. 
+Mniejszy obraz można przeskalować do większych wymiarów przenosząc wszystkie piksele z uwzględnieniem luk pomiędzy nimi i następnie użycia interpolacji do zamazania tych luk. 
+Interpolacja działa na zasadzie pobierania wartości z okolicznych pikseli i wyciągania z nich średniej, która posłuży jako baza koloru dla nowego piksela. 
+\subsubsection*{Kroki}
+\begin{enumerate}
+	\item Ustalenie nowych wymiarów obrazu
+	\item Obliczenie odległości pomiędzy pikselami (\textit{scaleFactoryH, scaleFactoryW})
+	\item Naniesienie pikseli z mniejszego obrazu na większy z uwzględnieniem luk
+	\item Interpolacja
+\end{enumerate}
+\begin{figure}
+	\caption{Skutki braku interpolacji}
+	\begin{center}
+		\includegraphics[width=8cm, height=8cm]{man-without-interpolation.png}
+	\end{center}
+\end{figure}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 1 (2133x2133, 300dpi), obraz 2 (2133x2133, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{man-modified.png}
+	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 1 (2133x2133, 300dpi), obraz 2 (2133x2133, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{man-rastar-unification.png}
+	\includegraphics[width=8cm, height=8cm]{cat-unmodified.jpg}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def rasterGray(self):
+	print('raster gray unification start')
+	self._scaleUpGray(self.firstDecoder, 'Resources/rgUnification_1.png')
+	print('first image done')
+	self._scaleUpGray(self.secondDecoder, 'Resources/rgUnification_2.png')
+	print('second image done')
+	print('raster gray unification done')
+
+def _scaleUpGray(self, decoder, outputPath):
+	width, height = decoder.width, decoder.height
+	scaleFactoryW = float(self.maxWidth) / width
+	scaleFactoryH = float(self.maxHeight) / height
+	if width < self.maxWidth or height < self.maxHeight:
+		pixelsBuffer = decoder.getPixels()
+		result = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
+		# Fill values
+		for h in range(height):
+			for w in range(width):
+				if w%2 == 0:
+					result[int(scaleFactoryH * h), int(round(scaleFactoryW * w)) + 1] = pixelsBuffer[h, w]
+				if w%2 == 1:
+					result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
+		# Interpolate
+		self._interpolateGray(result)
+		img = Image.fromarray(result, mode='L')
+		img.save(outputPath)
+
+def _interpolateGray(self, result):
+	for h in range(self.maxHeight):
+		for w in range(self.maxWidth):
+			value = 0
+			count = 0
+			if result[h, w] == 0:
+				for hOff in range(-1, 2):
+					for wOff in range(-1, 2):
+						hSafe = h if ((h + hOff) > (self.maxHeight - 2)) | ((h + hOff) < 0) else (h + hOff)
+						wSafe = w if ((w + wOff) > (self.maxWidth - 2)) | ((w + wOff) < 0) else (w + wOff)
+						if result[hSafe, wSafe] != 0:
+							value += result[hSafe, wSafe]
+							count += 1
+				result[h, w] = value / count
+\end{python}
 \section{Ujednolicenie obrazów RGB geometryczne}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+Algorytm geometrycznego ujednolicenia obrazów ma za zadanie sprowadzić oba obrazy do tej samej liczby pikseli w każdym wierszu i każdej kolumnie. 
+Różnica pomiędzy tym przypadkiem a szarym sprawia, że ważne jest użycie odpowiednich struktur danych w taki sposób aby każdy z kanałów RGB był w stanie się pomieścić. Niewątpliwie ważne jest struktura danych uwzględniała kolejność w jakim kolory są przechowywane, inaczej może dojść do sytuacji w której nie dostaniemy oczekiwanego rezultatu. 
+\subsubsection*{Kroki}
+\begin{enumerate}
+	\item Porównaj szerokości i wysokości obu obrazów i wybierz największe. 
+	\item Jeśli pierwszy lub drugi obraz mają szerokość lub wysokość mniejszą od największej dostępnej to:
+	\begin{enumerate}
+		\item Utwórz czarne tło
+		\item Przenieś z wyśrodkowaniem piksle na czarne tło z uwzględnieniem każdego z kanałów RGB
+	\end{enumerate}
+	\item Jeśli żaden z warunków jest niespełniony to nie rób nic
+\end{enumerate}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 1 (512x512, 300dpi), obraz 2 (1024x1024, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{sea-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{field-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 1 (1024x1024, 300dpi), obraz 2 (1024x1024, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{sea-geo-modified.png}
+	\includegraphics[width=8cm, height=8cm]{field-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 3 (126x126, 300dpi), obraz 4 (256x256, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 3 (126x126, 300dpi), obraz 4 (256x256, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{phone-geo-modified.png}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+\end{figure}
+\newpage
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def geometricColor(self):
+	print('geometric color unificaiton start')
+	self.firstDecoder.setColor()
+	width, height = self.firstDecoder.width, self.firstDecoder.height
+	if width < self.maxWidth or height < self.maxHeight:
+		result = self._paintInMiddleColor(self.firstDecoder)
+		img = Image.fromarray(result, 'RGB')
+		img.save('Resources/gcUnification_1.png')
+		print('first image done')
+	
+	self.secondDecoder.setColor()
+	width, height = self.secondDecoder.width, self.secondDecoder.height
+	if width < self.maxWidth or height < self.maxHeight:
+		result = self._paintInMiddleColor(self.secondDecoder)
+		img = Image.fromarray(result, 'RGB')
+		img.save('Resources/gcUnification_2.png')
+		print('second image done')
+	print('geometric color unification done')
+	
+def _paintInMiddleColor(self, decoder):
+	# Create black background
+	result = numpy.full((self.maxHeight, self.maxWidth, 3), 0, numpy.uint8)
+	# Copy smaller image to bigger
+	width, height = decoder.width, decoder.height
+	startWidthIndex = int(round((self.maxWidth - width) / 2))
+	startHeightIndex = int(round((self.maxHeight - height) / 2))
+	pixelsBuffer = decoder.getPixels24Bits()
+	for h in range (0, height):
+		for w in range (0, width):
+			result[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
+	return result
+\end{python}
 \section{Ujednolicenie obrazów RGB rozdzielczościowe}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+Po użyciu ujednolicenia geometrycznego można użyć ujednolicenia rozdzielczościowego, które przeskaluje obraz z mniejszej postaci do większej dzięki czemu nie zostanie nam czarna ramka wokół obrazu. Wynikiem będzie większy obraz niż początkowo bez czarnego obwodu wokół. 
+Mniejszy obraz można przeskalować do większych wymiarów przenosząc wszystkie piksele z uwzględnieniem luk pomiędzy nimi i następnie użycia interpolacji do zamazania tych luk. 
+Interpolacja działa na zasadzie pobierania wartości z okolicznych pikseli i wyciągania z nich średniej, która posłuży jako baza koloru dla nowego piksela. 
+\subsubsection*{Kroki}
+\begin{enumerate}
+	\item Ustalenie nowych wymiarów obrazu
+	\item Obliczenie odległości pomiędzy pikselami (\textit{scaleFactoryH, scaleFactoryW})
+	\item Naniesienie pikseli z mniejszego obrazu na większy z uwzględnieniem luk
+	\item Interpolacja
+\end{enumerate}
+\begin{figure}
+	\caption{Skutki braku interpolacji}
+	\begin{center}
+		\includegraphics[width=8cm, height=8cm]{phone-without-interpolation.png}
+	\end{center}
+\end{figure}
+\begin{figure}
+	\caption{Przed uruchomieniem algorytmu (od lewej): obraz 1 (256x256, 300dpi), obraz 2 (256x256, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{phone-geo-modified.png}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+\end{figure}
+\begin{figure}
+	\caption{Po uruchomieniem algorytmu (od lewej): obraz 1 (256x256, 300dpi), obraz 2 (256x256, 300dpi)}
+	\includegraphics[width=8cm, height=8cm]{phone-rastar-unification.png}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+\end{figure}
+\newpage
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def rasterColor(self):
+	print('rastar color unification start')
+	self.firstDecoder.setColor()
+	self._scaleUpColor(self.firstDecoder, 'Resources/rcUnification_1.png')
+	print('first image done')
+	self.secondDecoder.setColor()
+	self._scaleUpColor(self.secondDecoder, 'Resources/rcUnification_2.png')
+	print('second image done')
+	print('rastar color unification done')
+
+def _scaleUpColor(self, decoder, outputPath):
+	width, height = decoder.width, decoder.height
+	scaleFactoryW = float(self.maxWidth) / width
+	scaleFactoryH = float(self.maxHeight) / height
+	if width < self.maxWidth or height < self.maxHeight:
+		pixelsBuffer = decoder.getPixels24Bits()
+		result = numpy.full((self.maxHeight, self.maxWidth, 3), 1, numpy.uint8)
+		# Fill values
+		for h in range(height):
+			for w in range(width):
+				if w%2 == 0:
+					result[int(scaleFactoryH * h), int(round(scaleFactoryW * w)) + 1] = pixelsBuffer[h, w]
+				if w%2 == 1:
+					result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
+			# Interpolate
+			self._interpolateColor(result)
+			img = Image.fromarray(result, mode='RGB')
+			img.save(outputPath)
+
+def _interpolateColor(self, result):
+	for h in range(self.maxHeight):
+		for w in range(self.maxWidth):
+			r, g, b = 0, 0, 0
+			n = 0
+			if (result[h, w][0] == 1) & (result[h, w][1] == 1) & (result[h, w][2] == 1):
+				for hOff in range(-1, 2):
+					for wOff in range(-1, 2):
+						hSafe = h if ((h + hOff) > (self.maxHeight - 2)) | ((h + hOff) < 0) else (h + hOff)
+						wSafe = w if ((w + wOff) > (self.maxWidth - 2)) | ((w + wOff) < 0) else (w + wOff)
+						if (result[hSafe, wSafe][0] > 1) | (result[hSafe, wSafe][1] > 1) | (result[hSafe, wSafe][2] > 1):
+							r += result[hSafe, wSafe][0]
+							g += result[hSafe, wSafe][1]
+							b += result[hSafe, wSafe][2]
+							n += 1
+				result[h, w] = (r/n, g/n, b/n)
+\end{python}
 
 \chapter{Operacje sumowania arytmetycznego obrazów szarych}
 \section{Sumowanie (określonej) stałej z obrazem}
