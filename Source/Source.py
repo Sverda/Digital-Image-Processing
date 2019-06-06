@@ -16,10 +16,11 @@ def unificationModule():
     #unification.rasterColor()
 
 def geometricModule():
-    geometric = Geometric('Resources/coffee.djvu')
+    geometric = Geometric('Resources/sea.djvu')
     #geometric.translate(100, -100)
     #geometric.homogeneousScaling(2.0)
-    geometric.nonUniformScaling(2.0, 1.0)
+    #geometric.nonUniformScaling(2.0, 1.0)
+    geometric.rotation(45)
 
 if __name__ == '__main__':
     main()

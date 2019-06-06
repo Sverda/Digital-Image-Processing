@@ -1,3 +1,4 @@
+import math
 import numpy
 import collections
 from PIL import Image
@@ -23,6 +24,7 @@ class Geometric(object):
         img.save('Resources/tGeometric.png')
         print('translation done')
 
+    # Ex4.2
     def homogeneousScaling(self, scale = 1.0):
         print('homogeneous scaling start')
         image = self.decoder.getPixels24Bits()
@@ -39,6 +41,7 @@ class Geometric(object):
     def _scale(self, matrix, scaleXY):
         return self._scale(matrix, scaleXY, scaleXY)
 
+    # Ex4.3
     def nonUniformScaling(self, scaleX = 1.0, scaleY = 1.0):
         print('non-uniform scaling start')
         image = self.decoder.getPixels24Bits()
@@ -61,6 +64,32 @@ class Geometric(object):
                     result[int(scaleY * y)][int(scaleX * x)] = matrix[y][x]
         return result
 
+    # Ex4.4
+    def rotation(self, phi):
+        print('rotation start')
+        image = self.decoder.getPixels24Bits()
+
+        print('rotating')
+        result = self._rotate(image, phi)
+        print('interpolation')
+        self._interpolateColor(result)
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/rGeometric.png')
+        print('rotation done')
+
+    def _rotate(self, image, phi):
+        height, width = self.decoder.height, self.decoder.width
+        result = numpy.full((height, width, 3), 1, numpy.uint8)
+        radian = math.radians(phi)
+        for y in range(height):
+            for x in range(width): 
+                newX = x*math.cos(radian) - y*math.sin(radian)
+                newY = x*math.sin(radian) + y*math.cos(radian)
+                if newY < height and newY >= 0 and newX >= 0 and newX < width:
+                    result[int(newY)][int(newX)] = image[y][x]
+        return result
+
     def _interpolateColor(self, result):
         height, width = self.decoder.height, self.decoder.width
         for h in range(height):
@@ -72,7 +101,7 @@ class Geometric(object):
                         for wOff in range(-1, 2):
                             hSafe = h if ((h + hOff) > (height - 2)) | ((h + hOff) < 0) else (h + hOff)
                             wSafe = w if ((w + wOff) > (width - 2)) | ((w + wOff) < 0) else (w + wOff)
-                            if (result[hSafe, wSafe][0] > 1) | (result[hSafe, wSafe][1] > 1) | (result[hSafe, wSafe][2] > 1):
+                            if (result[hSafe, wSafe][0] > 0) | (result[hSafe, wSafe][1] > 0) | (result[hSafe, wSafe][2] > 0):
                                 r += result[hSafe, wSafe][0]
                                 g += result[hSafe, wSafe][1]
                                 b += result[hSafe, wSafe][2]

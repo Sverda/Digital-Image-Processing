@@ -520,10 +520,65 @@ def _interpolateColor(self, result):
 								n += 1
 						result[h, w] = (r/n, g/n, b/n)
 \end{python}
-\section{Obracanie obrazu o dowolny kąt}}
+\section{Obracanie obrazu o dowolny kąt}
 \subsection*{Opis}
-
+Operacja obrotu wykonywana jest wokół początku układu współrzędnych o kąt $\varphi$ w taki sposób aby odległość od początku układu do punktu pozostała bez zmian, oraz aby pomiędzy odcinkami danych punków był kąt $\varphi$. Właściwości te można pozyskać dzięki wzorom: 
+\begin{gather}
+	x` = x\cos(\varphi) - y\sin(\varphi) \\
+	y` = x\sin(\varphi) + y\cos(\varphi)
+\end{gather}
+gdzie \textit{(x`, y`)} to nowe współrzędne wyznaczone po obrocie punktu \textit{(x, y)} o kąt $\varphi$. 
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po obróceniu o kąt $45^o$(prawy obraz), po obrocie bez interpolacji (środkowy obraz)}
+	\includegraphics[width=4cm, height=4cm]{sea-unmodified.jpg}
+	\includegraphics[width=4cm, height=4cm]{sea-rotation-without-interpolation.png}
+	\includegraphics[width=4cm, height=4cm]{sea-rotation.png}
+\end{figure}
 \subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def rotation(self, phi):
+	print('rotation start')
+	image = self.decoder.getPixels24Bits()
+	
+	print('rotating')
+	result = self._rotate(image, phi)
+	print('interpolation')
+	self._interpolateColor(result)
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/rGeometric.png')
+	print('rotation done')
+
+def _rotate(self, image, phi):
+	height, width = self.decoder.height, self.decoder.width
+	result = numpy.full((height, width, 3), 1, numpy.uint8)
+	radian = math.radians(phi)
+	for y in range(height):
+		for x in range(width): 
+			newX = x*math.cos(radian) - y*math.sin(radian)
+			newY = x*math.sin(radian) + y*math.cos(radian)
+			if newY < height and newY >= 0 and newX >= 0 and newX < width:
+				result[int(newY)][int(newX)] = image[y][x]
+	return result
+
+def _interpolateColor(self, result):
+	height, width = self.decoder.height, self.decoder.width
+	for h in range(height):
+		for w in range(width):
+			r, g, b = 0, 0, 0
+			n = 0
+			if (result[h, w][0] == 1) & (result[h, w][1] == 1) & (result[h, w][2] == 1):
+				for hOff in range(-1, 2):
+					for wOff in range(-1, 2):
+						hSafe = h if ((h + hOff) > (height - 2)) | ((h + hOff) < 0) else (h + hOff)
+						wSafe = w if ((w + wOff) > (width - 2)) | ((w + wOff) < 0) else (w + wOff)
+						if (result[hSafe, wSafe][0] > 0) | (result[hSafe, wSafe][1] > 0) | (result[hSafe, wSafe][2] > 0):
+							r += result[hSafe, wSafe][0]
+							g += result[hSafe, wSafe][1]
+							b += result[hSafe, wSafe][2]
+							n += 1
+				result[h, w] = (r/n, g/n, b/n)
+\end{python}
 \section{Symetrie względem osi układu}
 \subsection*{Algorytm}
 \subsubsection*{Opis}
