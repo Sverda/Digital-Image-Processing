@@ -28,7 +28,7 @@ class Geometric(object):
         image = self.decoder.getPixels24Bits()
 
         print('scaling')
-        result = self._scaleXY(image, scale)
+        result = self._scale(image, scale)
         print('interpolation')
         self._interpolateColor(result)
 
@@ -36,13 +36,29 @@ class Geometric(object):
         img.save('Resources/hsGeometric.png')
         print('homogeneous scaling done')
 
-    def _scaleXY(self, matrix, scale):
+    def _scale(self, matrix, scaleXY):
+        return self._scale(matrix, scaleXY, scaleXY)
+
+    def nonUniformScaling(self, scaleX = 1.0, scaleY = 1.0):
+        print('non-uniform scaling start')
+        image = self.decoder.getPixels24Bits()
+
+        print('scaling')
+        result = self._scale(image, scaleX, scaleY)
+        print('interpolation')
+        self._interpolateColor(result)
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/nusGeometric.png')
+        print('non-uniform scaling done')
+
+    def _scale(self, matrix, scaleX, scaleY):
         height, width = self.decoder.height, self.decoder.width
         result = numpy.full((height, width, 3), 1, numpy.uint8)
         for y in range(height):
             for x in range(width):  
-                if scale * y < height and scale * x < width:
-                    result[int(scale * y)][int(scale * x)] = matrix[y][x]
+                if scaleY * y < height and scaleX * x < width:
+                    result[int(scaleY * y)][int(scaleX * x)] = matrix[y][x]
         return result
 
     def _interpolateColor(self, result):

@@ -18,7 +18,8 @@ def unificationModule():
 def geometricModule():
     geometric = Geometric('Resources/coffee.djvu')
     #geometric.translate(100, -100)
-    geometric.homogeneousScaling(2.0)
+    #geometric.homogeneousScaling(2.0)
+    geometric.nonUniformScaling(2.0, 1.0)
 
 if __name__ == '__main__':
     main()
