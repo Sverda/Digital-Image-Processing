@@ -5,22 +5,24 @@ from Unification import Unification
 from Geometric import Geometric
 
 def main():
+    #unificationModule()
     geometricModule()
 
 def unificationModule():
     unification = Unification('Resources/cat.djvu', 'Resources/photoman.djvu')
-    #unification.geometricGray()
+    unification.geometricGray()
     unification.rasterGray()
-    #unification = Unification('Resources/coffee.djvu', 'Resources/phone.djvu')
-    #unification.geometricColor()
-    #unification.rasterColor()
+    unification = Unification('Resources/coffee.djvu', 'Resources/phone.djvu')
+    unification.geometricColor()
+    unification.rasterColor()
 
 def geometricModule():
     geometric = Geometric('Resources/sea.djvu')
     #geometric.translate(100, -100)
     #geometric.homogeneousScaling(2.0)
     #geometric.nonUniformScaling(2.0, 1.0)
-    geometric.rotation(45)
+    #geometric.rotation(45)
+    geometric.axisSymmetry(True, True)
 
 if __name__ == '__main__':
     main()

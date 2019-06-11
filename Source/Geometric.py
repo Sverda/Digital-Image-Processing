@@ -90,6 +90,31 @@ class Geometric(object):
                     result[int(newY)][int(newX)] = image[y][x]
         return result
 
+    # Ex4.5
+    def axisSymmetry(self, ox, oy):
+        print('axis symmetry start')
+        image = self.decoder.getPixels24Bits()
+
+        print('symmetry operation')
+        result = self._symmetryOXorOY(image, ox, oy)
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/Geometric-AxisSymmetry.png')
+        print('axis symmetry done')
+
+    def _symmetryOXorOY(self, image, ox, oy):
+        height, width = self.decoder.height, self.decoder.width
+        result = numpy.zeros((height, width, 3), numpy.uint8)
+        for y in range(height):
+            for x in range(width): 
+                if ox and not oy:
+                    result[y][x] = image[y][(width-1)-x]
+                elif not ox and oy:
+                    result[y][x] = image[(height-1)-y][x]
+                elif ox and oy:
+                    result[y][x] = image[(height-1)-y][(width-1)-x]
+        return result
+
     def _interpolateColor(self, result):
         height, width = self.decoder.height, self.decoder.width
         for h in range(height):
