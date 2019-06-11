@@ -581,7 +581,7 @@ def _interpolateColor(self, result):
 \end{python}
 \section{Symetrie względem osi układu}
 \subsection*{Opis}
-Symetria osiowa względem osi OX lub OY sprawia, że punkt \textit{(x, y)} zmienia się w \textit{(x, -y)} lub \textit{(-x, y)} w zależności czy symetria dotyczyła osi OX lub OY. W naszej pracy przyjmujemy, że środek obrazu znajduje się w punkcie \textit{(0, 0)}. 
+Symetria osiowa względem osi OX lub OY sprawia, że punkt \textit{(x, y)} zmienia się w \textit{(x, -y)} lub \textit{(-x, y)} w zależności czy symetria dotyczyła osi OX lub OY. W naszej pracy przyjmujemy, że lewa dolna krawędź obrazu znajduje się w punkcie \textit{(0, 0)}. 
 \begin{figure}[H]
 	\caption{Od lewej: przed uruchomieniem algorytmu, po symetrii względem OX, po symetrii względem OY, po symetrii względem OX oraz OY}
 	\includegraphics[width=7cm, height=7cm]{sea-unmodified.jpg}
@@ -616,10 +616,66 @@ def _symmetryOXorOY(self, image, ox, oy):
 	return result
 \end{python}
 \section{Symetrie względem zadanej prostej}
-\subsection*{Algorytm}
-\subsubsection*{Opis}
-\subsubsection*{Kroki}
+\subsection*{Opis}
+Przypadek podobny do poprzedniego, lecz tym razem użytkownik podaje wiersz lub kolumnę względem której będzie przebiegała oś symetrii. 
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy), po symetrii względem prostej \textit{x=356} (środkowy), po symetrii względem prostej \textit{y=356} (prawy)}
+	\includegraphics[width=4cm, height=4cm]{phone-unmodified.jpg}
+	\includegraphics[width=4cm, height=4cm]{phone-custom-symmetry-x.png}
+	\includegraphics[width=4cm, height=4cm]{phone-custom-symmetry-y.png}
+\end{figure}
 \subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def customSymmetryX(self, ox):
+	print('custom axis symmetry X start')
+	if not self._validateSymmetryAxisX(ox):
+		return
+	
+	print('symmetry operation X')
+	image = self.decoder.getPixels24Bits()
+	height, width = self.decoder.height, self.decoder.width
+	resultWidth = ox*2
+	result = numpy.zeros((height, resultWidth, 3), numpy.uint8)
+	for y in range(height):
+		for x in range(ox):
+			result[y][x] = image[y][x]
+			result[y][resultWidth-1-x] = image[y][x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/Geometric-CustomSymmetryX.png')
+	print('custom axis symmetry X done')
+	
+def _validateSymmetryAxisX(self, ox):
+	width = self.decoder.width
+	if ox <= 0 or ox > width:
+		return False
+	return True
+	
+def customSymmetryY(self, oy):
+	print('custom axis symmetry Y start')
+	if not self._validateSymmetryAxisY(oy):
+	return
+	
+	print('symmetry operation Y')
+	image = self.decoder.getPixels24Bits()
+	height, width = self.decoder.height, self.decoder.width
+	resultHeight = oy*2
+	result = numpy.zeros((resultHeight, width, 3), numpy.uint8)
+	for y in range(oy):
+		for x in range(width):
+			result[y][x] = image[y][x]
+			result[resultHeight-1-y][x] = image[y][x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/Geometric-CustomSymmetryY.png')
+	print('custom axis symmetry Y done')
+	
+def _validateSymmetryAxisY(self, oy):
+	height = self.decoder.height
+	if oy <= 0 or oy > height:
+		return False
+	return True
+\end{python}
 \section{Wycinanie fragmentów obrazu}
 \subsection*{Algorytm}
 \subsubsection*{Opis}

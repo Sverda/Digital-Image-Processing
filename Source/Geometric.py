@@ -115,6 +115,56 @@ class Geometric(object):
                     result[y][x] = image[(height-1)-y][(width-1)-x]
         return result
 
+    def customSymmetryX(self, ox):
+        print('custom axis symmetry X start')
+        if not self._validateSymmetryAxisX(ox):
+            return
+
+        print('symmetry operation X')
+        image = self.decoder.getPixels24Bits()
+        height, width = self.decoder.height, self.decoder.width
+        resultWidth = ox*2
+        result = numpy.zeros((height, resultWidth, 3), numpy.uint8)
+        for y in range(height):
+            for x in range(ox):
+                result[y][x] = image[y][x]
+                result[y][resultWidth-1-x] = image[y][x]
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/Geometric-CustomSymmetryX.png')
+        print('custom axis symmetry X done')
+
+    def _validateSymmetryAxisX(self, ox):
+        width = self.decoder.width
+        if ox <= 0 or ox > width:
+            return False
+        return True
+
+    def customSymmetryY(self, oy):
+        print('custom axis symmetry Y start')
+        if not self._validateSymmetryAxisY(oy):
+            return
+
+        print('symmetry operation Y')
+        image = self.decoder.getPixels24Bits()
+        height, width = self.decoder.height, self.decoder.width
+        resultHeight = oy*2
+        result = numpy.zeros((resultHeight, width, 3), numpy.uint8)
+        for y in range(oy):
+            for x in range(width):
+                result[y][x] = image[y][x]
+                result[resultHeight-1-y][x] = image[y][x]
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/Geometric-CustomSymmetryY.png')
+        print('custom axis symmetry Y done')
+
+    def _validateSymmetryAxisY(self, oy):
+        height = self.decoder.height
+        if oy <= 0 or oy > height:
+            return False
+        return True
+
     def _interpolateColor(self, result):
         height, width = self.decoder.height, self.decoder.width
         for h in range(height):

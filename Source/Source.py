@@ -17,12 +17,14 @@ def unificationModule():
     unification.rasterColor()
 
 def geometricModule():
-    geometric = Geometric('Resources/sea.djvu')
+    geometric = Geometric('Resources/phone.djvu')
     #geometric.translate(100, -100)
     #geometric.homogeneousScaling(2.0)
     #geometric.nonUniformScaling(2.0, 1.0)
     #geometric.rotation(45)
-    geometric.axisSymmetry(True, True)
+    #geometric.axisSymmetry(True, True)
+    #geometric.customSymmetryX(356)
+    geometric.customSymmetryY(356)
 
 if __name__ == '__main__':
     main()
