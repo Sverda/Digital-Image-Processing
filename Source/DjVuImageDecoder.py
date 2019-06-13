@@ -48,7 +48,7 @@ class DjVuImageDecoder(djvu.decode.Context):
         r = (array & 0x00FF0000) >> 4*4
         g = (array & 0x0000FF00) >> 2*4
         b = array & 0x000000FF
-        result = numpy.zeros((array.shape[0], array.shape[1], 3))
+        result = numpy.zeros((array.shape[0], array.shape[1], 3), dtype=numpy.uint8)
         for h in range(0, array.shape[0]):
             for w in range(0, array.shape[1]):
                 result[h, w] = (r[h, w], g[h, w], b[h, w])

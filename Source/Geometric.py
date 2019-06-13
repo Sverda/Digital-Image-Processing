@@ -115,6 +115,7 @@ class Geometric(object):
                     result[y][x] = image[(height-1)-y][(width-1)-x]
         return result
 
+    # Ex4.6a
     def customSymmetryX(self, ox):
         print('custom axis symmetry X start')
         if not self._validateSymmetryAxisX(ox):
@@ -134,6 +135,7 @@ class Geometric(object):
         img.save('Resources/Geometric-CustomSymmetryX.png')
         print('custom axis symmetry X done')
 
+    # Ex4.6b
     def _validateSymmetryAxisX(self, ox):
         width = self.decoder.width
         if ox <= 0 or ox > width:
@@ -182,3 +184,17 @@ class Geometric(object):
                                 b += result[hSafe, wSafe][2]
                                 n += 1
                     result[h, w] = (r/n, g/n, b/n)
+
+    # Ex4.7
+    def crop(self, (x1, y1), (x2, y2)):
+        print('croping image start')
+        image = self.decoder.getPixels24Bits()
+
+        print('croping')
+        for x in range(x1, x2+1):
+            for y in range(y1, y2+1):
+                image[y, x] = (0, 0, 0)
+
+        img = Image.fromarray(image, mode='RGB')
+        img.save('Resources/Geometric-Crop.png')
+        print('croping image done')

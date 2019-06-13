@@ -677,14 +677,31 @@ def _validateSymmetryAxisY(self, oy):
 	return True
 \end{python}
 \section{Wycinanie fragmentów obrazu}
-\subsection*{Algorytm}
-\subsubsection*{Opis}
-\subsubsection*{Kroki}
+\subsection*{Opis}
+Wycięcie części obrazu jest zaimplementowane za pomocą kopiowania pikseli do obrazu pomocniczego. Skopiowane zostają tylko te piksle, które znajdują się wewnątrz podanego zakresu. 
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy), po wycięciu kwadratu od piksela \textit{(50, 50)} do \textit{(300, 300)} (prawy)}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{phone-crop.png}
+\end{figure}
 \subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def crop(self, (x1, y1), (x2, y2)):
+	print('croping image start')
+	image = self.decoder.getPixels24Bits()
+	
+	print('croping')
+	for x in range(x1, x2+1):
+		for y in range(y1, y2+1):
+			image[y, x] = (0, 0, 0)
+	
+	img = Image.fromarray(image, mode='RGB')
+	img.save('Resources/Geometric-Crop.png')
+	print('croping image done')
+\end{python}
 \section{Kopiowanie fragmentów obrazów}
-\subsection*{Algorytm}
-\subsubsection*{Opis}
-\subsubsection*{Kroki}
+\subsection*{Opis}
+
 \subsection*{Kod źródłowy algorytmu}
 
 \chapter{Operacje na histogramie obrazu szarego}
