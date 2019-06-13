@@ -4,10 +4,10 @@
 - [x] Damian 
 - [ ] Maciej
 
-1. Ujednolicenie obrazów szarych geometryczne (liczba wierszy i kolumn piksli)
-2. Ujednolicenie obrazów szarych rozdzielczosciowe (w rastrze) ´
-3. Ujednolicenie obrazów RGB geometryczne (liczba wierszy i kolumn piksli)
-4. Ujednolicenie obrazów RGB rozdzielczosciowe (w rastrze) ´
+~~1. Ujednolicenie obrazów szarych geometryczne (liczba wierszy i kolumn piksli)~~
+~~2. Ujednolicenie obrazów szarych rozdzielczosciowe (w rastrze)~~
+~~3. Ujednolicenie obrazów RGB geometryczne (liczba wierszy i kolumn piksli)~~
+~~4. Ujednolicenie obrazów RGB rozdzielczosciowe (w rastrze)~~
 ## **2. Operacje sumowania arytmetycznego obrazów szarych** 
 - [ ] Damian 
 - [x] Maciej
@@ -34,12 +34,12 @@
 - [x] Damian 
 - [ ] Maciej
 
-1. Przemieszczenie obrazu o zadany wektor
-2. Jednorodne i niejednorodne skalowanie obrazu
-3. Obracanie obrazu o dowolny kąt
-4. Symetrie względem osi układu i zadanej prostej
-5. Wycinanie fragmentów obrazu
-6. Kopiowanie fragmentów obrazów
+~~1. Przemieszczenie obrazu o zadany wektor~~
+~~2. Jednorodne i niejednorodne skalowanie obrazu~~
+~~3. Obracanie obrazu o dowolny kąt~~
+~~4. Symetrie względem osi układu i zadanej prostej~~
+~~5. Wycinanie fragmentów obrazu~~
+~~6. Kopiowanie fragmentów obrazów~~
 ## **5. Operacje na histogramie obrazu szarego** 
 - [ ] Damian 
 - [x] Maciej
