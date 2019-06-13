@@ -198,3 +198,19 @@ class Geometric(object):
         img = Image.fromarray(image, mode='RGB')
         img.save('Resources/Geometric-Crop.png')
         print('croping image done')
+
+    # Ex4.8
+    def copy(self, (x1, y1), (x2, y2)):
+        print('copying image start')
+        image = self.decoder.getPixels24Bits()
+        height, width = self.decoder.height, self.decoder.width
+        result = numpy.zeros((height, width, 3), numpy.uint8)
+
+        print('copying')
+        for x in range(x1, x2+1):
+            for y in range(y1, y2+1):
+                result[y, x] = image[y, x]
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/Geometric-Copy.png')
+        print('copying image done')

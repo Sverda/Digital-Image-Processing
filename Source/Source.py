@@ -25,8 +25,10 @@ def geometricModule():
     #geometric.axisSymmetry(True, True)
     #geometric.customSymmetryX(356)
     #geometric.customSymmetryY(356)
+    #point1, point2 = (50, 50), (300, 300)
+    #geometric.crop(point1, point2)
     point1, point2 = (50, 50), (300, 300)
-    geometric.crop(point1, point2)
+    geometric.copy(point1, point2)
 
 if __name__ == '__main__':
     main()

@@ -701,8 +701,28 @@ def crop(self, (x1, y1), (x2, y2)):
 \end{python}
 \section{Kopiowanie fragmentów obrazów}
 \subsection*{Opis}
-
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy), po skopiowaniu kwadratu od piksela \textit{(50, 50)} do \textit{(300, 300)} (prawy)}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{phone-copy.png}
+\end{figure}
 \subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def copy(self, (x1, y1), (x2, y2)):
+	print('copying image start')
+	image = self.decoder.getPixels24Bits()
+	height, width = self.decoder.height, self.decoder.width
+	result = numpy.zeros((height, width, 3), numpy.uint8)
+	
+	print('copying')
+	for x in range(x1, x2+1):
+		for y in range(y1, y2+1):
+			result[y, x] = image[y, x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/Geometric-Copy.png')
+	print('copying image done')
+\end{python}
 
 \chapter{Operacje na histogramie obrazu szarego}
 \section{Obliczanie histogramu}
@@ -732,7 +752,7 @@ def crop(self, (x1, y1), (x2, y2)):
 \section{Otwarcie}
 \section{Zamknięcie}
 
-\chapter{Filtrowanie liniowe i nieliniowe}
+\chapter{Filtrowanie wygładzające liniowe i nieliniowe}
 \section{Filtr dolnoprzepustowy uśredniający}
 \section{Filtr dolnoprzepustowy Gaussowski}
 \section{Operator Roberts’a}
