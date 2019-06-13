@@ -7,6 +7,8 @@
 \usepackage{tabto}
 \usepackage{graphicx}
 \usepackage{pythonhighlight}
+\usepackage{amsmath}
+\usepackage{float}
 
 \hypersetup{
 	colorlinks=true,
@@ -363,14 +365,364 @@ def _interpolateColor(self, result):
 \section{Logarytmowanie obrazu}
 
 \chapter{Operacje geometryczne na obrazie}
+Operacje geometryczne przekształcają położenie pikseli \textit{(x1, y1)} w obrazie wejściowym do nowej lokacji \textit{(x2, y2)} w obrazie wynikowym. Dzięki temu możemy dopasować obraz do odpowiedniego układu współrzędnych lub użyć tych operacji do eliminacji geometrycznych zakłóceń obrazu (dystorsji). 
 \section{Przemieszczenie obrazu o zadany wektor}
+\subsection*{Opis}
+Operacja translacji wykonuje transformację geometryczną polegającą na przeniesieniu każdego z punktów obrazu wejściowego w nowe miejsce na obrazie wynikowym. Pod wpływem translacji element obrazu zlokalizowany na \textit{(x1, y1)} zostanie przesunięty na nową pozycję \textit{(x2, y2)}. Różnicą pomiędzy \textit{(x1, y1)} i \textit{(x2, y2)} jest wektor \textit{(bx, by)}, który jest określony przez użytkownika. 
+\newline
+Operacja przemieszczenia przybiera postać: 
+\begin{gather}
+	x_2 = x_1 + b_x \\
+	y_2 = y_1 + b_y
+\end{gather}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po przesunięciu o wektor [100, 100] (prawy obraz)}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{phone-translate.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po przesunięciu o wektor [100, -100] (prawy obraz)}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{coffee-translate.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def translate(self, deltaX = 0, deltaY = 0):
+	print('translation start')
+	height, width = self.decoder.height, self.decoder.width
+	image = self.decoder.getPixels24Bits()
+	result = numpy.zeros((height, width, 3), numpy.uint8)
+	
+	for y in range(height):
+		for x in range(width):  
+			if 0 < y + deltaY < height and 0 < x + deltaX < width:
+				result[y + deltaY][x + deltaX] = image[y][x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/tGeometric.png')
+print('translation done')
+\end{python}
 \section{Jednorodne skalowanie obrazu}
+\subsection*{Opis}
+Skalowanie jednorodne obrazu składa się na pomnożenie współrzędnych każdego piksela przez określoną wartość. 
+\begin{gather}
+x_2 = S_x * x_1 \\
+y_2 = S_y * y_1
+\end{gather}
+Przy czym skalowanie jednorodne oznacza, że po zmianie wartości współrzędnych nasz obraz zachowa dawne proporcje. Czyli: 
+\begin{gather}
+S_x = S_y
+\end{gather}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po skalowaniu jednorodnym o współczynnik 2 (prawy obraz)}
+	\includegraphics[width=4cm, height=4cm]{coffee-unmodified.jpg}
+	\includegraphics[width=4cm, height=4cm]{coffee-hscaling-without-interpolation.png}
+	\includegraphics[width=4cm, height=4cm]{coffee-hscaling.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def homogeneousScaling(self, scale = 1.0):
+	print('homogeneous scaling start')
+	image = self.decoder.getPixels24Bits()
+	
+	print('scaling')
+	result = self._scaleXY(image, scale)
+	print('interpolation')
+	self._interpolateColor(result)
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/hsGeometric.png')
+	print('homogeneous scaling done')
+
+def _scaleXY(self, matrix, scale):
+	height, width = self.decoder.height, self.decoder.width
+	result = numpy.full((height, width, 3), 1, numpy.uint8)
+	for y in range(height):
+		for x in range(width):  
+			if scale * y < height and scale * x < width:
+				result[int(scale * y)][int(scale * x)] = matrix[y][x]
+	return result
+
+def _interpolateColor(self, result):
+	height, width = self.decoder.height, self.decoder.width
+	for h in range(height):
+		for w in range(width):
+			r, g, b = 0, 0, 0
+			n = 0
+			if (result[h, w][0] == 1) & (result[h, w][1] == 1) & (result[h, w][2] == 1):
+				for hOff in range(-1, 2):
+					for wOff in range(-1, 2):
+						hSafe = h if ((h + hOff) > (height - 2)) | ((h + hOff) < 0) else (h + hOff)
+						wSafe = w if ((w + wOff) > (width - 2)) | ((w + wOff) < 0) else (w + wOff)
+						if (result[hSafe, wSafe][0] > 1) | (result[hSafe, wSafe][1] > 1) | (result[hSafe, wSafe][2] > 1):
+							r += result[hSafe, wSafe][0]
+							g += result[hSafe, wSafe][1]
+							b += result[hSafe, wSafe][2]
+							n += 1
+				result[h, w] = (r/n, g/n, b/n)
+\end{python}
 \section{Niejednorodne skalowanie obrazu}
+\subsection*{Opis}
+Skalowanie niejednorodne obrazu składa się na pomnożenie współrzędnych każdego piksela przez określoną wartość. 
+\begin{gather}
+x_2 = S_x * x_1 \\
+y_2 = S_y * y_1
+\end{gather}
+Przy czym skalowanie niejednorodne oznacza, że po zmianie wartości współrzędnych nasz obraz będzie miał zachwiane proporcje. Czyli: 
+\begin{gather}
+S_x \neq S_y
+\end{gather}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po skalowaniu jednorodnym o współczynnik x = 2.0, y = 1.0 (prawy obraz)}
+	\includegraphics[width=4cm, height=4cm]{coffee-unmodified.jpg}
+	\includegraphics[width=4cm, height=4cm]{coffee-nonuniform-scaling-without-interpolation.png}
+	\includegraphics[width=4cm, height=4cm]{coffee-nonuniform-scaling.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def nonUniformScaling(self, scaleX = 1.0, scaleY = 1.0):
+	print('non-uniform scaling start')
+	image = self.decoder.getPixels24Bits()
+	
+	print('scaling')
+	result = self._scale(image, scaleX, scaleY)
+	print('interpolation')
+	self._interpolateColor(result)
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/nusGeometric.png')
+	print('non-uniform scaling done')
+
+def _scale(self, matrix, scaleX, scaleY):
+	height, width = self.decoder.height, self.decoder.width
+	result = numpy.full((height, width, 3), 1, numpy.uint8)
+	for y in range(height):
+		for x in range(width):  
+			if scaleY * y < height and scaleX * x < width:
+				result[int(scaleY * y)][int(scaleX * x)] = matrix[y][x]
+	return result
+
+def _interpolateColor(self, result):
+	height, width = self.decoder.height, self.decoder.width
+	for h in range(height):
+		for w in range(width):
+			r, g, b = 0, 0, 0
+			n = 0
+				if (result[h, w][0] == 1) & (result[h, w][1] == 1) & (result[h, w][2] == 1):
+					for hOff in range(-1, 2):
+						for wOff in range(-1, 2):
+							hSafe = h if ((h + hOff) > (height - 2)) | ((h + hOff) < 0) else (h + hOff)
+							wSafe = w if ((w + wOff) > (width - 2)) | ((w + wOff) < 0) else (w + wOff)
+							if (result[hSafe, wSafe][0] > 1) | (result[hSafe, wSafe][1] > 1) | (result[hSafe, wSafe][2] > 1):
+								r += result[hSafe, wSafe][0]
+								g += result[hSafe, wSafe][1]
+								b += result[hSafe, wSafe][2]
+								n += 1
+						result[h, w] = (r/n, g/n, b/n)
+\end{python}
 \section{Obracanie obrazu o dowolny kąt}
+\subsection*{Opis}
+Operacja obrotu wykonywana jest wokół początku układu współrzędnych o kąt $\varphi$ w taki sposób aby odległość od początku układu do punktu pozostała bez zmian, oraz aby pomiędzy odcinkami danych punków był kąt $\varphi$. Właściwości te można pozyskać dzięki wzorom: 
+\begin{gather}
+	x` = x\cos(\varphi) - y\sin(\varphi) \\
+	y` = x\sin(\varphi) + y\cos(\varphi)
+\end{gather}
+gdzie \textit{(x`, y`)} to nowe współrzędne wyznaczone po obrocie punktu \textit{(x, y)} o kąt $\varphi$. 
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po obróceniu o kąt $45^o$(prawy obraz), po obrocie bez interpolacji (środkowy obraz)}
+	\includegraphics[width=4cm, height=4cm]{sea-unmodified.jpg}
+	\includegraphics[width=4cm, height=4cm]{sea-rotation-without-interpolation.png}
+	\includegraphics[width=4cm, height=4cm]{sea-rotation.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def rotation(self, phi):
+	print('rotation start')
+	image = self.decoder.getPixels24Bits()
+	
+	print('rotating')
+	result = self._rotate(image, phi)
+	print('interpolation')
+	self._interpolateColor(result)
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/rGeometric.png')
+	print('rotation done')
+
+def _rotate(self, image, phi):
+	height, width = self.decoder.height, self.decoder.width
+	result = numpy.full((height, width, 3), 1, numpy.uint8)
+	radian = math.radians(phi)
+	for y in range(height):
+		for x in range(width): 
+			newX = x*math.cos(radian) - y*math.sin(radian)
+			newY = x*math.sin(radian) + y*math.cos(radian)
+			if newY < height and newY >= 0 and newX >= 0 and newX < width:
+				result[int(newY)][int(newX)] = image[y][x]
+	return result
+
+def _interpolateColor(self, result):
+	height, width = self.decoder.height, self.decoder.width
+	for h in range(height):
+		for w in range(width):
+			r, g, b = 0, 0, 0
+			n = 0
+			if (result[h, w][0] == 1) & (result[h, w][1] == 1) & (result[h, w][2] == 1):
+				for hOff in range(-1, 2):
+					for wOff in range(-1, 2):
+						hSafe = h if ((h + hOff) > (height - 2)) | ((h + hOff) < 0) else (h + hOff)
+						wSafe = w if ((w + wOff) > (width - 2)) | ((w + wOff) < 0) else (w + wOff)
+						if (result[hSafe, wSafe][0] > 0) | (result[hSafe, wSafe][1] > 0) | (result[hSafe, wSafe][2] > 0):
+							r += result[hSafe, wSafe][0]
+							g += result[hSafe, wSafe][1]
+							b += result[hSafe, wSafe][2]
+							n += 1
+				result[h, w] = (r/n, g/n, b/n)
+\end{python}
 \section{Symetrie względem osi układu}
+\subsection*{Opis}
+Symetria osiowa względem osi OX lub OY sprawia, że punkt \textit{(x, y)} zmienia się w \textit{(x, -y)} lub \textit{(-x, y)} w zależności czy symetria dotyczyła osi OX lub OY. W naszej pracy przyjmujemy, że lewa dolna krawędź obrazu znajduje się w punkcie \textit{(0, 0)}. 
+\begin{figure}[H]
+	\caption{Od lewej: przed uruchomieniem algorytmu, po symetrii względem OX, po symetrii względem OY, po symetrii względem OX oraz OY}
+	\includegraphics[width=7cm, height=7cm]{sea-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{sea-symmetry-x.png}
+	\includegraphics[width=7cm, height=7cm]{sea-symmetry-y.png}
+	\includegraphics[width=7cm, height=7cm]{sea-symmetry-xy.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def axisSymmetry(self, ox, oy):
+	print('axis symmetry start')
+	image = self.decoder.getPixels24Bits()
+	
+	print('symmetry operation')
+	result = self._symmetryOXorOY(image, ox, oy)
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/Geometric-AxisSymmetry.png')
+	print('axis symmetry done')
+
+def _symmetryOXorOY(self, image, ox, oy):
+	height, width = self.decoder.height, self.decoder.width
+	result = numpy.zeros((height, width, 3), numpy.uint8)
+	for y in range(height):
+		for x in range(width): 
+			if ox and not oy:
+				result[y][x] = image[y][(width-1)-x]
+			elif not ox and oy:
+				result[y][x] = image[(height-1)-y][x]
+			elif ox and oy:
+				result[y][x] = image[(height-1)-y][(width-1)-x]
+	return result
+\end{python}
 \section{Symetrie względem zadanej prostej}
+\subsection*{Opis}
+Przypadek podobny do poprzedniego, lecz tym razem użytkownik podaje wiersz lub kolumnę względem której będzie przebiegała oś symetrii. 
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy), po symetrii względem prostej \textit{x=356} (środkowy), po symetrii względem prostej \textit{y=356} (prawy)}
+	\includegraphics[width=4cm, height=4cm]{phone-unmodified.jpg}
+	\includegraphics[width=4cm, height=4cm]{phone-custom-symmetry-x.png}
+	\includegraphics[width=4cm, height=4cm]{phone-custom-symmetry-y.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def customSymmetryX(self, ox):
+	print('custom axis symmetry X start')
+	if not self._validateSymmetryAxisX(ox):
+		return
+	
+	print('symmetry operation X')
+	image = self.decoder.getPixels24Bits()
+	height, width = self.decoder.height, self.decoder.width
+	resultWidth = ox*2
+	result = numpy.zeros((height, resultWidth, 3), numpy.uint8)
+	for y in range(height):
+		for x in range(ox):
+			result[y][x] = image[y][x]
+			result[y][resultWidth-1-x] = image[y][x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/Geometric-CustomSymmetryX.png')
+	print('custom axis symmetry X done')
+	
+def _validateSymmetryAxisX(self, ox):
+	width = self.decoder.width
+	if ox <= 0 or ox > width:
+		return False
+	return True
+	
+def customSymmetryY(self, oy):
+	print('custom axis symmetry Y start')
+	if not self._validateSymmetryAxisY(oy):
+	return
+	
+	print('symmetry operation Y')
+	image = self.decoder.getPixels24Bits()
+	height, width = self.decoder.height, self.decoder.width
+	resultHeight = oy*2
+	result = numpy.zeros((resultHeight, width, 3), numpy.uint8)
+	for y in range(oy):
+		for x in range(width):
+			result[y][x] = image[y][x]
+			result[resultHeight-1-y][x] = image[y][x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/Geometric-CustomSymmetryY.png')
+	print('custom axis symmetry Y done')
+	
+def _validateSymmetryAxisY(self, oy):
+	height = self.decoder.height
+	if oy <= 0 or oy > height:
+		return False
+	return True
+\end{python}
 \section{Wycinanie fragmentów obrazu}
+\subsection*{Opis}
+Wycięcie części obrazu jest zaimplementowane za pomocą kopiowania pikseli do obrazu pomocniczego. Skopiowane zostają tylko te piksle, które znajdują się wewnątrz podanego zakresu. 
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy), po wycięciu kwadratu od piksela \textit{(50, 50)} do \textit{(300, 300)} (prawy)}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{phone-crop.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def crop(self, (x1, y1), (x2, y2)):
+	print('croping image start')
+	image = self.decoder.getPixels24Bits()
+	
+	print('croping')
+	for x in range(x1, x2+1):
+		for y in range(y1, y2+1):
+			image[y, x] = (0, 0, 0)
+	
+	img = Image.fromarray(image, mode='RGB')
+	img.save('Resources/Geometric-Crop.png')
+	print('croping image done')
+\end{python}
 \section{Kopiowanie fragmentów obrazów}
+\subsection*{Opis}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy), po skopiowaniu kwadratu od piksela \textit{(50, 50)} do \textit{(300, 300)} (prawy)}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{phone-copy.png}
+\end{figure}
+\subsection*{Kod źródłowy algorytmu}
+\begin{python}
+def copy(self, (x1, y1), (x2, y2)):
+	print('copying image start')
+	image = self.decoder.getPixels24Bits()
+	height, width = self.decoder.height, self.decoder.width
+	result = numpy.zeros((height, width, 3), numpy.uint8)
+	
+	print('copying')
+	for x in range(x1, x2+1):
+		for y in range(y1, y2+1):
+			result[y, x] = image[y, x]
+	
+	img = Image.fromarray(result, mode='RGB')
+	img.save('Resources/Geometric-Copy.png')
+	print('copying image done')
+\end{python}
 
 \chapter{Operacje na histogramie obrazu szarego}
 \section{Obliczanie histogramu}
@@ -400,7 +752,7 @@ def _interpolateColor(self, result):
 \section{Otwarcie}
 \section{Zamknięcie}
 
-\chapter{Filtrowanie liniowe i nieliniowe}
+\chapter{Filtrowanie wygładzające liniowe i nieliniowe}
 \section{Filtr dolnoprzepustowy uśredniający}
 \section{Filtr dolnoprzepustowy Gaussowski}
 \section{Operator Roberts’a}

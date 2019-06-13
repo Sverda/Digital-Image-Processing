@@ -95,7 +95,6 @@ class Unification(object):
     # Ex1.3
     def geometricColor(self):
         print('geometric color unificaiton start')
-        self.firstDecoder.setColor()
         width, height = self.firstDecoder.width, self.firstDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
             result = self._paintInMiddleColor(self.firstDecoder)
@@ -103,7 +102,6 @@ class Unification(object):
             img.save('Resources/gcUnification_1.png')
             print('first image done')
 
-        self.secondDecoder.setColor()
         width, height = self.secondDecoder.width, self.secondDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
             result = self._paintInMiddleColor(self.secondDecoder)
@@ -128,7 +126,6 @@ class Unification(object):
     # Ex1.4
     def rasterColor(self):
         print('rastar color unification start')
-        self.firstDecoder.setColor()
         self._scaleUpColor(self.firstDecoder, 'Resources/rcUnification_1.png')
         print('first image done')
         self.secondDecoder.setColor()
