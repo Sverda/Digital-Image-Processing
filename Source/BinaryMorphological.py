@@ -83,3 +83,15 @@ class BinaryMorphological(object):
         img = Image.fromarray(result, mode='L')
         img.save('Resources/morph-opening.png')
         print('opening done')
+
+    #Ex7.4
+    def closing(self):
+        print('closing start')
+        image = self.decoder.getPixels()
+
+        result = self._dilationOperation(image)
+        result = self._erosionOperation(result)
+
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/morph-closing.png')
+        print('closing done')
