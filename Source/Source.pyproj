@@ -28,6 +28,9 @@
     <Compile Include="Geometric.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BinaryMorphological.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Source.py" />
     <Compile Include="Unification.py">
       <SubType>Code</SubType>
@@ -40,6 +43,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\binary.djvu" />
     <Content Include="Resources\cat.djvu" />
     <Content Include="Resources\coffee.djvu" />
     <Content Include="Resources\field.djvu" />
