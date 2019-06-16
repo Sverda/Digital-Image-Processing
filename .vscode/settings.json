@@ -1,5 +1,6 @@
 {
-    "python.pythonPath": "/usr/bin/python",
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true
+    "python.pythonPath": "/home/humblenarcissus/.local/share/virtualenvs/Digital-Image-Processing-Vien0pMU/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true,
+    "python.linting.pep8Enabled": true
 }

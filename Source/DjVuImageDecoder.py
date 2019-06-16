@@ -1,8 +1,9 @@
 from __future__ import print_function
 import os
 
-import djvu.dllpath
-djvu.dllpath.set_dll_search_path()
+# import djvu.dllpath
+# djvu.dllpath.set_dll_search_path()
+
 import djvu.decode
 import numpy
 
