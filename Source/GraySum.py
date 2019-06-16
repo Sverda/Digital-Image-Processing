@@ -2,7 +2,7 @@ import numpy
 import collections
 import math
 import numpy as np
-from PIL import Image, ImageMath, ImageChops
+from PIL import Image, ImageMath, ImageChops, ImageOps
 from DjVuImageDecoder import DjVuImageDecoder
 
 class GraySum(object):
@@ -16,6 +16,17 @@ class GraySum(object):
         self.maxWidth = max([self.firstDecoder.width, self.secondDecoder.width])
         print('max size: ' + str(self.maxWidth) + 'x' + str(self.maxHeight))
         return self.maxHeight, self.maxWidth
+    
+    def run_all(self):
+        self.add_constant(20)
+        self.add_img_to_img()
+        self.multiply_img_by_constant(2)
+        self.multiply_img_by_img()
+        self.image_pow(2)
+        self.image_divide_constant(2)
+        self.image_divide_by_image()
+        self.sqrt_img(3)
+        self.image_log()
     
     # Ex 2.1
     def add_constant(self, constant):
@@ -52,7 +63,7 @@ class GraySum(object):
 
         for h in range(0, height):
             for w in range(0, width):
-                firstImg[h, w] = pixelsBuffer[h, w] * constant
+                firstImg[h, w] = pixelsBuffer[h, w] * constant 
         
         img = Image.fromarray(firstImg, mode='L')
         img.save('Resources/mul_const.png')
@@ -66,6 +77,7 @@ class GraySum(object):
 
         ImageChops.multiply(im1, im2).save('Resources/mul_im_by_im.png')
     
+    # Ex 2.4
     def image_pow(self, alfa):
         im1 = self.firstDecoder.getPixels()
         im1 = Image.fromarray(im1, mode='L')
@@ -79,6 +91,7 @@ class GraySum(object):
         out.save("Resources/pow1.png")
         out2.save("Resources/pow2.png")
 
+    # Ex 2.5
     def image_divide_constant(self, constant):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         pixelsBuffer = self.firstDecoder.getPixels()
@@ -106,6 +119,7 @@ class GraySum(object):
         img = Image.fromarray(firstImg, mode='L')
         img.save('Resources/div_img_by_img.png')
     
+    # Ex 2.6
     def sqrt_img(self, deg):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         pixelsBuffer = self.firstDecoder.getPixels()
@@ -128,6 +142,7 @@ class GraySum(object):
         img = Image.fromarray(firstImg, mode='L')
         img.save('Resources/sqrt_img.png')
 
+    # Ex 2.7
     def image_log(self):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         pixelsBuffer = self.firstDecoder.getPixels()
