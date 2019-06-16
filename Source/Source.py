@@ -35,7 +35,8 @@ def geometricModule():
 def morphologicalModule():
     morph = BinaryMorphological('Resources/binary.djvu')
     #morph.erosion()
-    morph.dilation()
+    #morph.dilation()
+    morph.opening()
 
 if __name__ == '__main__':
     main()
