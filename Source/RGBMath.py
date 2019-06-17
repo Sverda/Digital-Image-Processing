@@ -82,7 +82,7 @@ class RGBMAth(object):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         pixelsBuffer = self.firstDecoder.getPixels24Bits()
         
-        firstImg = numpy.zeros((self.maxHeight, self.maxWidth, 3), numpy.uint8)
+        firstImg = numpy.zeros((self.maxHeight, self.maxWidth, 3), 0, numpy.uint8)
 
         for h in range(0, height):
             for w in range(0, width):

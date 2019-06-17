@@ -25,7 +25,7 @@ class GraySum(object):
         self.image_pow(2)
         self.image_divide_constant(2)
         self.image_divide_by_image()
-        self.sqrt_img(3)
+        self.sqrt_img()
         self.image_log()
     
     # Ex 2.1
@@ -120,25 +120,40 @@ class GraySum(object):
         img.save('Resources/div_img_by_img.png')
     
     # Ex 2.6
-    def sqrt_img(self, deg):
+    def sqrt_img(self):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         pixelsBuffer = self.firstDecoder.getPixels()
         
         firstImg = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
 
-        img_max = 0
-        alfa = 1 / deg
+        alfa = 1 # Zamiana stopnia pierwiastka na ulamek
+        f_img_max = 0
+        f_img_min = 0
 
-        for h in range(0, height):
-            for w in range(0, width):
-                if pixelsBuffer[h, w] > img_max:
-                    img_max = pixelsBuffer[h, w]
+        for h in range(height):
+            for w in range(width):  
+                
+                L = int(pixelsBuffer[h][w])
 
-        for h in range(0, height):
-            for w in range(0, width):
-                pixelsBuffer[h][w] = math.pow(int(pixelsBuffer[h][w]) / img_max, alfa) * 255
-                firstImg[h][w] = math.ceil(pixelsBuffer[h][w])
-        
+                # Poszukiwanie maksimum
+                if f_img_max < L:
+                    f_img_max = L
+
+        for h in range(height):
+            for w in range(width):  
+                
+                L = int(pixelsBuffer[h][w])
+                if L == 255:
+                    L = 255
+                elif L == 0:
+                    L = 0
+                else:
+                    L = math.pow(int(pixelsBuffer[h][w]) / f_img_max, alfa) * 255
+
+                # Zaokroglenie do najblizszej wartosci calkowitej z gory
+                # i przypisanie wartosci
+                firstImg[h][w] = math.ceil(L)
+
         img = Image.fromarray(firstImg, mode='L')
         img.save('Resources/sqrt_img.png')
 
@@ -155,7 +170,6 @@ class GraySum(object):
             for w in range(0, width):
                 if pixelsBuffer[h, w] > img_max:
                     img_max = pixelsBuffer[h, w]
-
         for h in range(0, height):
             for w in range(0, width):
                 firstImg[h, w] = (math.log(1 + pixelsBuffer[h, w]) / math.log(1 + img_max)) * 255

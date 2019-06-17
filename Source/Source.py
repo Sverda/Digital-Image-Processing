@@ -5,13 +5,16 @@ from Unification import Unification
 from Geometric import Geometric
 from GraySum import GraySum
 from RGBMath import RGBMAth
+from Histogram import Histogram
 
 def main():
     #unificationModule()
     # geometricModule()
-    g = GraySum('Resources/lion.djvu', 'Resources/tree.djvu')
-    g.run_all()
+    # g = GraySum('Resources/ila.djvu', 'Resources/ila.djvu')
+    # g.run_all()
     # rgb = RGBMAth('Resources/ila.djvu', 'Resources/egge.djvu').run_all()
+    h = Histogram('Resources/egge.djvu', 'Resources/egge.djvu')
+    h.run_all()
 
 # def unificationModule():
 #     unification = Unification('Resources/cat.djvu', 'Resources/photoman.djvu')
