@@ -95,7 +95,7 @@ class Histogram(object):
         
         l, r = -(int(round(dim / 2))), int(round(dim / 2) + 1)
 
-        # progowanie lokalne
+        
         for h in range(height):
             for w in range(width):
                 n = 0
@@ -113,7 +113,7 @@ class Histogram(object):
         self.calc(image=result)
         Image.fromarray(result, mode='L').save('Resources/local_thr.png')
     
-     # punkt 5
+     # Ex 5.5
     def global_threshold(self):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         image = self.firstDecoder.getPixels()
@@ -121,8 +121,7 @@ class Histogram(object):
         result = np.empty((height, width), dtype=np.uint8)
 
         
-        threshold = 0
-        n = 0
+        threshold, n = 0, 0
 
         for h in range(height):
             for w in range(width):
@@ -130,7 +129,7 @@ class Histogram(object):
                 n += 1
         threshold = int(round(threshold / n))
 
-        # binaryzacja
+        
         for h in range(height):
             for w in range(width):
                 result[h, w] = 0 if (image[h, w] < threshold) else 255
