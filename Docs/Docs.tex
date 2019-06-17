@@ -949,13 +949,14 @@ def _erosionOperation(self, image):
 Operacje morfologiczne obrazów szarych to uogólnienie idei operacji morfologicznych na obrazach binarnych. Z zbioru wartości \textit{0, 255} przechodzimy do zbioru \textit{0, ..., 255}. Operacje OR i AND zastępujemy funkcjami Min i Max. Element strukturalny w tym rozdziale został rozbudowany o dwa elementy: o dynamiczną wielkość tablicy (z punktem centralnym w jej środku) pozwalającą na określenie zasięgu naszej operacji, oraz o wartości w elemencie pozwalające na określeniu głębi zmian koloru w obrazie. 
 \section{Erozja}
 \subsection{Opis}
+Erozja w obrazach szarych sprowadza się do zwiększenia udziału ciemniejszych kolorów. Na zdjęciach po erozji można zaobserwować dwie zależności. Pierwsza z nich dotyczy wielkości elementu strukturalnego - im większy element tym większy efekt operacji, co można zobaczyć po pogrubieniu czarnych elementów. Natomiast nadanie elementowi wartości sprawi, że średnia wartość pikseli się obniży. 
 \begin{figure}[H]
-	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 5x5 o wartościach 50 (prawy)}
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 3x3 o wartościach 50 (prawy)}
 	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
 	\includegraphics[width=7cm, height=7cm]{morph-gray-erosion-strel3x3-50.png}
 \end{figure}
 \begin{figure}[H]
-	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 5x5 o wartościach 100 (prawy)}
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 3x3 o wartościach 100 (prawy)}
 	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
 	\includegraphics[width=7cm, height=7cm]{morph-gray-erosion-strel3x3-100.png}
 \end{figure}
@@ -1002,7 +1003,63 @@ def _erosionOperation(self, image, structuralElement, elementCenterIndices):
 	result8 = numpy.clip(result32, 0, 255).astype('uint8')
 	return result8
 \end{python}
-\section{Nakładanie (dylatacja)}
+\section{Dylatacja}
+\subsection{Opis}
+	Okrawanie w wersji obrazów szarych sprowadza się do zmniejszenia udziału czerni. Po dylatacji można zaobserwować jak czarne obiekty ulegają zmniejszeniu i deformacji, oraz jak ogólna aparycja obrazu staje się jaśniejsza. Dzieje się tak z powodu funkcji \textit{max()}, która wybiera przy okrawaniu tylko najjaśniejsze sąsiedztwo piksela, oraz przez wartość elementu strukturalnego, która jest dodawana do wartości pikseli. Wadą większego elementu jest jego skłonność do zatracania szczegółów podczas dylatacji. 
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 5x5 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel5x5-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 5x5 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel5x5-100.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 10x10 o wartościach 0 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel10x10-0.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 10x10 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel10x10-50.png}
+\end{figure}
+\subsection{Kod źródłowy algorytmu}
+\begin{python}
+# Ex8.2
+	def dilation(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
+	print('dilation start')
+	image = self.decoder.getPixels()
+	
+	structuralElement = numpy.full((seHeight, seWidth), seDepth, numpy.uint8)
+	result = self._dilationOperation(image, structuralElement, seCenter)
+	
+	img = Image.fromarray(result, mode='L')
+	img.save('Resources/morph-gray-dilation-strel{}x{}-{}.png'.format(str(seHeight), str(seWidth), str(seDepth)))
+	print('dilation done')
+
+def _dilationOperation(self, image, structuralElement, elementCenterIndices=(0, 0)):
+	image32 = image.copy().astype('int32')
+	height, width = self.decoder.height, self.decoder.width
+	result32 = numpy.zeros((height, width), numpy.int32)
+	structuralElement32 = structuralElement.astype(numpy.int32)
+	
+	seHeight, seWidth = structuralElement32.shape
+	seHalfY, seHalfX = seHeight-1-elementCenterIndices[0], seWidth-1-elementCenterIndices[1]
+	minY, minX = seHalfY, seHalfX
+	maxY, maxX = height-(seHeight-minY), width-(seWidth-minX)
+	for y in range(minY, maxY):
+		for x in range(minX, maxX):
+			neighbourPixels = structuralElement32.copy()
+			for seY in range(-seHalfY, seHalfY):
+				for seX in range(-seHalfX, seHalfX):
+					neighbourPixels[seY][seX] = image32[y+seY][x+seX] + structuralElement32[seY][seX]
+			result32[y][x] = numpy.amax(neighbourPixels)
+	result8 = numpy.clip(result32, 0, 255).astype('uint8')
+	return result8
+\end{python}
 \section{Otwarcie}
 \section{Zamknięcie}
 
