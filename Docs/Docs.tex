@@ -1061,6 +1061,44 @@ def _dilationOperation(self, image, structuralElement, elementCenterIndices=(0, 
 	return result8
 \end{python}
 \section{Otwarcie}
+\subsection{Opis}
+W obrazie binarnym otwarcie przyczyniało się do tworzenia przerw pomiędzy obiektami czarni. W wypadku obrazów szarych ta właściwość nie przepada, ale dochodzi jeszcze jedna wynikająca z wartości elementu strukturalnego. Im mniejsza jego wartość tym większy kontrast pomiędzy obiektami czerni i bieli. Na obrazach wynikowych widać również zatracenie szczegółów w oddali jak i również większą dominację jasno białego koloru. 
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 5x5 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel5x5-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 5x5 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel5x5-100.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 10x10 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel10x10-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 10x10 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel10x10-100.png}
+\end{figure}
+\subsection{Kod źródłowy algorytmu}
+Funkcje erozji i okrawania są takie same jak w poprzednich sekcjach. 
+\begin{python}
+#Ex8.3
+def opening(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
+	print('opening start')
+	image = self.decoder.getPixels()
+	
+	structuralElement = numpy.full((seHeight, seWidth), seDepth, numpy.uint8)
+	result = self._erosionOperation(image, structuralElement, seCenter)
+	result = self._dilationOperation(result, structuralElement, seCenter)
+	
+	img = Image.fromarray(result, mode='L')
+	img.save('Resources/morph-gray-opening-strel{}x{}-{}.png'.format(str(seHeight), str(seWidth), str(seDepth)))
+	print('opening done')
+\end{python}
 \section{Zamknięcie}
 
 \chapter{Filtrowanie wygładzające liniowe i nieliniowe}

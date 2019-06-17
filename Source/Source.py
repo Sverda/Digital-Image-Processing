@@ -44,8 +44,8 @@ def morphologicalModule():
 def grayMorphologicalModule():
     morph = GrayMorphological('Resources/photoman.djvu')
     #morph.erosion(10, 10, 0, (4, 4))
-    morph.dilation(5, 5, 50, (2, 2))
-    #morph.opening()
+    #morph.dilation(5, 5, 50, (2, 2))
+    morph.opening(10, 10, 100, (4, 4))
     #morph.closing()
 
 if __name__ == '__main__':

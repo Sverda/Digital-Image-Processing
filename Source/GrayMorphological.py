@@ -33,15 +33,16 @@ class GrayMorphological(object):
         print('dilation done')
 
     #Ex8.3
-    def opening(self):
+    def opening(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
         print('opening start')
         image = self.decoder.getPixels()
-
-        result = self._erosionOperation(image)
-        result = self._dilationOperation(result)
+        
+        structuralElement = numpy.full((seHeight, seWidth), seDepth, numpy.uint8)
+        result = self._erosionOperation(image, structuralElement, seCenter)
+        result = self._dilationOperation(result, structuralElement, seCenter)
 
         img = Image.fromarray(result, mode='L')
-        img.save('Resources/morph-gray-opening.png')
+        img.save('Resources/morph-gray-opening-strel{}x{}-{}.png'.format(str(seHeight), str(seWidth), str(seDepth)))
         print('opening done')
 
     #Ex8.4
