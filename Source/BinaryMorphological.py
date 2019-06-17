@@ -19,27 +19,6 @@ class BinaryMorphological(object):
         img.save('Resources/morph-erosion.png')
         print('erosion done')
 
-    def _erosionOperation(self, image):
-        height, width = self.decoder.height, self.decoder.width
-        result = numpy.zeros((height, width), numpy.uint8)
-        
-        minY, minX = 1, 1
-        maxY, maxX = height-1, width-1
-        for y in range(minY, maxY):
-            for x in range(minX, maxX):
-                neighbourPixels = [255, 255, 255, 255]
-        
-                neighbourPixels[0]=(image[y][x-1])
-                neighbourPixels[1]=(image[y-1][x])
-                neighbourPixels[2]=(image[y][x+1])
-                neighbourPixels[3]=(image[y+1][x])
-        
-                if 255 in neighbourPixels:
-                    result[y][x] = 255
-                else:
-                    result[y][x] = 0
-        return result
-
     # Ex7.2
     def dilation(self):
         print('dilation start')
@@ -50,27 +29,6 @@ class BinaryMorphological(object):
         img = Image.fromarray(result, mode='L')
         img.save('Resources/morph-dilation.png')
         print('dilation done')
-
-    def _dilationOperation(self, image):
-        height, width = self.decoder.height, self.decoder.width
-        result = numpy.zeros((height, width), numpy.uint8)
-        
-        minY, minX = 1, 1
-        maxY, maxX = height-1, width-1
-        for y in range(minY, maxY):
-            for x in range(minX, maxX):
-                neighbourPixels = [255, 255, 255, 255]
-        
-                neighbourPixels[0]=(image[y][x-1])
-                neighbourPixels[1]=(image[y-1][x])
-                neighbourPixels[2]=(image[y][x+1])
-                neighbourPixels[3]=(image[y+1][x])
-        
-                if 0 in neighbourPixels:
-                    result[y][x] = 0
-                else:
-                    result[y][x] = 255
-        return result
 
     #Ex7.3
     def opening(self):
@@ -95,3 +53,45 @@ class BinaryMorphological(object):
         img = Image.fromarray(result, mode='L')
         img.save('Resources/morph-closing.png')
         print('closing done')
+    
+    def _dilationOperation(self, image):
+        height, width = self.decoder.height, self.decoder.width
+        result = numpy.zeros((height, width), numpy.uint8)
+        
+        minY, minX = 1, 1
+        maxY, maxX = height-1, width-1
+        for y in range(minY, maxY):
+            for x in range(minX, maxX):
+                neighbourPixels = [255, 255, 255, 255]
+        
+                neighbourPixels[0]=(image[y][x-1])
+                neighbourPixels[1]=(image[y-1][x])
+                neighbourPixels[2]=(image[y][x+1])
+                neighbourPixels[3]=(image[y+1][x])
+        
+                if 0 in neighbourPixels:
+                    result[y][x] = 0
+                else:
+                    result[y][x] = 255
+        return result
+
+    def _erosionOperation(self, image):
+        height, width = self.decoder.height, self.decoder.width
+        result = numpy.zeros((height, width), numpy.uint8)
+        
+        minY, minX = 1, 1
+        maxY, maxX = height-1, width-1
+        for y in range(minY, maxY):
+            for x in range(minX, maxX):
+                neighbourPixels = [255, 255, 255, 255]
+        
+                neighbourPixels[0]=(image[y][x-1])
+                neighbourPixels[1]=(image[y-1][x])
+                neighbourPixels[2]=(image[y][x+1])
+                neighbourPixels[3]=(image[y+1][x])
+        
+                if 255 in neighbourPixels:
+                    result[y][x] = 255
+                else:
+                    result[y][x] = 0
+        return result

@@ -741,7 +741,7 @@ def copy(self, (x1, y1), (x2, y2)):
 \section{Progowanie wielo-progowe globalne}
 
 \chapter{Operacje morfologiczne na obrazach binarnych}
-Obrazy binarne mogą zawierać wiele niedoskonałości. W szczególności podczas tworzeniu obrazu binarnego z kolorowego \textit{(ang. tresholding)} zdarza się, że na obrazie wynikowym zostanie jakiś szum lub niechciany piksel. Operacje morfologiczne powstały aby umożliwić usuwanie tych niedoskonałości. 
+Obrazy binarne mogą zawierać wiele niedoskonałości. W szczególności podczas tworzeniu obrazu binarnego z obrazu kolorowego \textit{(ang. tresholding)} zdarza się, że na obrazie wynikowym zostanie jakiś szum lub niechciany piksel. Operacje morfologiczne powstały aby umożliwić usuwanie tych niedoskonałości. 
 \section{Erozja}
 \subsection{Opis}
 Okrawanie \textit{(ang. erosion)} oznacza \textbf{kurczenie} się zbioru czarnych połączonych pikseli co może prowadzić do kurczenia się elementów na obrazie jak i również usuwaniu połączeń pomiędzy elementami czy też wystających części elementu. W tym przykładzie do erozji używamy małego elementu strukturyzującego \textit{(ang. structuring element)} o wielkości 2x2. Użycie większego formatu skutkowałoby wycięciem większej połaci czarnych pikseli. 
@@ -946,10 +946,196 @@ def _erosionOperation(self, image):
 \end{python}
 
 \chapter{Operacje morfologiczne na obrazach szarych}
-\section{Okrawanie (erozja)}
-\section{Nakładanie (dylatacja)}
+Operacje morfologiczne obrazów szarych to uogólnienie idei operacji morfologicznych na obrazach binarnych. Z zbioru wartości \textit{0, 255} przechodzimy do zbioru \textit{0, ..., 255}. Operacje OR i AND zastępujemy funkcjami Min i Max. Element strukturalny w tym rozdziale został rozbudowany o dwa elementy: o dynamiczną wielkość tablicy (z punktem centralnym w jej środku) pozwalającą na określenie zasięgu naszej operacji, oraz o wartości w elemencie pozwalające na określeniu głębi zmian koloru w obrazie. 
+\section{Erozja}
+\subsection{Opis}
+Erozja w obrazach szarych sprowadza się do zwiększenia udziału ciemniejszych kolorów. Na zdjęciach po erozji można zaobserwować dwie zależności. Pierwsza z nich dotyczy wielkości elementu strukturalnego - im większy element tym większy efekt operacji, co można zobaczyć po pogrubieniu czarnych elementów. Natomiast nadanie elementowi wartości sprawi, że średnia wartość pikseli się obniży. 
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 3x3 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-erosion-strel3x3-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 3x3 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-erosion-strel3x3-100.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 10x10 o wartościach 0 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-erosion-strel10x10-0.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po erozji z użyciem elementu strukturalnego 10x10 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-erosion-strel10x10-50.png}
+\end{figure}
+\subsection{Kod źródłowy algorytmu}
+\begin{python}
+# Ex8.1
+def erosion(self, seHeight, seWidth, seDepth):
+	print('erosion start')
+	image = self.decoder.getPixels()
+	
+	structuralElement = numpy.full((seHeight, seWidth), seDepth, numpy.uint8)
+	result = self._erosionOperation(image, structuralElement, (4, 4))
+	
+	img = Image.fromarray(result, mode='L')
+	img.save('Resources/morph-gray-erosion-strel{}x{}-{}.png'.format(str(seHeight), str(seWidth), str(seDepth)))
+	print('erosion done')
+def _erosionOperation(self, image, structuralElement, elementCenterIndices):
+	image32 = image.copy().astype('int32')
+	height, width = self.decoder.height, self.decoder.width
+	result32 = numpy.zeros((height, width), numpy.int32)
+	structuralElement32 = structuralElement.astype(numpy.int32)
+	
+	seHeight, seWidth = structuralElement32.shape
+	seHalfY, seHalfX = seHeight-1-elementCenterIndices[0], seWidth-1-elementCenterIndices[1]
+	minY, minX = seHalfY, seHalfX
+	maxY, maxX = height-(seHeight-minY), width-(seWidth-minX)
+	for y in range(minY, maxY):
+		for x in range(minX, maxX):
+			neighbourPixels = structuralElement32.copy()
+			for seY in range(-seHalfY, seHalfY):
+				for seX in range(-seHalfX, seHalfX):
+					neighbourPixels[seY][seX] = image32[y+seY][x+seX] - structuralElement32[seY][seX]
+			result32[y][x] = numpy.amin(neighbourPixels)
+	result8 = numpy.clip(result32, 0, 255).astype('uint8')
+	return result8
+\end{python}
+\section{Dylatacja}
+\subsection{Opis}
+	Okrawanie w wersji obrazów szarych sprowadza się do zmniejszenia udziału czerni. Po dylatacji można zaobserwować jak czarne obiekty ulegają zmniejszeniu i deformacji, oraz jak ogólna aparycja obrazu staje się jaśniejsza. Dzieje się tak z powodu funkcji \textit{max()}, która wybiera przy okrawaniu tylko najjaśniejsze sąsiedztwo piksela, oraz przez wartość elementu strukturalnego, która jest dodawana do wartości pikseli. Wadą większego elementu jest jego skłonność do zatracania szczegółów podczas dylatacji. 
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po dylatacji z użyciem elementu strukturalnego 5x5 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel5x5-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po dylatacji z użyciem elementu strukturalnego 5x5 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel5x5-100.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po dylatacji z użyciem elementu strukturalnego 10x10 o wartościach 0 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel10x10-0.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po dylatacji z użyciem elementu strukturalnego 10x10 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-dilation-strel10x10-50.png}
+\end{figure}
+\subsection{Kod źródłowy algorytmu}
+\begin{python}
+# Ex8.2
+	def dilation(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
+	print('dilation start')
+	image = self.decoder.getPixels()
+	
+	structuralElement = numpy.full((seHeight, seWidth), seDepth, numpy.uint8)
+	result = self._dilationOperation(image, structuralElement, seCenter)
+	
+	img = Image.fromarray(result, mode='L')
+	img.save('Resources/morph-gray-dilation-strel{}x{}-{}.png'.format(str(seHeight), str(seWidth), str(seDepth)))
+	print('dilation done')
+
+def _dilationOperation(self, image, structuralElement, elementCenterIndices=(0, 0)):
+	image32 = image.copy().astype('int32')
+	height, width = self.decoder.height, self.decoder.width
+	result32 = numpy.zeros((height, width), numpy.int32)
+	structuralElement32 = structuralElement.astype(numpy.int32)
+	
+	seHeight, seWidth = structuralElement32.shape
+	seHalfY, seHalfX = seHeight-1-elementCenterIndices[0], seWidth-1-elementCenterIndices[1]
+	minY, minX = seHalfY, seHalfX
+	maxY, maxX = height-(seHeight-minY), width-(seWidth-minX)
+	for y in range(minY, maxY):
+		for x in range(minX, maxX):
+			neighbourPixels = structuralElement32.copy()
+			for seY in range(-seHalfY, seHalfY):
+				for seX in range(-seHalfX, seHalfX):
+					neighbourPixels[seY][seX] = image32[y+seY][x+seX] + structuralElement32[seY][seX]
+			result32[y][x] = numpy.amax(neighbourPixels)
+	result8 = numpy.clip(result32, 0, 255).astype('uint8')
+	return result8
+\end{python}
 \section{Otwarcie}
+\subsection{Opis}
+W obrazie binarnym otwarcie przyczyniało się do tworzenia przerw pomiędzy obiektami czarni. W wypadku obrazów szarych ta właściwość nie przepada, ale dochodzi jeszcze jedna wynikająca z wartości elementu strukturalnego. Im mniejsza jego wartość tym większy kontrast pomiędzy obiektami czerni i bieli. Na obrazach wynikowych widać również zatracenie szczegółów w oddali jak i również większą dominację jasno białego koloru. 
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po otwarciu z użyciem elementu strukturalnego 5x5 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel5x5-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po otwarciu z użyciem elementu strukturalnego 5x5 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel5x5-100.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po otwarciu z użyciem elementu strukturalnego 10x10 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel10x10-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po otwarciu z użyciem elementu strukturalnego 10x10 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-opening-strel10x10-100.png}
+\end{figure}
+\subsection{Kod źródłowy algorytmu}
+Funkcje erozji i okrawania są takie same jak w poprzednich sekcjach. 
+\begin{python}
+#Ex8.3
+def opening(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
+	print('opening start')
+	image = self.decoder.getPixels()
+	
+	structuralElement = numpy.full((seHeight, seWidth), seDepth, numpy.uint8)
+	result = self._erosionOperation(image, structuralElement, seCenter)
+	result = self._dilationOperation(result, structuralElement, seCenter)
+	
+	img = Image.fromarray(result, mode='L')
+	img.save('Resources/morph-gray-opening-strel{}x{}-{}.png'.format(str(seHeight), str(seWidth), str(seDepth)))
+	print('opening done')
+\end{python}
 \section{Zamknięcie}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po zamknięciu z użyciem elementu strukturalnego 5x5 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-closing-strel5x5-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po zamknięciu z użyciem elementu strukturalnego 5x5 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-closing-strel5x5-100.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po zamknięciu z użyciem elementu strukturalnego 10x10 o wartościach 50 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-closing-strel10x10-50.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz niezmieniony (lewy), po zamknięciu z użyciem elementu strukturalnego 10x10 o wartościach 100 (prawy)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{morph-gray-closing-strel10x10-100.png}
+\end{figure}
+\subsection{Kod źródłowy algorytmu}
+Funkcje erozji i okrawania są takie same jak w poprzednich sekcjach. 
+\begin{python}
+#Ex8.4
+def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
+	print('closing start')
+	image = self.decoder.getPixels()
+	
+	structuralElement = numpy.full((seHeight, seWidth), seDepth, numpy.uint8)
+	result = self._dilationOperation(image, structuralElement, seCenter)
+	result = self._erosionOperation(result, structuralElement, seCenter)
+	
+	img = Image.fromarray(result, mode='L')
+	img.save('Resources/morph-gray-closing-strel{}x{}-{}.png'.format(str(seHeight), str(seWidth), str(seDepth)))
+	print('closing done')
+\end{python}
 
 \chapter{Filtrowanie wygładzające liniowe i nieliniowe}
 \section{Filtr dolnoprzepustowy uśredniający}
