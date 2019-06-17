@@ -53,8 +53,8 @@
 - [ ] Damian 
 - [x] Maciej
 
-1. Obliczanie histogramu
-2. Przemieszczanie histogramu
+~~1. Obliczanie histogramu~~
+~~2. Przemieszczanie histogramu~~
 3. Rozciąganie histogramu
 4. Progowanie 1-progowe
 5. Progowanie wieloprogowe

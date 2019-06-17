@@ -6,6 +6,7 @@ from Geometric import Geometric
 from GraySum import GraySum
 from RGBMath import RGBMAth
 from Histogram import Histogram
+from HistogramRGB import HistogramRGB
 
 def main():
     #unificationModule()
@@ -13,7 +14,7 @@ def main():
     # g = GraySum('Resources/ila.djvu', 'Resources/ila.djvu')
     # g.run_all()
     # rgb = RGBMAth('Resources/ila.djvu', 'Resources/egge.djvu').run_all()
-    h = Histogram('Resources/egge.djvu', 'Resources/egge.djvu')
+    h = HistogramRGB('Resources/egge.djvu', 'Resources/egge.djvu')
     h.run_all()
 
 # def unificationModule():
