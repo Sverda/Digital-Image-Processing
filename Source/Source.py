@@ -4,11 +4,13 @@ import sys
 from Unification import Unification
 from Geometric import Geometric
 from BinaryMorphological import BinaryMorphological
+from GrayMorphological import GrayMorphological
 
 def main():
     #unificationModule()
     #geometricModule()
-    morphologicalModule()
+    #morphologicalModule()
+    grayMorphologicalModule()
 
 def unificationModule():
     unification = Unification('Resources/cat.djvu', 'Resources/photoman.djvu')
@@ -34,10 +36,17 @@ def geometricModule():
 
 def morphologicalModule():
     morph = BinaryMorphological('Resources/binary.djvu')
-    #morph.erosion()
+    morph.erosion()
+    morph.dilation()
+    morph.opening()
+    morph.closing()
+
+def grayMorphologicalModule():
+    morph = GrayMorphological('Resources/photoman.djvu')
+    morph.erosion(10, 10, 0)
     #morph.dilation()
     #morph.opening()
-    morph.closing()
+    #morph.closing()
 
 if __name__ == '__main__':
     main()
