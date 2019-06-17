@@ -12,19 +12,19 @@
 - [ ] Damian 
 - [x] Maciej
 
-1. Sumowanie (okreslonej) stałej z obrazem oraz dwóch obrazów
-2. Mnozenie obrazu przez zadaną liczbę oraz przez inny obraz ˙
+~~1. Sumowanie (okreslonej) stałej z obrazem oraz dwóch obrazów~~
+~~2. Mnozenie obrazu przez zadaną liczbę oraz przez inny obraz ˙~~
 3. Mieszanie obrazów z okreslonym współczynnikiem ´
-4. Potęgowanie obrazu (z zadaną pot˛egą)
-5. Dzielenie obrazu przez (zadaną) liczbę oraz przez inny obraz
+~~4. Potęgowanie obrazu (z zadaną pot˛egą)~~
+~~5. Dzielenie obrazu przez (zadaną) liczbę oraz przez inny obraz~~
 6. Pierwiastkowanie obrazu
-7. Logarytmowanie obrazu
+~~7. Logarytmowanie obrazu~~
 ## **3. Operacje sumowania arytmetycznego obrazów barwowych** 
 - [ ] Damian 
 - [x] Maciej
 
-1. Sumowanie (okreslonej) stałej z obrazem oraz dwóch obrazów
-2. Mnozenie obrazu przez zadaną liczbę oraz przez inny obraz ˙
+~~1. Sumowanie (okreslonej) stałej z obrazem oraz dwóch obrazów~~
+~~2. Mnozenie obrazu przez zadaną liczbę oraz przez inny obraz ˙~~
 3. Mieszanie obrazów z okreslonym współczynnikiem ´
 4. Potęgowanie obrazu (z zadaną potęgą)
 5. Dzielenie obrazu przez (zadaną) liczbę oraz przez inny obraz
@@ -44,11 +44,11 @@
 - [ ] Damian 
 - [x] Maciej
 
-1. Obliczanie histogramu
-2. Przemieszczanie histogramu
-3. Rozciąganie histogramu
-4. Progowanie lokalne
-5. Progowanie globalne
+~~1. Obliczanie histogramu~~
+~~2. Przemieszczanie histogramu~~
+~~3. Rozciąganie histogramu~~
+~~4. Progowanie lokalne~~
+~~5. Progowanie globalne~~
 ## **6. Operacje na histogramie obrazu barwowego** 
 - [ ] Damian 
 - [x] Maciej
