@@ -25,6 +25,9 @@
     <Compile Include="DjVuImageDecoder.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Filters.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Geometric.py">
       <SubType>Code</SubType>
     </Compile>

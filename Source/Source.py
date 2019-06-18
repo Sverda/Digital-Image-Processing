@@ -5,12 +5,14 @@ from Unification import Unification
 from Geometric import Geometric
 from BinaryMorphological import BinaryMorphological
 from GrayMorphological import GrayMorphological
+from Filters import Filters
 
 def main():
     #unificationModule()
     #geometricModule()
     #morphologicalModule()
-    grayMorphologicalModule()
+    #grayMorphologicalModule()
+    filteringModule()
 
 def unificationModule():
     unification = Unification('Resources/cat.djvu', 'Resources/photoman.djvu')
@@ -43,10 +45,14 @@ def morphologicalModule():
 
 def grayMorphologicalModule():
     morph = GrayMorphological('Resources/photoman.djvu')
-    #morph.erosion(10, 10, 0, (4, 4))
-    #morph.dilation(5, 5, 50, (2, 2))
-    #morph.opening(10, 10, 100, (4, 4))
+    morph.erosion(10, 10, 0, (4, 4))
+    morph.dilation(5, 5, 50, (2, 2))
+    morph.opening(10, 10, 100, (4, 4))
     morph.closing(5, 5, 0, (2, 2))
+
+def filteringModule():
+    filters = Filters('Resources/photoman.djvu')
+    filters.lowPass()
 
 if __name__ == '__main__':
     main()

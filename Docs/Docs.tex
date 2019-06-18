@@ -1138,16 +1138,51 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 \end{python}
 
 \chapter{Filtrowanie wygładzające liniowe i nieliniowe}
-\section{Filtr dolnoprzepustowy uśredniający}
-\section{Filtr dolnoprzepustowy Gaussowski}
-\section{Operator Roberts’a}
-\section{Operator Prewitt’a}
-\section{Operator Sobel’a}
-\section{Filtr kompasowy}
-\section{Gradient wektora kierunkowego}
-\section{Filtr medianowy}
-\section{Filtr maksymalny}
-\section{Filtr minimalny}
-\section{Filtr płaskorzeźbowy}
+	Według definicji filtrowanie to technika modyfikująca lub upiększająca obraz. Dla przykładu, można nałożyć filtr na obraz w celu uwydatnienia jego krawędzi w taki sposób w jaki robi to filtr Robertsa. Przy czym filtr Robertsa należy do grupy filtrów liniowych co można poznać po operacjach jakie wykonuje. Głównie będą to proste operacje jak suma liniowa i będą się one wywodzić ze splotu różnych funkcji. W kategoriach filtrów znajdują się jeszcze filtry nieliniowe oparte na bazie kombinacji liniowych i heurystyk. Przykładem takiego filtru może być filtr medianowy. 
+	\section{Filtr dolnoprzepustowy uśredniający}
+		\subsection{Opis}
+			Podstawowy filtr dający efekt rozmazania lub wygładzenia. Filtr oblicza średnią pikseli w elemencie strukturalnym o wielkości dziewięciu pikseli i przypisuje do piksela w środku. W swojej prostocie filtr ten ma słaby punkt w postaci szumu, który przejawia się w postaci białych, losowych pikseli. Po zastosowaniu filtru biały piksel może być bardziej widoczny niż wcześniej. 
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy), po zastosowaniu filtru(prawy)}
+				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-lowpass.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\begin{python}
+			    # Ex9.1
+				def lowPass(self):
+					print('low pass filtering start')
+					height, width = self.decoder.height, self.decoder.width
+					image = self.decoder.getPixels()
+					
+					result = numpy.empty((height, width), numpy.uint8)
+					mask = numpy.ones((3, 3))
+					
+					for y in range(height):
+						for x in range(width):
+							avg, n = 0, 0
+							for iOff in range(-1, 1):
+								for jOff in range(-1, 1):
+									iSafe = y if ((y + iOff) > (height - 1)) else (y + iOff)
+									jSafe = x if ((x + jOff) > (width - 1)) else (x + jOff)
+									avg += image[iSafe, jSafe] * mask[iOff + 1, jOff + 1]
+									n += mask[iOff + 1, jOff + 1]
+							avg = int(round(avg/n))
+							result[y, x] = avg
+					
+					img = Image.fromarray(result, mode='L')
+					img.save('Resources/filter-lowpass.png')
+					print('low pass filtering done')
+			\end{python}
+	\section{Filtr dolnoprzepustowy Gaussowski}
+	\section{Operator Roberts’a}
+	\section{Operator Prewitt’a}
+	\section{Operator Sobel’a}
+	\section{Filtr kompasowy}
+	\section{Gradient wektora kierunkowego}
+	\section{Filtr medianowy}
+	\section{Filtr maksymalny}
+	\section{Filtr minimalny}
+	\section{Filtr płaskorzeźbowy}
 
 \end{document}
