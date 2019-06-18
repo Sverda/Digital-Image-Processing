@@ -13,9 +13,9 @@ def main():
     # geometricModule()
     # g = GraySum('Resources/ila.djvu', 'Resources/ila.djvu')
     # g.run_all()
-    # rgb = RGBMAth('Resources/ila.djvu', 'Resources/egge.djvu').run_all()
-    h = HistogramRGB('Resources/egge.djvu', 'Resources/egge.djvu')
-    h.run_all()
+    rgb = RGBMAth('Resources/ila.djvu', 'Resources/egge.djvu').run_all()
+    # h = HistogramRGB('Resources/egge.djvu', 'Resources/egge.djvu')
+    # h.run_all()
 
 # def unificationModule():
 #     unification = Unification('Resources/cat.djvu', 'Resources/photoman.djvu')

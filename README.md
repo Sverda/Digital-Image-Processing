@@ -26,10 +26,10 @@
 ~~1. Sumowanie (okreslonej) stałej z obrazem oraz dwóch obrazów~~
 ~~2. Mnozenie obrazu przez zadaną liczbę oraz przez inny obraz ˙~~
 3. Mieszanie obrazów z okreslonym współczynnikiem ´
-4. Potęgowanie obrazu (z zadaną potęgą)
-5. Dzielenie obrazu przez (zadaną) liczbę oraz przez inny obraz
+~~4. Potęgowanie obrazu (z zadaną potęgą)~~
+~~5. Dzielenie obrazu przez (zadaną) liczbę oraz przez inny obraz~~
 6. Pierwiastkowanie obrazu
-7. Logarytmowanie obrazu
+~~7. Logarytmowanie obrazu~~
 ## **4. Operacje geometryczne na obrazie**
 - [x] Damian 
 - [ ] Maciej
@@ -59,7 +59,7 @@
 ~~4. Progowanie 1-progowe~~
 ~~5. Progowanie wieloprogowe~~
 6. Progowanie lokalne
-7. Progowanie globalne
+~~7. Progowanie globalne~~
 ## **7. Operacje morfologiczne na obrazach binarnych** 
 - [x] Damian 
 - [ ] Maciej
