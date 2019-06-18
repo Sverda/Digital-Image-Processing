@@ -55,9 +55,9 @@
 
 ~~1. Obliczanie histogramu~~
 ~~2. Przemieszczanie histogramu~~
-3. Rozciąganie histogramu
-4. Progowanie 1-progowe
-5. Progowanie wieloprogowe
+~~3. Rozciąganie histogramu~~
+~~4. Progowanie 1-progowe~~
+~~5. Progowanie wieloprogowe~~
 6. Progowanie lokalne
 7. Progowanie globalne
 ## **7. Operacje morfologiczne na obrazach binarnych** 

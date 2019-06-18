@@ -18,11 +18,13 @@ class HistogramRGB(object):
     def run_all(self):
         # self.calc()
         # self.move_histogram(60)
-        self.distend_histogram()
-        # self.local_threshold()
+        # self.distend_histogram()
+        # self.single_threshold()
+        # self.multi_threshold()
+        self.local_threshold(21)
         # self.global_threshold()
-    
-    # Ex 5.1
+
+    # Ex 6.1
     def calc(self, image = False):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         
@@ -62,7 +64,7 @@ class HistogramRGB(object):
         plt.xlabel("RGB")
         plt.show()
     
-    # Ex 5.2
+    # Ex 6.2
     def move_histogram(self, const = 0):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         image = self.firstDecoder.getPixels24Bits()
@@ -85,7 +87,7 @@ class HistogramRGB(object):
         self.calc(image=result)
         Image.fromarray(result, mode='RGB').save('Resources/move_hist_RGB.png')
     
-    # Ex 5.3
+    # Ex 6.3
     def distend_histogram(self):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         image = self.firstDecoder.getPixels24Bits()
@@ -117,53 +119,130 @@ class HistogramRGB(object):
         self.calc(image=result)
         Image.fromarray(result, mode='RGB').save('Resources/dist_hist_RGB.png')
     
-    # # Ex 5.4
-    # def local_threshold(self, dim=3):
-    #     width, height = self.firstDecoder.width, self.firstDecoder.height
-    #     image = self.firstDecoder.getPixels()
+    # Ex 6.4
+    def single_threshold(self):
+        width, height = self.firstDecoder.width, self.firstDecoder.height
+        image = self.firstDecoder.getPixels24Bits()
 
-    #     result = np.empty((height, width), dtype=np.uint8)
-        
-    #     l, r = -(int(round(dim / 2))), int(round(dim / 2) + 1)
+        result = np.empty((height, width, 3), dtype=np.uint8)
 
-        
-    #     for h in range(height):
-    #         for w in range(width):
-    #             n = 0
-    #             threshold = 0
-    #             currPix = image[h, w]
-    #             for i in range(l, r):
-    #                 for j in range(l, r):
-    #                     i_result = h if ((h + i) > (height + l)) else (h + i)
-    #                     j_result = w if ((w + j) > (width + l)) else (w + j)
-    #                     threshold += image[i_result, j_result]
-    #                     n += 1
-    #             threshold = int(round(threshold / n))
-    #             result[h, w] = 0 if (currPix < threshold) else 255
+        R, G, B = 0, 0, 0
 
-    #     self.calc(image=result)
-    #     Image.fromarray(result, mode='L').save('Resources/local_thr.png')
+        newR, newG, newB = 0, 0, 0
+
+        for h in range(height):
+            for w in range(width):
+                R += image[h, w][0]
+                newR += 1
+                G += image[h, w][1]
+                newG += 1
+                B += image[h, w][2]
+                newB += 1
+        R = int(round(R / newR))
+        G = int(round(G / newG))
+        B = int(round(B / newB))
+
+        for h in range(height):
+            for w in range(width):
+                result[h, w] = (0 if (image[h, w][0] < R) else 255, 0 if (image[h, w][1] < G) else 255, 0 if (image[h, w][2] < B) else 255)
+
+
+        self.calc(image=result)
+        Image.fromarray(result, mode='RGB').save('Resources/single_thr_RGB.png')
     
-    #  # Ex 5.5
-    # def global_threshold(self):
-    #     width, height = self.firstDecoder.width, self.firstDecoder.height
-    #     image = self.firstDecoder.getPixels()
+     # Ex 6.5
+    def multi_threshold(self, bins=3):
+        width, height = self.firstDecoder.width, self.firstDecoder.height
+        image = self.firstDecoder.getPixels24Bits()
 
-    #     result = np.empty((height, width), dtype=np.uint8)
+        result = np.empty((height, width, 3), dtype=np.uint8)
 
+        max_value = [0] * 3
+        min_value = [255] * 3
+
+        for h in range(height):
+            for w in range(width):
+                current = image[h, w]
+                for k in range(3):
+                    max_value[k] = max(max_value[k], current[k])
+                    min_value[k] = min(min_value[k], current[k])
+
+        scale = [0] * 3
+        for k in range(3):
+            scale[k] = max_value[k] / (bins - 1)
+
+        for h in range(height):
+            for w in range(width):
+                pixel = image[h, w]
+                for k in range(3):
+                    pixel[k] = int(round(pixel[k] / scale[k])) * scale[k]
+                result[h, w] = pixel
+
+        self.calc(image=result)
+        Image.fromarray(result, mode='RGB').save('Resources/multi_thr_RGB.png')
+    
+    # Ex 6.6
+    def local_threshold(self, dim=3):
+        width, height = self.firstDecoder.width, self.firstDecoder.height
+        image = self.firstDecoder.getPixels24Bits()
+
+        result = np.empty((height, width, 3), dtype=np.uint8)
+        low, up = -(int(dim / 2)), (int(dim / 2) + 1)
+
+        for h in range(height):
+            for w in range(width):
+                n = 0
+                r, g, b = 0, 0, 0
+                current = image[h, w]
+                for i in range(low, up):
+                    for j in range(low, up):
+                        i_result = h if ((h + i) > (height + low)) | ((h + i) < 0) else (h + i)
+                        j_result = w if ((w + j) > (width + low)) | ((w + j) < 0) else (w + j)
+                        r += int(image[i_result, j_result][0])
+                        g += int(image[i_result, j_result][1])
+                        b += int(image[i_result, j_result][2])
+                        n += 1
+                r = int(round(r / n))
+                g = int(round(g / n))
+                b = int(round(b / n))
+                result[h, w] = (0 if (current[0] < r) else 255, 0 if (current[1] < g) else 255, 0 if (current[2] < b) else 255)
         
-    #     threshold, n = 0, 0
+        self.calc(image=result)
+        Image.fromarray(result, mode='RGB').save('Resources/local_thr_RGB.png')
+    
+    # Ex 6.7
+    def global_threshold(self, dim=3, bins=4):
+        width, height = self.firstDecoder.width, self.firstDecoder.height
+        image = self.firstDecoder.getPixels24Bits()
 
-    #     for h in range(height):
-    #         for w in range(width):
-    #             threshold += image[h, w]
-    #             n += 1
-    #     threshold = int(round(threshold / n))
+        result = np.empty((height, width, 3), dtype=np.uint8)
+        low, up = -(int(dim / 2)), (int(dim / 2) + 1)
 
+        for h in range(height):
+            for w in range(width):
+                n, r, g, b = 0, 0, 0, 0
+                current = image[h, w]
+                max_value = [0] * 3
+                min_value = [255] * 3
+                for i in range(low, up):
+                    for j in range(low, up):
+                        i_result = h if ((h + i) > (height + low)) | ((h + i) < 0) else (h + i)
+                        j_result = w if ((w + j) > (width + low)) | ((w + j) < 0) else (w + j)
+                        current = image[i_result, j_result]
+                        for k in range(3):
+                            max_value[k] = max(max_value[k], current[k])
+                            min_value[k] = min(min_value[k], current[k])
+                scale = [0] * 3
+                for k in range(3):
+                    scale[k] = max_value[k] / (bins - 1)
+                    if scale[k] == 0:
+                        scale[k] = 1
+                for k in range(3):
+                    v = int(round(current[k] / scale[k])) * scale[k]
+                    current[k] = v
+                result[h, w] = current
         
-    #     for h in range(height):
-    #         for w in range(width):
-    #             result[h, w] = 0 if (image[h, w] < threshold) else 255
-
-    #     self.calc(image=result)
-    #     Image.fromarray(result, mode='L').save('Resources/global_thr.png')
+        self.calc(image=result)
+        Image.fromarray(result, mode='RGB').save('Resources/global_thr_RGB.png')
+    
+    
