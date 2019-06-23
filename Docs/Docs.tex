@@ -1141,7 +1141,7 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 	Według definicji filtrowanie to technika modyfikująca lub upiększająca obraz. Dla przykładu, można nałożyć filtr na obraz w celu uwydatnienia jego krawędzi w taki sposób w jaki robi to filtr Robertsa. Przy czym filtr Robertsa należy do grupy filtrów liniowych co można poznać po operacjach jakie wykonuje. Głównie będą to proste operacje jak suma liniowa i będą się one wywodzić ze splotu różnych funkcji. W kategoriach filtrów znajdują się jeszcze filtry nieliniowe oparte na bazie kombinacji liniowych i heurystyk. Przykładem takiego filtru może być filtr medianowy. 
 	\section{Filtr dolnoprzepustowy uśredniający}
 		\subsection{Opis}
-			Podstawowy filtr dający efekt rozmazania lub wygładzenia. Filtr oblicza średnią pikseli w elemencie strukturalnym o wielkości dziewięciu pikseli i przypisuje do piksela w środku. W swojej prostocie filtr ten ma słaby punkt w postaci szumu, który przejawia się w postaci białych, losowych pikseli. Po zastosowaniu filtru biały piksel może być bardziej widoczny niż wcześniej. \newline
+			Podstawowy filtr dający efekt rozmazania lub wygładzenia. Filtr oblicza średnią pikseli w elemencie strukturalnym (maska) o wielkości dziewięciu pikseli i przypisuje do piksela w środku. W swojej prostocie filtr ten ma słaby punkt w postaci szumu, który przejawia się w postaci białych, losowych pikseli. Po zastosowaniu filtru biały piksel może być bardziej widoczny niż wcześniej. \newline
 			Maska tej operacji przedstawia się następująco:
 			\begin{equation*}
 				\quad
@@ -1165,35 +1165,49 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 				\includegraphics[width=4cm, height=4cm]{man-filter-boxblur27x27.png}
 			\end{figure}
 		\subsection{Kod źródłowy algorytmu}
-			\begin{python}
-				# Ex9.1
-				def lowPassBoxBlur(self, kernelSize=(9,9)):
-					print('box blur with size {}x{} start'.format(kernelSize[0], kernelSize[1]))
-					height, width = self.decoder.height, self.decoder.width
-					image = self.decoder.getPixels()
-					
-					result = numpy.empty((height, width), numpy.uint8)
-					kernel = numpy.ones(kernelSize)
-					
-					kernelHeight, kernelWidth = kernel.shape
-					overlapHeight, overlapWidth = int(math.ceil(kernelHeight/2)), int(math.ceil(kernelWidth/2))
-					for y in range(height):
-						for x in range(width):
-							average, hitsCount = 0, 0
-							for yOff in range(-overlapHeight, overlapHeight):
-								for xOff in range(-overlapWidth, overlapWidth):
-									ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
-									xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
-									average += image[ySafe, xSafe] * kernel[yOff + 1, xOff + 1]
-									hitsCount += kernel[yOff + 1, xOff + 1]
-							average = int(round(average/hitsCount))
-							result[y, x] = average
-						
-					img = Image.fromarray(result, mode='L')
-					img.save('Resources/filter-boxblur{}x{}.png'.format(kernelSize[0], kernelSize[1]))
-					print('box blur with size {}x{} start'.format(kernelSize[0], kernelSize[1]))
-			\end{python}
+			\inputpython{../Source/Filters.py}{12}{37}
 	\section{Filtr dolnoprzepustowy Gaussowski}
+		\subsection{Opis}
+			Kolejnym filtrem dolnoprzepustowym, wygładzającym obraz i usuwającym detale i szum jest filtr oparty o rozkład Gaussa. Ma ona zastosowanie przy produkcji maski dla tego filtra. Wartości maski, w swej idei, układają się w kształt dzwonu Gaussa (Rys. 10.3), tzn. największa wartość jest po środku macierzy, a wartości wokół niej tworzą pierścień składający się z mniejszych wartości. Jeśli wielkość maski na to pozwala kolejny pierścień mniejszych wartości otula poprzedni. \newline
+			Przykładowe maski stworzone za pomocą funkcji Gaussa: 
+			\begin{equation*}
+				\frac{1}{16}
+				*
+				\begin{bmatrix}
+				1 & 2 & 1 \\
+				2 & 4 & 2 \\
+				1 & 2 & 1
+				\end{bmatrix}
+				\quad
+				\frac{1}{256}
+				*
+				\begin{bmatrix}
+				1 & 4 & 6 & 4 & 1 \\
+				4 & 16 & 24 & 16 & 4 \\
+				6 & 24 & 36 & 24 & 6 \\
+				4 & 16 & 24 & 16 & 4 \\
+				1 & 4 & 6 & 4 & 1
+				\end{bmatrix}
+			\end{equation*}
+			\begin{figure}[H]
+				\caption{Dzwon Gaussa}
+				\includegraphics[width=7cm, height=7cm]{overview/gauss-bell.png}
+			\end{figure}
+			Zaletą użycia rozkładu normalnego jest efekt jaki uzyskujemy w porównaniu do filtru uśredniającego. Rozkład normalny daje promieniście rozchodzącą się maskę, która z kolei nadaje wagi naszym pikselom. Używając wag do obliczania sumy w algorytmie filtra, uzyskujemy PSF \textit{(Point-spread function)} o okrągłym, kolistym kształcie. W porównaniu do poprzedniego rodzaju filtra, który zawsze daje nam rozmycie oparte o kształt prostokąta. 
+			\begin{figure}[H]
+				\caption{(Od lewej) Kropka bez rozmycia, rozmycie filtrem uśredniającym, rozmycie filtrem gaussowskim}
+				\includegraphics[width=4cm, height=4cm]{overview/gauss-dot.jpg}
+				\includegraphics[width=4cm, height=4cm]{overview/gauss-dot-boxblur.jpg}
+				\includegraphics[width=4cm, height=4cm]{overview/gauss-dot-gaussianblur.jpg}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy), po zastosowaniu filtru z maską 9x9 i wartościami sumującymi się do 546 (środkowy), z maską 18x18 i wartościami sumującymi się do 1092 (prawy)}
+				\includegraphics[width=4cm, height=4cm]{man-unmodified.jpg}
+				\includegraphics[width=4cm, height=4cm]{man-filter-gaussianblur9x9f546.png}
+				\includegraphics[width=4cm, height=4cm]{man-filter-gaussianblur18x18f1092.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{39}{70}
 	\section{Operator Roberts’a}
 	\section{Operator Prewitt’a}
 	\section{Operator Sobel’a}

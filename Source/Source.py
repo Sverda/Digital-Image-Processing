@@ -52,8 +52,9 @@ def grayMorphologicalModule():
 
 def filteringModule():
     filters = Filters('Resources/photoman.djvu')
-    #filters.lowPassBoxBlur((9, 9))
-    filters.lowPassBoxBlur((27, 27))
+    #filters.boxBlur((9, 9))
+    #filters.boxBlur((27, 27))
+    filters.gaussianBlur()
 
 if __name__ == '__main__':
     main()
