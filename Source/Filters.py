@@ -9,26 +9,28 @@ class Filters(object):
         self.decoder = DjVuImageDecoder(firstPath)
 
     # Ex9.1
-    def lowPass(self):
-        print('low pass filtering start')
+    def lowPassBoxBlur(self, kernelSize=(9,9)):
+        print('box blur with size {}x{} start'.format(kernelSize[0], kernelSize[1]))
         height, width = self.decoder.height, self.decoder.width
         image = self.decoder.getPixels()
 
         result = numpy.empty((height, width), numpy.uint8)
-        mask = numpy.ones((3, 3))
+        kernel = numpy.ones(kernelSize)
 
+        kernelHeight, kernelWidth = kernel.shape
+        overlapHeight, overlapWidth = int(math.ceil(kernelHeight/2)), int(math.ceil(kernelWidth/2))
         for y in range(height):
             for x in range(width):
-                avg, n = 0, 0
-                for iOff in range(-1, 1):
-                    for jOff in range(-1, 1):
-                        iSafe = y if ((y + iOff) > (height - 1)) else (y + iOff)
-                        jSafe = x if ((x + jOff) > (width - 1)) else (x + jOff)
-                        avg += image[iSafe, jSafe] * mask[iOff + 1, jOff + 1]
-                        n += mask[iOff + 1, jOff + 1]
-                avg = int(round(avg/n))
-                result[y, x] = avg
+                average, hitsCount = 0, 0
+                for yOff in range(-overlapHeight, overlapHeight):
+                    for xOff in range(-overlapWidth, overlapWidth):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        average += image[ySafe, xSafe] * kernel[yOff + 1, xOff + 1]
+                        hitsCount += kernel[yOff + 1, xOff + 1]
+                average = int(round(average/hitsCount))
+                result[y, x] = average
 
         img = Image.fromarray(result, mode='L')
-        img.save('Resources/filter-lowpass.png')
-        print('low pass filtering done')
+        img.save('Resources/filter-boxblur{}x{}.png'.format(kernelSize[0], kernelSize[1]))
+        print('box blur with size {}x{} start'.format(kernelSize[0], kernelSize[1]))
