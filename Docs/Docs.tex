@@ -1141,7 +1141,23 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 	Według definicji filtrowanie to technika modyfikująca lub upiększająca obraz. Dla przykładu, można nałożyć filtr na obraz w celu uwydatnienia jego krawędzi w taki sposób w jaki robi to filtr Robertsa. Przy czym filtr Robertsa należy do grupy filtrów liniowych co można poznać po operacjach jakie wykonuje. Głównie będą to proste operacje jak suma liniowa i będą się one wywodzić ze splotu różnych funkcji. W kategoriach filtrów znajdują się jeszcze filtry nieliniowe oparte na bazie kombinacji liniowych i heurystyk. Przykładem takiego filtru może być filtr medianowy. 
 	\section{Filtr dolnoprzepustowy uśredniający}
 		\subsection{Opis}
-			Podstawowy filtr dający efekt rozmazania lub wygładzenia. Filtr oblicza średnią pikseli w elemencie strukturalnym o wielkości dziewięciu pikseli i przypisuje do piksela w środku. W swojej prostocie filtr ten ma słaby punkt w postaci szumu, który przejawia się w postaci białych, losowych pikseli. Po zastosowaniu filtru biały piksel może być bardziej widoczny niż wcześniej. 
+			Podstawowy filtr dający efekt rozmazania lub wygładzenia. Filtr oblicza średnią pikseli w elemencie strukturalnym o wielkości dziewięciu pikseli i przypisuje do piksela w środku. W swojej prostocie filtr ten ma słaby punkt w postaci szumu, który przejawia się w postaci białych, losowych pikseli. Po zastosowaniu filtru biały piksel może być bardziej widoczny niż wcześniej. \newline
+			Maska tej operacji przedstawia się następująco:
+			\begin{equation*}
+				\quad
+				\frac{1}{9}
+				*
+				\begin{bmatrix}
+				1 & 1 & 1 \\
+				1 & 1 & 1 \\
+				1 & 1 & 1
+				\end{bmatrix}
+			\end{equation*}
+			Dzięki niej jesteśmy w stanie symulować zachowanie oryginalnego filtru dolnoprzepustowego z elektroniki, który polegał na odcięciu górnych pasm częstotliwości w sygnale. Jednakże mając obraz w formacie macierzy trudno byłoby nam zgadnąć jaki piksel skrywa jaką wartość częstotliwości. Dlatego w tym temacie pomocny jest algorytm \textbf{Szybkiej Transformaty Fouriera} \textit{(ang. Fast Fourier Transform - FFT)}. Pozwala on na przeniesienie macierzy pikseli zawierającą wartości kolorów (domena czasu) w domenę częstotliwości. 
+			\begin{figure}[H]
+				\caption{Zmiana w częstotliwości obrazu przed i po zastosowaniu pokazanej maski}
+				\includegraphics[width=15cm, height=15cm]{/overview/fft.png}
+			\end{figure}
 			\begin{figure}[H]
 				\caption{Obraz niezmieniony (lewy), po zastosowaniu filtru(prawy)}
 				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
