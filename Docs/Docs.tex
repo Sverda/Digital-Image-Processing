@@ -1219,7 +1219,18 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 			\end{figure}
 		\subsection{Kod źródłowy algorytmu}
 			\inputpython{../Source/Filters.py}{72}{94}
-	\section{Filtr maksymalny}
+	\section{Filtr modalny}
+		\subsection{Opis}
+			Filtr modalny bazuje na prostej statystyce. Podczas wykonywania algorytmu w oknie filtru jest obliczana ilość wystąpień wartości pikseli i na rezultat jest wybierana wartość występująca najczęściej. Jeśli wszystkie wartości występują tą samą ilość razy wtedy rezultatem jest aktualnie rozważany piksel. Filtr modalny produkuje gładkie, bezszumne obrazy. Czasem zdarza się, że obraz wyjściowy zawierał będzie obiekty z nieregularnymi kształtami, których nie było wcześniej. 
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 9x9 (prawy, górny), z maską 18x18 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{man-noise-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-modal9x9.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-modal18x18.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-modal27x27.png}
+			\end{figure}
+			Dobranie odpowiedniej maski do obrazu jest kluczowe, aby filtr spełnił swoje zadanie. Siła tego algorytmu - statystyka - to równocześnie jego słabość. Mając obraz na którym króluje jeden lub kilka kolorów stajemy przed obliczem bezkształtnej jednokolorowej masy tego kolory po wykonaniu algorytmu jeśli źle dobierzemy wielkość maski. 
+		\subsection{Kod źródłowy algorytmu}
 	\section{Filtr minimalny}
 	\section{Filtr płaskorzeźbowy}
 

@@ -92,3 +92,42 @@ class Filters(object):
         img = Image.fromarray(result, mode='L')
         img.save('Resources/filter-median{}x{}.png'.format(squareKernelSize, squareKernelSize))
         print('median filter with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+
+    # Ex9.3
+    def modalGray(self, squareKernelSize=9):
+        print('modal filter with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels()
+
+        result = numpy.empty((height, width), numpy.uint8)
+
+        overlap = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                kernel = numpy.zeros((squareKernelSize, squareKernelSize), numpy.uint8)
+                for yOff in range(-overlap, overlap):
+                    for xOff in range(-overlap, overlap):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        kernel[yOff+overlap][xOff+overlap] = image[ySafe][xSafe]
+                result[y, x] = self.mostFrequent(kernel, kernel[overlap][overlap])
+
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/filter-modal{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('modal filter with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+
+    def mostFrequent(self, matrix, defaultValue):
+        array1d = numpy.reshape(matrix, matrix.size)
+        (values,counts) = numpy.unique(matrix, return_counts=True)
+        if self.allEquals(counts):
+            return defaultValue
+        mostFrequentIndex = numpy.argmax(counts)
+        return values[mostFrequentIndex]
+
+    def allEquals(self, iterator):
+        iterator = iter(iterator)
+        try:
+            first = next(iterator)
+        except StopIteration:
+            return True
+        return all(first == rest for rest in iterator)

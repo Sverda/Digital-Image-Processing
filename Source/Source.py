@@ -56,9 +56,13 @@ def filteringModule():
     #filters.boxBlur((27, 27))
     #filters.gaussianBlur(9, 546)
     #filters.gaussianBlur(9*2, 546*2)
-    filters = Filters('Resources/phone-noise.djvu')
+    #filters = Filters('Resources/phone-noise.djvu')
     #filters.median(9)
     #filters.median(27)
+    #filters = Filters('Resources/photoman.djvu')
+    #filters.modalGray(9)
+    #filters.modalGray(18)
+    filters.modalGray(27)
 
 if __name__ == '__main__':
     main()
