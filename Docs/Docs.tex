@@ -9,6 +9,7 @@
 \usepackage{pythonhighlight}
 \usepackage{amsmath}
 \usepackage{float}
+\usepackage[margin=1.5cm]{geometry}
 
 \hypersetup{
 	colorlinks=true,
@@ -1138,16 +1139,160 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 \end{python}
 
 \chapter{Filtrowanie wygładzające liniowe i nieliniowe}
-\section{Filtr dolnoprzepustowy uśredniający}
-\section{Filtr dolnoprzepustowy Gaussowski}
-\section{Operator Roberts’a}
-\section{Operator Prewitt’a}
-\section{Operator Sobel’a}
-\section{Filtr kompasowy}
-\section{Gradient wektora kierunkowego}
-\section{Filtr medianowy}
-\section{Filtr maksymalny}
-\section{Filtr minimalny}
-\section{Filtr płaskorzeźbowy}
+	Według definicji filtrowanie to technika modyfikująca lub upiększająca obraz. Dla przykładu, można nałożyć filtr na obraz w celu uwydatnienia jego krawędzi w taki sposób w jaki robi to filtr Robertsa. Przy czym filtr Robertsa należy do grupy filtrów liniowych co można poznać po operacjach jakie wykonuje. Głównie będą to proste operacje jak suma liniowa i będą się one wywodzić ze splotu różnych funkcji. W kategoriach filtrów znajdują się jeszcze filtry nieliniowe oparte na bazie kombinacji liniowych i heurystyk. Przykładem takiego filtru może być filtr medianowy. 
+	\section{Filtr dolnoprzepustowy uśredniający}
+		\subsection{Opis}
+			Podstawowy filtr dający efekt rozmazania lub wygładzenia. Filtr oblicza średnią pikseli w elemencie strukturalnym (maska) o wielkości dziewięciu pikseli i przypisuje do piksela w środku. W swojej prostocie filtr ten ma słaby punkt w postaci szumu, który przejawia się w postaci białych, losowych pikseli. Po zastosowaniu filtru biały piksel może być bardziej widoczny niż wcześniej. \newline
+			Maska tej operacji przedstawia się następująco:
+			\begin{equation*}
+				\quad
+				\frac{1}{9}
+				*
+				\begin{bmatrix}
+				1 & 1 & 1 \\
+				1 & 1 & 1 \\
+				1 & 1 & 1
+				\end{bmatrix}
+			\end{equation*}
+			Dzięki niej jesteśmy w stanie symulować zachowanie oryginalnego filtru dolnoprzepustowego z elektroniki, który polegał na odcięciu górnych pasm częstotliwości w sygnale. Jednakże mając obraz w formacie macierzy trudno byłoby nam zgadnąć jaki piksel skrywa jaką wartość częstotliwości. Dlatego w tym temacie pomocny jest algorytm \textbf{Szybkiej Transformaty Fouriera} \textit{(ang. Fast Fourier Transform - FFT)}. Pozwala on na przeniesienie macierzy pikseli zawierającą wartości kolorów (domena czasu) w domenę częstotliwości. 
+			\begin{figure}[H]
+				\caption{Zmiana w częstotliwości obrazu przed i po zastosowaniu pokazanej maski}
+				\includegraphics[width=15cm, height=15cm]{/overview/fft.png}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy), po zastosowaniu filtru z maską 9x9 (środkowy), z maską 27x27 (prawy)}
+				\includegraphics[width=4cm, height=4cm]{man-unmodified.jpg}
+				\includegraphics[width=4cm, height=4cm]{man-filter-boxblur9x9.png}
+				\includegraphics[width=4cm, height=4cm]{man-filter-boxblur27x27.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{12}{37}
+	\section{Filtr dolnoprzepustowy Gaussowski}
+		\subsection{Opis}
+			Kolejnym filtrem dolnoprzepustowym, wygładzającym obraz i usuwającym detale i szum jest filtr oparty o rozkład Gaussa. Ma ona zastosowanie przy produkcji maski dla tego filtra. Wartości maski, w swej idei, układają się w kształt dzwonu Gaussa (Rys. 10.3), tzn. największa wartość jest po środku macierzy, a wartości wokół niej tworzą pierścień składający się z mniejszych wartości. Jeśli wielkość maski na to pozwala kolejny pierścień mniejszych wartości otula poprzedni. \newline
+			Przykładowe maski stworzone za pomocą funkcji Gaussa: 
+			\begin{equation*}
+				\frac{1}{16}
+				*
+				\begin{bmatrix}
+				1 & 2 & 1 \\
+				2 & 4 & 2 \\
+				1 & 2 & 1
+				\end{bmatrix}
+				\quad
+				\frac{1}{256}
+				*
+				\begin{bmatrix}
+				1 & 4 & 6 & 4 & 1 \\
+				4 & 16 & 24 & 16 & 4 \\
+				6 & 24 & 36 & 24 & 6 \\
+				4 & 16 & 24 & 16 & 4 \\
+				1 & 4 & 6 & 4 & 1
+				\end{bmatrix}
+			\end{equation*}
+			\begin{figure}[H]
+				\caption{Dzwon Gaussa}
+				\includegraphics[width=7cm, height=7cm]{overview/gauss-bell.png}
+			\end{figure}
+			Zaletą użycia rozkładu normalnego jest efekt jaki uzyskujemy w porównaniu do filtru uśredniającego. Rozkład normalny daje promieniście rozchodzącą się maskę, która z kolei nadaje wagi naszym pikselom. Używając wag do obliczania sumy w algorytmie filtra, uzyskujemy PSF \textit{(Point-spread function)} o okrągłym, kolistym kształcie. W porównaniu do poprzedniego rodzaju filtra, który zawsze daje nam rozmycie oparte o kształt prostokąta. 
+			\begin{figure}[H]
+				\caption{(Od lewej) Kropka bez rozmycia, rozmycie filtrem uśredniającym, rozmycie filtrem gaussowskim}
+				\includegraphics[width=4cm, height=4cm]{overview/gauss-dot.jpg}
+				\includegraphics[width=4cm, height=4cm]{overview/gauss-dot-boxblur.jpg}
+				\includegraphics[width=4cm, height=4cm]{overview/gauss-dot-gaussianblur.jpg}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy), po zastosowaniu filtru z maską 9x9 i wartościami sumującymi się do 546 (środkowy), z maską 18x18 i wartościami sumującymi się do 1092 (prawy)}
+				\includegraphics[width=4cm, height=4cm]{man-unmodified.jpg}
+				\includegraphics[width=4cm, height=4cm]{man-filter-gaussianblur9x9f546.png}
+				\includegraphics[width=4cm, height=4cm]{man-filter-gaussianblur18x18f1092.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{39}{70}
+	\section{Filtr medianowy}
+		\subsection{Opis}
+			Filtr medianowy należy do rodziny filtrów nieliniowych, co oznacza że składa się on z kombinacji liniowych bądź opiera się na heurystyce. Po zastosowaniu go na zaszumiony obraz zdumiewamy się jego skutecznością w wale z białymi i/lub czarnymi pikselami. Natomiast po przyjrzeniu się możemy jeszcze dostrzec wyraźne linie krawędzi obiektów na obrazie co wyróżnia go na tle innych filtrów mogących usuwać szumy. Swoje niezwykłe, użyteczne właściwości filtr ten zawdzięcza kwartylowi rzędu 1/2, czyli medianie, która ignoruje wszystkie skrajne wartości w aktualnym oknie podczas wykonywania się algorytmu
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy), po zastosowaniu filtru z maską 9x9 (środkowy), z maską 27x27 (prawy)}
+				\includegraphics[width=4cm, height=4cm]{phone-noise-unmodified.jpg}
+				\includegraphics[width=4cm, height=4cm]{phone-filter-median9x9.png}
+				\includegraphics[width=4cm, height=4cm]{phone-filter-median27x27.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{72}{94}
+	\section{Filtr modalny}
+		\subsection{Opis}
+			Filtr modalny bazuje na prostej statystyce. Podczas wykonywania algorytmu w oknie filtru jest obliczana ilość wystąpień wartości pikseli i na rezultat jest wybierana wartość występująca najczęściej. Jeśli wszystkie wartości występują tą samą ilość razy wtedy rezultatem jest aktualnie rozważany piksel. Filtr modalny produkuje gładkie, bezszumne obrazy. Czasem zdarza się, że obraz wyjściowy zawierał będzie obiekty z nieregularnymi kształtami, których nie było wcześniej. 
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 9x9 (prawy, górny), z maską 18x18 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{man-noise-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-modal9x9.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-modal18x18.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-modal27x27.png}
+			\end{figure}
+			Dobranie odpowiedniej maski do obrazu jest kluczowe, aby filtr spełnił swoje zadanie. Siła tego algorytmu - statystyka - to równocześnie jego słabość. Mając obraz na którym króluje jeden lub kilka kolorów stajemy przed obliczem bezkształtnej jednokolorowej masy tego kolory po wykonaniu algorytmu jeśli źle dobierzemy wielkość maski. 
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{96}{133}
+	\section{Filtr Kuwahary}
+		\subsection{Opis}
+			Filtr wygładzający Kuwahary polega na w swojej idei na wybraniu jednego z czterech regionów, na które jest podzielona maska. Wybór odbywa się poprzez obliczenie odchylenia standardowego każdego regionu i wybranie tego który ma najmniejsze odchylenie. Każdy region nachodzi na krawędź dwóch sąsiednich. Im większa maska tym mniejsze jest rozmazanie krawędzi powstałe w wyniku usunięcia szumu. 
+			\begin{figure}[H]
+				\caption{Przykład maski z zaznaczonymi regionami}
+				\includegraphics[width=16cm, height=7cm]{/overview/kuwahara-matrix.png}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-kuwahara3x3.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-kuwahara9x9.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-kuwahara27x27.png}
+			\end{figure}
+		\begin{figure}[H]
+			\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+			\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+			\includegraphics[width=7cm, height=7cm]{phone-filter-kuwahara-color3x3.png}
+			\includegraphics[width=7cm, height=7cm]{phone-filter-kuwahara-color9x9.png}
+			\includegraphics[width=7cm, height=7cm]{phone-filter-kuwahara-color27x27.png}
+		\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{135}{199}
+	\section{Filtr minimalny}
+		\subsection{Opis}
+			Zwany jest także filtrem kompresującym albo erozyjnym. Jego działanie polega na wybraniu z pod maski punktu o wartości najmniejszej. Jego działanie powoduje zmniejszenie jasności obrazu dające efekt erozji obiektów. 
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-minimal3x3.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-minimal9x9.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-minimal27x27.png}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-minimal-color3x3.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-minimal-color9x9.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-minimal-color27x27.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{201}{245}
+	\section{Filtr maksymalny}
+		\subsection{Opis}
+			Zwany jest także filtrem dekompresującym albo ekspansywnym. Jego działanie polega na wybraniu z pod maski punktu o wartości największej. Jego działanie powoduje zwiększenie jasności obrazu dające efekt powiększania się obiektów. 
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-maximal3x3.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-maximal9x9.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-maximal27x27.png}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-maximal-color3x3.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-maximal-color9x9.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-maximal-color27x27.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{247}{291}
 
 \end{document}
