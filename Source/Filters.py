@@ -34,10 +34,10 @@ class Filters(object):
 
         img = Image.fromarray(result, mode='L')
         img.save('Resources/filter-boxblur{}x{}.png'.format(kernelSize[0], kernelSize[1]))
-        print('box blur with size {}x{} start'.format(kernelSize[0], kernelSize[1]))
+        print('box blur with size {}x{} done'.format(kernelSize[0], kernelSize[1]))
 
     # Ex9.1 - Gaussian Blur
-    def gaussianBlur(self, kernelSize=9*2, kernelFactory=546*2):
+    def gaussianBlur(self, kernelSize=16, kernelFactory=256):
         print('gaussian blur with size {}x{} start'.format(kernelSize, kernelSize))
         height, width = self.decoder.height, self.decoder.width
         image = self.decoder.getPixels()
@@ -60,7 +60,7 @@ class Filters(object):
 
         img = Image.fromarray(result, mode='L')
         img.save('Resources/filter-gaussianblur{}x{}f{}.png'.format(kernelSize, kernelSize, kernelFactory))
-        print('gaussian blur with size {}x{} start'.format(kernelSize, kernelSize))
+        print('gaussian blur with size {}x{} done'.format(kernelSize, kernelSize))
 
     def generateGaussianKernel(self, size=3, sigma=1):
         lim = size//2 + (size % 2)/2
@@ -68,3 +68,27 @@ class Filters(object):
         kern1d = numpy.diff(st.norm.cdf(x))
         kern2d = numpy.outer(kern1d, kern1d)
         return kern2d/kern2d.sum()
+
+    # Ex9.2
+    def median(self, squareKernelSize=9):
+        print('median filter with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels()
+
+        result = numpy.empty((height, width), numpy.uint8)
+        kernel = numpy.zeros((squareKernelSize, squareKernelSize), numpy.uint8)
+
+        overlap = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                median = kernel.copy()
+                for yOff in range(-overlap, overlap):
+                    for xOff in range(-overlap, overlap):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        median[yOff+overlap][xOff+overlap] = image[ySafe][xSafe]
+                result[y, x] = numpy.median(median)
+
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/filter-median{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('median filter with size {}x{} done'.format(squareKernelSize, squareKernelSize))

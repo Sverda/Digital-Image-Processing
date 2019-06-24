@@ -1208,12 +1208,17 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 			\end{figure}
 		\subsection{Kod źródłowy algorytmu}
 			\inputpython{../Source/Filters.py}{39}{70}
-	\section{Operator Roberts’a}
-	\section{Operator Prewitt’a}
-	\section{Operator Sobel’a}
-	\section{Filtr kompasowy}
-	\section{Gradient wektora kierunkowego}
 	\section{Filtr medianowy}
+		\subsection{Opis}
+			Filtr medianowy należy do rodziny filtrów nieliniowych, co oznacza że składa się on z kombinacji liniowych bądź opiera się na heurystyce. Po zastosowaniu go na zaszumiony obraz zdumiewamy się jego skutecznością w wale z białymi i/lub czarnymi pikselami. Natomiast po przyjrzeniu się możemy jeszcze dostrzec wyraźne linie krawędzi obiektów na obrazie co wyróżnia go na tle innych filtrów mogących usuwać szumy. Swoje niezwykłe, użyteczne właściwości filtr ten zawdzięcza kwartylowi rzędu 1/2, czyli medianie, która ignoruje wszystkie skrajne wartości w aktualnym oknie podczas wykonywania się algorytmu
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy), po zastosowaniu filtru z maską 9x9 (środkowy), z maską 27x27 (prawy)}
+				\includegraphics[width=4cm, height=4cm]{phone-noise-unmodified.jpg}
+				\includegraphics[width=4cm, height=4cm]{phone-filter-median9x9.png}
+				\includegraphics[width=4cm, height=4cm]{phone-filter-median27x27.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{72}{94}
 	\section{Filtr maksymalny}
 	\section{Filtr minimalny}
 	\section{Filtr płaskorzeźbowy}

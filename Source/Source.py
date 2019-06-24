@@ -51,10 +51,14 @@ def grayMorphologicalModule():
     morph.closing(5, 5, 0, (2, 2))
 
 def filteringModule():
-    filters = Filters('Resources/photoman.djvu')
+    #filters = Filters('Resources/photoman.djvu')
     #filters.boxBlur((9, 9))
     #filters.boxBlur((27, 27))
-    filters.gaussianBlur()
+    #filters.gaussianBlur(9, 546)
+    #filters.gaussianBlur(9*2, 546*2)
+    filters = Filters('Resources/phone-noise.djvu')
+    #filters.median(9)
+    #filters.median(27)
 
 if __name__ == '__main__':
     main()

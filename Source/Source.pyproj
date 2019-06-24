@@ -53,7 +53,9 @@
     <Content Include="Resources\cat.djvu" />
     <Content Include="Resources\coffee.djvu" />
     <Content Include="Resources\field.djvu" />
+    <Content Include="Resources\phone-noise.djvu" />
     <Content Include="Resources\phone.djvu" />
+    <Content Include="Resources\photoman-noise.djvu" />
     <Content Include="Resources\photoman.djvu" />
     <Content Include="Resources\sea.djvu" />
   </ItemGroup>
