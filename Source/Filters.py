@@ -132,9 +132,9 @@ class Filters(object):
             return True
         return all(first == rest for rest in iterator)
 
-    # Ex9.4
-    def kuwahara(self, squareKernelSize=3):
-        print('kuwahara filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+    # Ex9.4 - Gray
+    def kuwaharaGray(self, squareKernelSize=3):
+        print('kuwahara gray filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
         height, width = self.decoder.height, self.decoder.width
         image = self.decoder.getPixels()
         result = numpy.empty((height, width), numpy.uint8)
@@ -148,20 +148,52 @@ class Filters(object):
                         ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
                         xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
                         kernel[yOff+commonAxis][xOff+commonAxis] = image[ySafe][xSafe]
-                result[y, x] = self.findLowestRegionVariance(kernel, commonAxis)
+                result[y, x] = self.findLowestSDRegion(kernel, commonAxis)
 
         img = Image.fromarray(result, mode='L')
         img.save('Resources/filter-kuwahara{}x{}.png'.format(squareKernelSize, squareKernelSize))
-        print('kuwahara filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+        print('kuwahara gray filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
 
-    def findLowestRegionVariance(self, kernel, commonAxis):
+    # Ex9.4 - Color
+    def kuwaharaColor(self, squareKernelSize=3):
+        print('kuwahara color filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels24Bits()
+        result = numpy.empty((height, width, 3), numpy.uint8)
+
+        commonAxis = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                kernel = numpy.zeros((squareKernelSize, squareKernelSize, 3), numpy.uint8)
+                for yOff in range(-commonAxis, commonAxis+1):
+                    for xOff in range(-commonAxis, commonAxis+1):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        kernel[yOff+commonAxis][xOff+commonAxis] = image[ySafe][xSafe]
+                result[y, x, 0] = self.findLowestSDRegion(kernel[:,:,0], commonAxis)
+                result[y, x, 1] = self.findLowestSDRegion(kernel[:,:,1], commonAxis)
+                result[y, x, 2] = self.findLowestSDRegion(kernel[:,:,2], commonAxis)
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/filter-kuwahara-color{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('kuwahara color filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+
+    def findLowestSDRegion(self, kernel, commonAxis):
         length = kernel.shape[0]
         upperLeftRegion = kernel[0:commonAxis+1, 0:commonAxis+1]
         upperRightRegion = kernel[commonAxis:length, 0:commonAxis+1]
         lowerLeftRegion = kernel[0:commonAxis+1, commonAxis:length]
         lowerRightRegion = kernel[commonAxis:length, commonAxis:length]
-        variances = [numpy.var(upperLeftRegion), 
-                     numpy.var(upperRightRegion), 
-                     numpy.var(lowerLeftRegion), 
-                     numpy.var(lowerRightRegion)]
-        return numpy.min(variances)
+        standardDeviation = [numpy.std(upperLeftRegion), 
+                         numpy.std(upperRightRegion), 
+                         numpy.std(lowerLeftRegion), 
+                         numpy.std(lowerRightRegion)]
+        minSD = numpy.min(standardDeviation)
+        if minSD == standardDeviation[0]:
+            return upperLeftRegion.mean()
+        elif minSD == standardDeviation[1]:
+            return upperRightRegion.mean()
+        elif minSD == standardDeviation[2]:
+            return lowerLeftRegion.mean()
+        else:
+            return lowerRightRegion.mean()

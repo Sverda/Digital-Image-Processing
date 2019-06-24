@@ -9,6 +9,7 @@
 \usepackage{pythonhighlight}
 \usepackage{amsmath}
 \usepackage{float}
+\usepackage[margin=1.5cm]{geometry}
 
 \hypersetup{
 	colorlinks=true,
@@ -1234,20 +1235,27 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 			\inputpython{../Source/Filters.py}{96}{133}
 	\section{Filtr Kuwahary}
 		\subsection{Opis}
-			Filtr wygładzający Kuwahary polega na wybraniu najmniejszej wariancji z czterech regionów, które składają się na maskę. Każdy region nachodzi na krawędź dwóch sąsiednich. 
+			Filtr wygładzający Kuwahary polega na w swojej idei na wybraniu jednego z czterech regionów, na które jest podzielona maska. Wybór odbywa się poprzez obliczenie odchylenia standardowego każdego regionu i wybranie tego który ma najmniejsze odchylenie. Każdy region nachodzi na krawędź dwóch sąsiednich. Im większa maska tym mniejsze jest rozmazanie krawędzi powstałe w wyniku usunięcia szumu. 
 			\begin{figure}[H]
 				\caption{Przykład maski z zaznaczonymi regionami}
 				\includegraphics[width=16cm, height=7cm]{/overview/kuwahara-matrix.png}
 			\end{figure}
 			\begin{figure}[H]
-				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 5x5 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
 				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
 				\includegraphics[width=7cm, height=7cm]{man-filter-kuwahara3x3.png}
-				\includegraphics[width=7cm, height=7cm]{man-filter-kuwahara5x5.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-kuwahara9x9.png}
 				\includegraphics[width=7cm, height=7cm]{man-filter-kuwahara27x27.png}
 			\end{figure}
+		\begin{figure}[H]
+			\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+			\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+			\includegraphics[width=7cm, height=7cm]{phone-filter-kuwahara-color3x3.png}
+			\includegraphics[width=7cm, height=7cm]{phone-filter-kuwahara-color9x9.png}
+			\includegraphics[width=7cm, height=7cm]{phone-filter-kuwahara-color27x27.png}
+		\end{figure}
 		\subsection{Kod źródłowy algorytmu}
-			\inputpython{../Source/Filters.py}{135}{168}
+			\inputpython{../Source/Filters.py}{135}{199}
 	\section{Filtr minimalny}
 	\section{Filtr maksymalny}
 
