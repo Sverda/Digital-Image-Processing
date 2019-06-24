@@ -131,3 +131,37 @@ class Filters(object):
         except StopIteration:
             return True
         return all(first == rest for rest in iterator)
+
+    # Ex9.4
+    def kuwahara(self, squareKernelSize=3):
+        print('kuwahara filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels()
+        result = numpy.empty((height, width), numpy.uint8)
+
+        commonAxis = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                kernel = numpy.zeros((squareKernelSize, squareKernelSize), numpy.uint8)
+                for yOff in range(-commonAxis, commonAxis+1):
+                    for xOff in range(-commonAxis, commonAxis+1):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        kernel[yOff+commonAxis][xOff+commonAxis] = image[ySafe][xSafe]
+                result[y, x] = self.findLowestRegionVariance(kernel, commonAxis)
+
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/filter-kuwahara{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('kuwahara filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+
+    def findLowestRegionVariance(self, kernel, commonAxis):
+        length = kernel.shape[0]
+        upperLeftRegion = kernel[0:commonAxis+1, 0:commonAxis+1]
+        upperRightRegion = kernel[commonAxis:length, 0:commonAxis+1]
+        lowerLeftRegion = kernel[0:commonAxis+1, commonAxis:length]
+        lowerRightRegion = kernel[commonAxis:length, commonAxis:length]
+        variances = [numpy.var(upperLeftRegion), 
+                     numpy.var(upperRightRegion), 
+                     numpy.var(lowerLeftRegion), 
+                     numpy.var(lowerRightRegion)]
+        return numpy.min(variances)

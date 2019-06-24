@@ -59,10 +59,13 @@ def filteringModule():
     #filters = Filters('Resources/phone-noise.djvu')
     #filters.median(9)
     #filters.median(27)
-    #filters = Filters('Resources/photoman.djvu')
+    filters = Filters('Resources/photoman.djvu')
     #filters.modalGray(9)
     #filters.modalGray(18)
-    filters.modalGray(27)
+    #filters.modalGray(27)
+    #filters.kuwahara(3)
+    #filters.kuwahara(9)
+    filters.kuwahara(27)
 
 if __name__ == '__main__':
     main()
