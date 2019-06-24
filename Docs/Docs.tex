@@ -1257,6 +1257,42 @@ def closing(self, seHeight, seWidth, seDepth, seCenter=(0, 0)):
 		\subsection{Kod źródłowy algorytmu}
 			\inputpython{../Source/Filters.py}{135}{199}
 	\section{Filtr minimalny}
+		\subsection{Opis}
+			Zwany jest także filtrem kompresującym albo erozyjnym. Jego działanie polega na wybraniu z pod maski punktu o wartości najmniejszej. Jego działanie powoduje zmniejszenie jasności obrazu dające efekt erozji obiektów. 
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-minimal3x3.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-minimal9x9.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-minimal27x27.png}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-minimal-color3x3.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-minimal-color9x9.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-minimal-color27x27.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{201}{245}
 	\section{Filtr maksymalny}
+		\subsection{Opis}
+			Zwany jest także filtrem dekompresującym albo ekspansywnym. Jego działanie polega na wybraniu z pod maski punktu o wartości największej. Jego działanie powoduje zwiększenie jasności obrazu dające efekt powiększania się obiektów. 
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{man-filter-maximal3x3.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-maximal9x9.png}
+				\includegraphics[width=7cm, height=7cm]{man-filter-maximal27x27.png}
+			\end{figure}
+			\begin{figure}[H]
+				\caption{Obraz niezmieniony (lewy, górny), po zastosowaniu filtru z maską 3x3 (prawy, górny), z maską 9x9 (lewy, dolny), z maską 27x27 (prawy, dolny)}
+				\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-maximal-color3x3.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-maximal-color9x9.png}
+				\includegraphics[width=7cm, height=7cm]{phone-filter-maximal-color27x27.png}
+			\end{figure}
+		\subsection{Kod źródłowy algorytmu}
+			\inputpython{../Source/Filters.py}{247}{291}
 
 \end{document}

@@ -197,3 +197,95 @@ class Filters(object):
             return lowerLeftRegion.mean()
         else:
             return lowerRightRegion.mean()
+
+    # Ex9.5 - Minimal Gray
+    def minimalGray(self, squareKernelSize=3):
+        print('minimal gray filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels()
+        result = numpy.empty((height, width), numpy.uint8)
+
+        commonAxis = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                kernel = numpy.zeros((squareKernelSize, squareKernelSize), numpy.uint8)
+                for yOff in range(-commonAxis, commonAxis+1):
+                    for xOff in range(-commonAxis, commonAxis+1):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        kernel[yOff+commonAxis][xOff+commonAxis] = image[ySafe][xSafe]
+                result[y, x] = numpy.amin(kernel)
+
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/filter-minimal{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('minimal gray filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+
+    # Ex9.5 - Minimal Color
+    def minimalColor(self, squareKernelSize=3):
+        print('minimal color filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels24Bits()
+        result = numpy.empty((height, width, 3), numpy.uint8)
+
+        commonAxis = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                kernel = numpy.zeros((squareKernelSize, squareKernelSize, 3), numpy.uint8)
+                for yOff in range(-commonAxis, commonAxis+1):
+                    for xOff in range(-commonAxis, commonAxis+1):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        kernel[yOff+commonAxis][xOff+commonAxis] = image[ySafe][xSafe]
+                result[y, x, 0] = numpy.amin(kernel[:, :, 0])
+                result[y, x, 1] = numpy.amin(kernel[:, :, 1])
+                result[y, x, 2] = numpy.amin(kernel[:, :, 2])
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/filter-minimal-color{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('minimal color filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+
+    # Ex9.5 - Maximal Gray
+    def maximalGray(self, squareKernelSize=3):
+        print('maximal gray filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels()
+        result = numpy.empty((height, width), numpy.uint8)
+
+        commonAxis = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                kernel = numpy.zeros((squareKernelSize, squareKernelSize), numpy.uint8)
+                for yOff in range(-commonAxis, commonAxis+1):
+                    for xOff in range(-commonAxis, commonAxis+1):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        kernel[yOff+commonAxis][xOff+commonAxis] = image[ySafe][xSafe]
+                result[y, x] = numpy.amax(kernel)
+
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/filter-maximal{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('maximal gray filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
+
+    # Ex9.5 - Maximal Color
+    def maximalColor(self, squareKernelSize=3):
+        print('maximal color filtering with size {}x{} start'.format(squareKernelSize, squareKernelSize))
+        height, width = self.decoder.height, self.decoder.width
+        image = self.decoder.getPixels24Bits()
+        result = numpy.empty((height, width, 3), numpy.uint8)
+
+        commonAxis = int(math.ceil(squareKernelSize/2))
+        for y in range(height):
+            for x in range(width):
+                kernel = numpy.zeros((squareKernelSize, squareKernelSize, 3), numpy.uint8)
+                for yOff in range(-commonAxis, commonAxis+1):
+                    for xOff in range(-commonAxis, commonAxis+1):
+                        ySafe = y if ((y + yOff) > (height - 1) or (y + yOff) < 0) else (y + yOff)
+                        xSafe = x if ((x + xOff) > (width - 1) or (x + xOff) < 0) else (x + xOff)
+                        kernel[yOff+commonAxis][xOff+commonAxis] = image[ySafe][xSafe]
+                result[y, x, 0] = numpy.amax(kernel[:, :, 0])
+                result[y, x, 1] = numpy.amax(kernel[:, :, 1])
+                result[y, x, 2] = numpy.amax(kernel[:, :, 2])
+
+        img = Image.fromarray(result, mode='RGB')
+        img.save('Resources/filter-maximal-color{}x{}.png'.format(squareKernelSize, squareKernelSize))
+        print('maximal color filtering with size {}x{} done'.format(squareKernelSize, squareKernelSize))
