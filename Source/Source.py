@@ -5,7 +5,7 @@ from Unification import Unification
 from Geometric import Geometric
 
 def main():
-    #unificationModule()
+    unificationModule()
     geometricModule()
 
 def unificationModule():

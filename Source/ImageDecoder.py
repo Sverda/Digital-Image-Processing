@@ -8,13 +8,9 @@ class ImageDecoder(object):
         self.height = self.getHeight()
         self.width = self.getWidth()
 
-    def getGreyMatrix(self):
+    def getPixels(self):
         matrix = numpy.array(self.im)
         return matrix
-
-    def getRGBMatrix(self):
-        loadmatrix = numpy.array(self.im)
-        return loadmatrix
 
     def getSize(self):
         return self.im.size

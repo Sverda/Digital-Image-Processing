@@ -25,7 +25,7 @@ class Unification(object):
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
-            pixelsBuffer = self.firstDecoder.getGreyMatrix()
+            pixelsBuffer = self.firstDecoder.getPixels()
             for h in range (0, height):
                 for w in range (0, width):
                     firstResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
@@ -40,7 +40,7 @@ class Unification(object):
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
-            pixelsBuffer = self.secondDecoder.getGreyMatrix()
+            pixelsBuffer = self.secondDecoder.getPixels()
             for h in range (0, height):
                 for w in range (0, width):
                     secondResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
@@ -63,7 +63,7 @@ class Unification(object):
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
         if width < self.maxWidth or height < self.maxHeight:
-            pixelsBuffer = decoder.getGreyMatrix()
+            pixelsBuffer = decoder.getPixels()
             result = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Fill values
             for h in range(height):
@@ -117,7 +117,7 @@ class Unification(object):
         width, height = decoder.width, decoder.height
         startWidthIndex = int(round((self.maxWidth - width) / 2))
         startHeightIndex = int(round((self.maxHeight - height) / 2))
-        pixelsBuffer = decoder.getRGBMatrix()
+        pixelsBuffer = decoder.getPixels()
         for h in range (0, height):
             for w in range (0, width):
                 result[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
@@ -137,7 +137,7 @@ class Unification(object):
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
         if width < self.maxWidth or height < self.maxHeight:
-            pixelsBuffer = decoder.getRGBMatrix()
+            pixelsBuffer = decoder.getPixels()
             result = numpy.full((self.maxHeight, self.maxWidth, 3), 1, numpy.uint8)
             # Fill values
             for h in range(height):

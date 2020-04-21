@@ -12,7 +12,7 @@ class Geometric(object):
     def translate(self, deltaX = 0, deltaY = 0):
         print('translation start')
         height, width = self.decoder.height, self.decoder.width
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
         result = numpy.zeros((height, width, 3), numpy.uint8)
 
         for y in range(height):
@@ -27,7 +27,7 @@ class Geometric(object):
     # Ex4.2
     def homogeneousScaling(self, scale = 1.0):
         print('homogeneous scaling start')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
 
         print('scaling')
         result = self._scale(image, scale, scale)
@@ -41,7 +41,7 @@ class Geometric(object):
     # Ex4.3
     def nonUniformScaling(self, scaleX = 1.0, scaleY = 1.0):
         print('non-uniform scaling start')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
 
         print('scaling')
         result = self._scale(image, scaleX, scaleY)
@@ -64,7 +64,7 @@ class Geometric(object):
     # Ex4.4
     def rotation(self, phi):
         print('rotation start')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
 
         print('rotating')
         result = self._rotate(image, phi)
@@ -90,7 +90,7 @@ class Geometric(object):
     # Ex4.5
     def axisSymmetry(self, ox, oy):
         print('axis symmetry start')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
 
         print('symmetry operation')
         result = self._symmetryOXorOY(image, ox, oy)
@@ -119,7 +119,7 @@ class Geometric(object):
             return
 
         print('symmetry operation X')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
         height, width = self.decoder.height, self.decoder.width
         resultWidth = ox*2
         result = numpy.zeros((height, resultWidth, 3), numpy.uint8)
@@ -145,7 +145,7 @@ class Geometric(object):
             return
 
         print('symmetry operation Y')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
         height, width = self.decoder.height, self.decoder.width
         resultHeight = oy*2
         result = numpy.zeros((resultHeight, width, 3), numpy.uint8)
@@ -185,7 +185,7 @@ class Geometric(object):
     # Ex4.7
     def crop(self, (x1, y1), (x2, y2)):
         print('croping image start')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
 
         print('croping')
         for x in range(x1, x2+1):
@@ -199,7 +199,7 @@ class Geometric(object):
     # Ex4.8
     def copy(self, (x1, y1), (x2, y2)):
         print('copying image start')
-        image = self.decoder.getRGBMatrix()
+        image = self.decoder.getPixels()
         height, width = self.decoder.height, self.decoder.width
         result = numpy.zeros((height, width, 3), numpy.uint8)
 
