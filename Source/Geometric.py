@@ -2,17 +2,17 @@ import math
 import numpy
 import collections
 from PIL import Image
-from DjVuImageDecoder import DjVuImageDecoder
+from ImageDecoder import ImageDecoder
 
 class Geometric(object):
-    def __init__(self, firstPath):
-        self.decoder = DjVuImageDecoder(firstPath)
+    def __init__(self, firstPath, imageType):
+        self.decoder = ImageDecoder(firstPath, imageType)
 
     # Ex4.1
     def translate(self, deltaX = 0, deltaY = 0):
         print('translation start')
         height, width = self.decoder.height, self.decoder.width
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
         result = numpy.zeros((height, width, 3), numpy.uint8)
 
         for y in range(height):
@@ -21,30 +21,27 @@ class Geometric(object):
                     result[y + deltaY][x + deltaX] = image[y][x]
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/tGeometric.png')
+        img.save('Resources/result/tGeometric.png')
         print('translation done')
 
     # Ex4.2
     def homogeneousScaling(self, scale = 1.0):
         print('homogeneous scaling start')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
 
         print('scaling')
-        result = self._scale(image, scale)
+        result = self._scale(image, scale, scale)
         print('interpolation')
         self._interpolateColor(result)
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/hsGeometric.png')
+        img.save('Resources/result/hsGeometric.png')
         print('homogeneous scaling done')
-
-    def _scale(self, matrix, scaleXY):
-        return self._scale(matrix, scaleXY, scaleXY)
 
     # Ex4.3
     def nonUniformScaling(self, scaleX = 1.0, scaleY = 1.0):
         print('non-uniform scaling start')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
 
         print('scaling')
         result = self._scale(image, scaleX, scaleY)
@@ -52,7 +49,7 @@ class Geometric(object):
         self._interpolateColor(result)
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/nusGeometric.png')
+        img.save('Resources/result/nusGeometric.png')
         print('non-uniform scaling done')
 
     def _scale(self, matrix, scaleX, scaleY):
@@ -67,7 +64,7 @@ class Geometric(object):
     # Ex4.4
     def rotation(self, phi):
         print('rotation start')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
 
         print('rotating')
         result = self._rotate(image, phi)
@@ -75,7 +72,7 @@ class Geometric(object):
         self._interpolateColor(result)
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/rGeometric.png')
+        img.save('Resources/result/rGeometric.png')
         print('rotation done')
 
     def _rotate(self, image, phi):
@@ -93,13 +90,13 @@ class Geometric(object):
     # Ex4.5
     def axisSymmetry(self, ox, oy):
         print('axis symmetry start')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
 
         print('symmetry operation')
         result = self._symmetryOXorOY(image, ox, oy)
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/Geometric-AxisSymmetry.png')
+        img.save('Resources/result/Geometric-AxisSymmetry.png')
         print('axis symmetry done')
 
     def _symmetryOXorOY(self, image, ox, oy):
@@ -122,7 +119,7 @@ class Geometric(object):
             return
 
         print('symmetry operation X')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
         height, width = self.decoder.height, self.decoder.width
         resultWidth = ox*2
         result = numpy.zeros((height, resultWidth, 3), numpy.uint8)
@@ -132,7 +129,7 @@ class Geometric(object):
                 result[y][resultWidth-1-x] = image[y][x]
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/Geometric-CustomSymmetryX.png')
+        img.save('Resources/result/Geometric-CustomSymmetryX.png')
         print('custom axis symmetry X done')
 
     # Ex4.6b
@@ -148,7 +145,7 @@ class Geometric(object):
             return
 
         print('symmetry operation Y')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
         height, width = self.decoder.height, self.decoder.width
         resultHeight = oy*2
         result = numpy.zeros((resultHeight, width, 3), numpy.uint8)
@@ -158,7 +155,7 @@ class Geometric(object):
                 result[resultHeight-1-y][x] = image[y][x]
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/Geometric-CustomSymmetryY.png')
+        img.save('Resources/result/Geometric-CustomSymmetryY.png')
         print('custom axis symmetry Y done')
 
     def _validateSymmetryAxisY(self, oy):
@@ -188,7 +185,7 @@ class Geometric(object):
     # Ex4.7
     def crop(self, (x1, y1), (x2, y2)):
         print('croping image start')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
 
         print('croping')
         for x in range(x1, x2+1):
@@ -196,13 +193,13 @@ class Geometric(object):
                 image[y, x] = (0, 0, 0)
 
         img = Image.fromarray(image, mode='RGB')
-        img.save('Resources/Geometric-Crop.png')
+        img.save('Resources/result/Geometric-Crop.png')
         print('croping image done')
 
     # Ex4.8
     def copy(self, (x1, y1), (x2, y2)):
         print('copying image start')
-        image = self.decoder.getPixels24Bits()
+        image = self.decoder.getRGBMatrix()
         height, width = self.decoder.height, self.decoder.width
         result = numpy.zeros((height, width, 3), numpy.uint8)
 
@@ -212,5 +209,5 @@ class Geometric(object):
                 result[y, x] = image[y, x]
 
         img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/Geometric-Copy.png')
+        img.save('Resources/result/Geometric-Copy.png')
         print('copying image done')

@@ -22,9 +22,7 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DjVuImageDecoder.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ImageDecoder.py" />
     <Compile Include="Geometric.py">
       <SubType>Code</SubType>
     </Compile>
@@ -40,15 +38,13 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\binary.djvu" />
-    <Content Include="Resources\cat.djvu" />
-    <Content Include="Resources\coffee.djvu" />
-    <Content Include="Resources\field.djvu" />
-    <Content Include="Resources\phone-noise.djvu" />
-    <Content Include="Resources\phone.djvu" />
-    <Content Include="Resources\photoman-noise.djvu" />
-    <Content Include="Resources\photoman.djvu" />
-    <Content Include="Resources\sea.djvu" />
+    <Content Include="Resources\binary.png" />
+    <Content Include="Resources\cat.png" />
+    <Content Include="Resources\coffee.png" />
+    <Content Include="Resources\field.png" />
+    <Content Include="Resources\phone.png" />
+    <Content Include="Resources\photoman.png" />
+    <Content Include="Resources\sea.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>

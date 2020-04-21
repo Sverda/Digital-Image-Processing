@@ -1,12 +1,12 @@
 import numpy
 import collections
 from PIL import Image
-from DjVuImageDecoder import DjVuImageDecoder
+from ImageDecoder import ImageDecoder
 
 class Unification(object):
-    def __init__(self, firstPath, secondPath):
-        self.firstDecoder = DjVuImageDecoder(firstPath)
-        self.secondDecoder = DjVuImageDecoder(secondPath)
+    def __init__(self, firstPath, secondPath, imageType):
+        self.firstDecoder = ImageDecoder(firstPath, imageType)
+        self.secondDecoder = ImageDecoder(secondPath, imageType)
         self.maxHeight, self.maxWidth = self._findMaxSize()
         
     def _findMaxSize(self):
@@ -25,13 +25,13 @@ class Unification(object):
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
-            pixelsBuffer = self.firstDecoder.getPixels()
+            pixelsBuffer = self.firstDecoder.getGreyMatrix()
             for h in range (0, height):
                 for w in range (0, width):
                     firstResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
             img = Image.fromarray(firstResult, mode='L')
-            img.save('Resources/ggUnification_1.png')
-            print('first image done')
+            img.save('Resources/result/ggUnification_1.png')
+            print(' first image done')
         
         width, height = self.secondDecoder.width, self.secondDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
@@ -40,22 +40,22 @@ class Unification(object):
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
-            pixelsBuffer = self.secondDecoder.getPixels()
+            pixelsBuffer = self.secondDecoder.getGreyMatrix()
             for h in range (0, height):
                 for w in range (0, width):
                     secondResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
             img = Image.fromarray(secondResult, mode='L')
-            img.save('Resources/ggUnification_2.png')
-            print('second image done')
+            img.save('Resources/result/ggUnification_2.png')
+            print(' second image done')
         print('geometric gray unification done')
 
     # Ex1.2
     def rasterGray(self):
         print('raster gray unification start')
-        self._scaleUpGray(self.firstDecoder, 'Resources/rgUnification_1.png')
-        print('first image done')
-        self._scaleUpGray(self.secondDecoder, 'Resources/rgUnification_2.png')
-        print('second image done')
+        self._scaleUpGray(self.firstDecoder, 'Resources/result/rgUnification_1.png')
+        print(' first image done')
+        self._scaleUpGray(self.secondDecoder, 'Resources/result/rgUnification_2.png')
+        print(' second image done')
         print('raster gray unification done')
         
     def _scaleUpGray(self, decoder, outputPath):
@@ -63,7 +63,7 @@ class Unification(object):
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
         if width < self.maxWidth or height < self.maxHeight:
-            pixelsBuffer = decoder.getPixels()
+            pixelsBuffer = decoder.getGreyMatrix()
             result = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Fill values
             for h in range(height):
@@ -99,15 +99,15 @@ class Unification(object):
         if width < self.maxWidth or height < self.maxHeight:
             result = self._paintInMiddleColor(self.firstDecoder)
             img = Image.fromarray(result, 'RGB')
-            img.save('Resources/gcUnification_1.png')
-            print('first image done')
+            img.save('Resources/result/gcUnification_1.png')
+            print(' first image done')
 
         width, height = self.secondDecoder.width, self.secondDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
             result = self._paintInMiddleColor(self.secondDecoder)
             img = Image.fromarray(result, 'RGB')
-            img.save('Resources/gcUnification_2.png')
-            print('second image done')
+            img.save('Resources/result/gcUnification_2.png')
+            print(' second image done')
         print('geometric color unification done')
 
     def _paintInMiddleColor(self, decoder):
@@ -117,7 +117,7 @@ class Unification(object):
         width, height = decoder.width, decoder.height
         startWidthIndex = int(round((self.maxWidth - width) / 2))
         startHeightIndex = int(round((self.maxHeight - height) / 2))
-        pixelsBuffer = decoder.getPixels24Bits()
+        pixelsBuffer = decoder.getRGBMatrix()
         for h in range (0, height):
             for w in range (0, width):
                 result[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
@@ -126,11 +126,10 @@ class Unification(object):
     # Ex1.4
     def rasterColor(self):
         print('rastar color unification start')
-        self._scaleUpColor(self.firstDecoder, 'Resources/rcUnification_1.png')
-        print('first image done')
-        self.secondDecoder.setColor()
-        self._scaleUpColor(self.secondDecoder, 'Resources/rcUnification_2.png')
-        print('second image done')
+        self._scaleUpColor(self.firstDecoder, 'Resources/result/rcUnification_1.png')
+        print(' first image done')
+        self._scaleUpColor(self.secondDecoder, 'Resources/result/rcUnification_2.png')
+        print(' second image done')
         print('rastar color unification done')
 
     def _scaleUpColor(self, decoder, outputPath):
@@ -138,7 +137,7 @@ class Unification(object):
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
         if width < self.maxWidth or height < self.maxHeight:
-            pixelsBuffer = decoder.getPixels24Bits()
+            pixelsBuffer = decoder.getRGBMatrix()
             result = numpy.full((self.maxHeight, self.maxWidth, 3), 1, numpy.uint8)
             # Fill values
             for h in range(height):
