@@ -392,12 +392,29 @@ nie przekroczyła maksymalnej wartości dla zmiennej.
 \end{figure}
 
 \subsection{Kod źródłowy programu}
-\inputpython{../Source/ArithmeticSumGray.py}{13}{39}
+\inputpython{../Source/ArithmeticSumGray.py}{15}{41}
 
 \section{Sumowanie dwóch obrazów}
 \subsection{Opis}
+Dodanie dwóch obrazów jest analogiczne jak przy dodaniu stałej do obrazu, ale z tą różnicą, że maksymalnej wartości mogącej spowodować przepełnienie szukamy we wstępnym obrazie wynikowym sumy obu obrazów. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{lena-unmodified.png}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images.png}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images-2.png}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images-2-norm.png}
+\end{figure}
 
 \subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{44}{74}
 
 \section{Mnożenie obrazu przez zadaną liczbę}
 \subsection{Opis}
@@ -429,15 +446,6 @@ nie przekroczyła maksymalnej wartości dla zmiennej.
 
 \subsection{Kod źródłowy programu}
 
-\section{Pierwiastkowanie obrazu}
-\subsection{Opis}
-
-\subsection{Kod źródłowy programu}
-
-\section{Logarytmowanie obrazu}
-\subsection{Opis}
-
-\subsection{Kod źródłowy programu}
 
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
 \section{Sumowanie (określonej) stałej z obrazem}

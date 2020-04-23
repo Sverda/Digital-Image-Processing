@@ -33,12 +33,14 @@ def geometricModule():
     geometric.copy(point1, point2)
 
 def arithmeticSumModule():
+    gray = ArithmeticSumGray('Resources/photoman.png', 'Resources/lena.png', 'L')
+    #gray.sumWithConst(30)
+    #gray.sumWithConst(300)
+    gray.sumImages()
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/photoman.png', 'L')
-    gray.sumWithConst(30)
-    gray.sumWithConst(300)
-    gray = ArithmeticSumGray('Resources/photoman.png', 'Resources/photoman.png', 'L')
-    gray.sumWithConst(30)
-    gray.sumWithConst(300)
+    #gray.sumWithConst(30)
+    #gray.sumWithConst(300)
+    gray.sumImages()
 
 if __name__ == '__main__':
     main()

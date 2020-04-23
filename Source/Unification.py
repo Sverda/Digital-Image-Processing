@@ -1,6 +1,7 @@
 import numpy
 import collections
 from PIL import Image
+
 from ImageDecoder import ImageDecoder
 
 class Unification(object):
@@ -17,11 +18,19 @@ class Unification(object):
 
     # Ex1.1
     def geometricGray(self):
-        print('geometric gray unificaiton start')
+        print('geometric gray unification start')
+        firstResult, secondResult = self.grayUnification()
+        img = Image.fromarray(firstResult, mode='L')
+        img.save('Resources/result/ggUnification_1.png')
+        img = Image.fromarray(secondResult, mode='L')
+        img.save('Resources/result/ggUnification_2.png')
+        print('geometric gray unification done')
+
+    def grayUnification(self):
+        # Create black background
+        firstResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
         width, height = self.firstDecoder.width, self.firstDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            # Create black background
-            firstResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
@@ -29,14 +38,12 @@ class Unification(object):
             for h in range (0, height):
                 for w in range (0, width):
                     firstResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
-            img = Image.fromarray(firstResult, mode='L')
-            img.save('Resources/result/ggUnification_1.png')
-            print(' first image done')
+        else:
+            firstResult = self.firstDecoder.getPixels()
         
+        secondResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
         width, height = self.secondDecoder.width, self.secondDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            # Create black background
-            secondResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
@@ -44,10 +51,10 @@ class Unification(object):
             for h in range (0, height):
                 for w in range (0, width):
                     secondResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
-            img = Image.fromarray(secondResult, mode='L')
-            img.save('Resources/result/ggUnification_2.png')
-            print(' second image done')
-        print('geometric gray unification done')
+        else:
+            secondResult = self.secondDecoder.getPixels()
+
+        return firstResult, secondResult
 
     # Ex1.2
     def rasterGray(self):
