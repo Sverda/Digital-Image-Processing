@@ -51,10 +51,7 @@ Powyższa struktura przedstawia dokument składający się z jednej strony, na c
 \subsection{Instrukcja obsługi programu}
 W celu uruchomienia kodu źródłowego będzie niezbędny: 
 \begin{itemize}
-	\item \href{http://djvu.sourceforge.net/}{DjVuLibre} ($\geq$ 3.5.21)
 	\item \href{https://www.python.org/}{Python} ($\geq$ 2.6 lub 3.X)
-	\item \href{https://cython.org/}{Cython} ($\geq$ 0.19, lub $\geq$ 0.20 dla Python 3)
-	\item \href{https://wiki.freedesktop.org/www/Software/pkg-config/}{pkg-config} (POSIX)
 \end{itemize}
 
 \chapter{Operacje ujednolicania obrazów}
@@ -341,16 +338,106 @@ def _interpolateColor(self, result):
 \end{python}
 
 \chapter{Operacje sumowania arytmetycznego obrazów szarych}
-\section{Sumowanie (określonej) stałej z obrazem}
+Obraz jest macierzą wartości co pozwala nam wykonywać na nich operacje arytmetyczne tak samo jak na zwykłych macierzach. 
+Operacje takie jak: 
+\renewcommand{\labelitemi}{$*$}
+\begin{itemize}
+	\item dodawanie,
+	\item odejmowanie,
+	\item mnożenie,
+	\item dzielenie
+\end{itemize}
+obrazów może odbywać się w różnych kombinacjach rodzajów wartości: 
+\renewcommand{\labelitemi}{$*$}
+\begin{itemize}
+	\item obraz z obrazem
+	\item obraz ze stałą
+\end{itemize}
+Operacje te odbywają się na poziomie komórek macierz. 
+\\\\
+Po przeprowadzeniu operacji algebraicznych warto przeprowadzić normalizację w celu zmiany zakresu wartości \textit{(min, max)} na \textit{(newMin, newMax)}. 
+Do przeprowadzenia normalizacji w poniższych przykładach będziemy używać wzoru: 
+\[f_{norm}=Z_{rep}[(f-f_{min})/(f_{max}-f_{min})]\]
+
+\section{Sumowanie określonej stałej z obrazem}
+\subsection{Opis}
+W operacji sumowania obrazów szarych ze stałą ważne jest doprowadzenie do stanu w którym będziemy mogli dodać wartość 
+nie martwiąc się o przepełnienie zmiennej co mogłoby spowodować zniekształcenie obrazu. \\
+Aby tego uniknąć przeskalujemy wszystkie wartości macierzy obrazu tak, aby suma stałej i największej wartości macierzy 
+nie przekroczyła maksymalnej wartości dla zmiennej. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 300 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30-2.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30-norm-2.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 300 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300-2.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300-norm-2.png}
+\end{figure}
+
+\subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{13}{39}
+
 \section{Sumowanie dwóch obrazów}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Mnożenie obrazu przez zadaną liczbę}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Mnożenie obrazu przez inny obraz}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Mieszanie obrazów z określonym współczynnikiem}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Potęgowanie obrazu (z zadaną potęgą)}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Dzielenie obrazu przez (zadaną) liczbę}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Dzielenie obrazu przez przez inny obraz}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Pierwiastkowanie obrazu}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
+
 \section{Logarytmowanie obrazu}
+\subsection{Opis}
+
+\subsection{Kod źródłowy programu}
 
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
 \section{Sumowanie (określonej) stałej z obrazem}

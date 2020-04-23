@@ -3,10 +3,12 @@ import sys
 
 from Unification import Unification
 from Geometric import Geometric
+from ArithmeticSumGray import ArithmeticSumGray
 
 def main():
-    unificationModule()
-    geometricModule()
+    #unificationModule()
+    #geometricModule()
+    arithmeticSumModule()
 
 def unificationModule():
     unification = Unification('Resources/cat.png', 'Resources/photoman.png', "L")
@@ -29,6 +31,14 @@ def geometricModule():
     geometric.crop(point1, point2)
     point1, point2 = (50, 50), (100, 100)
     geometric.copy(point1, point2)
+
+def arithmeticSumModule():
+    gray = ArithmeticSumGray('Resources/cat.png', 'Resources/photoman.png', 'L')
+    gray.sumWithConst(30)
+    gray.sumWithConst(300)
+    gray = ArithmeticSumGray('Resources/photoman.png', 'Resources/photoman.png', 'L')
+    gray.sumWithConst(30)
+    gray.sumWithConst(300)
 
 if __name__ == '__main__':
     main()
