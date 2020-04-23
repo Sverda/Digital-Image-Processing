@@ -418,34 +418,56 @@ Dodanie dwóch obrazów jest analogiczne jak przy dodaniu stałej do obrazu, ale
 
 \section{Mnożenie obrazu przez zadaną liczbę}
 \subsection{Opis}
+Mnożenie macierzy obrazu prze liczbę to mnożenie każdego z elementów macierzy przez tą liczbę. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-30.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-30-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 300 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-300.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-300-norm.png}
+\end{figure}
 
 \subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{77}{102}
 
 \section{Mnożenie obrazu przez inny obraz}
 \subsection{Opis}
+Przebiega analogicznie jak przez stałą, ale z tą różnicą że każdą komórkę macierzy mnożymy przez odpowiadającą 
+jej komórkę w drugiej macierzy obrazu. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{lena-unmodified.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-2.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-norm.png}
+\end{figure}
 
 \subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{105}{129}
 
 \section{Mieszanie obrazów z określonym współczynnikiem}
 \subsection{Opis}
 
 \subsection{Kod źródłowy programu}
 
-\section{Potęgowanie obrazu (z zadaną potęgą)}
+\section{Potęgowanie obrazu z zadaną potęgą}
 \subsection{Opis}
 
 \subsection{Kod źródłowy programu}
-
-\section{Dzielenie obrazu przez (zadaną) liczbę}
-\subsection{Opis}
-
-\subsection{Kod źródłowy programu}
-
-\section{Dzielenie obrazu przez przez inny obraz}
-\subsection{Opis}
-
-\subsection{Kod źródłowy programu}
-
 
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
 \section{Sumowanie (określonej) stałej z obrazem}
