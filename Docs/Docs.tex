@@ -10,6 +10,9 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage[margin=1.5cm]{geometry}
+\usepackage{titlesec}
+
+\newcommand{\sectionbreak}{\clearpage}
 
 \hypersetup{
 	colorlinks=true,
@@ -418,28 +421,70 @@ Dodanie dwóch obrazów jest analogiczne jak przy dodaniu stałej do obrazu, ale
 
 \section{Mnożenie obrazu przez zadaną liczbę}
 \subsection{Opis}
-Mnożenie macierzy obrazu prze liczbę to mnożenie każdego z elementów macierzy przez tą liczbę. 
+Mnożenie obrazu przychodzi w dwóch formach. Jednym z nich jest wykonanie tej operacji z użyciem stałej jako mnożnika. Na wykonanie tej czynności składa się mnożenie każdego z pikseli przez stałą, w ten sam sposób jak przy zwykłych macierzach: \\
+$
+\begin{bmatrix}
+a_{11} & a_{12} & a_{13}\\
+a_{21} & a_{22} & a_{23}\\
+a_{31} & a_{32} & a_{33}
+\end{bmatrix}
+* X = 
+\begin{bmatrix}
+a_{11} * X & a_{12} * X & a_{13} * X\\
+a_{21} * X & a_{22} * X & a_{23} * X\\
+a_{31} * X & a_{32} * X & a_{33} * X
+\end{bmatrix}
+$
+\\\\
+Mnożeniem obrazów szarych można nazwać też ich \textit{skalowaniem} i dla wartości $\{x: 0 < x < 1\}$ przyciemnij obrazy, a dla wartości $\{x: 1 < x\}$ rozjaśnij go. 
+Jednym z zagrożeń przy tej operacji jest przepełnienie, które objawia się czarnymi plamami (Rysunek 3.7). Aby go uniknąć dla wartości powyżej  $Z_{rep}$ (tzn. maksymalna wielkość zakresu reprezentacji tonalnej obrazu) program przytnie wartości do $Z_{rep}$ co będzie skutkowało coraz jaśniejszymi obrazami, a uniemożliwi czarne plamy. 
 
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\caption{Przykład przekroczenia maksymalnej wartości}
+	\includegraphics[width=17cm, height=17cm]{2/multiply-gray-const-error.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-30.png}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-30-norm.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-norm.png}
 \end{figure}
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 300 (środkowy obraz), po normalizacji (prawy obraz)}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-300.png}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-300-norm.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-2.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-2-norm.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-3.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-3-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-4.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-4-norm.png}
 \end{figure}
 
 \subsection{Kod źródłowy programu}
-\inputpython{../Source/ArithmeticSumGray.py}{77}{102}
+\inputpython{../Source/ArithmeticSumGray.py}{77}{100}
 
 \section{Mnożenie obrazu przez inny obraz}
 \subsection{Opis}
-Przebiega analogicznie jak przez stałą, ale z tą różnicą że każdą komórkę macierzy mnożymy przez odpowiadającą 
-jej komórkę w drugiej macierzy obrazu. 
+Drugą formą mnożenia obrazu jest sytuacja gdy mnożnikiem jest inny obraz. Operacja ta przebiega analogicznie jak przy stałej, ale z tą różnicą że każdy piksel mnożymy przez odpowiadający mu piksel w drugim obrazie, zgodnie ze wzorem: 
+\begin{gather}
+	Q(i,j) = P_1(i,j) \times P_2(i,j)
+\end{gather}
+W zależności od tego jakich wartości w obrazach użyjemy otrzymamy różne rezultaty: 
+\begin{enumerate}
+	\item Dla dwóch obrazów, które wartości posiadają z przedziału $(0, Z_{rep})$ obrazy będą się na siebie nakładać (Rysunek 3.12 i 3.13). 
+	\item Dla obrazów w których jeden z nich jest używany jako maska otrzymamy wyciętą zawartość drugiego obrazu (Rysunek 3.14). 
+\end{enumerate}
+Przydatną własnością tej operacji jest możliwość wyciągania części wspólnych z obrazów, dzięki czemu wykrywanie ruch na obrazach po-klatkowych jest łatwiejsze. 
 
 \begin{figure}[H]
 	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
@@ -455,9 +500,16 @@ jej komórkę w drugiej macierzy obrazu.
 	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images.png}
 	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-norm.png}
 \end{figure}
+\begin{figure}[H]
+\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+\includegraphics[width=7cm, height=7cm]{mask-unmodified.png}
+\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
+\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
+\end{figure}
 
 \subsection{Kod źródłowy programu}
-\inputpython{../Source/ArithmeticSumGray.py}{105}{129}
+\inputpython{../Source/ArithmeticSumGray.py}{103}{129}
 
 \section{Mieszanie obrazów z określonym współczynnikiem}
 \subsection{Opis}

@@ -14,6 +14,7 @@ def unificationModule():
     unification = Unification('Resources/cat.png', 'Resources/photoman.png', "L")
     unification.geometricGray()
     unification.rasterGray()
+
     unification = Unification('Resources/coffee.png', 'Resources/phone.png', "RGB")
     unification.geometricColor()
     unification.rasterColor()
@@ -37,15 +38,22 @@ def arithmeticSumModule():
     #gray.sumWithConst(30)
     #gray.sumWithConst(300)
     #gray.sumImages()
-    #gray.multiplyWithConst(30)
-    #gray.multiplyWithConst(300)
+    #gray.multiplyWithConst(0.5)
+    #gray.multiplyWithConst(1.5)
     #gray.multiplyImages()
+
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/photoman.png', 'L')
     #gray.sumWithConst(30)
     #gray.sumWithConst(300)
     #gray.sumImages()
-    #gray.multiplyWithConst(30)
-    #gray.multiplyWithConst(300)
+    #gray.multiplyWithConst(0.5)
+    #gray.multiplyWithConst(1.5)
+    #gray.multiplyImages()
+
+    gray = ArithmeticSumGray('Resources/cat.png', 'Resources/window-mask.png', 'L')
+    #gray.multiplyImages()
+
+    gray = ArithmeticSumGray('Resources/cat.png', 'Resources/mask.png', 'L')
     gray.multiplyImages()
 
 if __name__ == '__main__':

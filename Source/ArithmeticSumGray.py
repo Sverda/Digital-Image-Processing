@@ -78,15 +78,13 @@ class ArithmeticSumGray(object):
         print('multiply gray image {} with const {}'.format(self.firstDecoder.name, constValue))
         height, width = self.firstDecoder.height, self.firstDecoder.width
         image = self.firstDecoder.getPixels()
-        
-        maxSum = float(numpy.amax(numpy.add(image.astype(numpy.uint32), constValue)))
-        maxValue = float(numpy.iinfo(image.dtype).max)
-        
+        maxValue = numpy.iinfo(image.dtype).max
         result = numpy.ones((height, width), numpy.uint8)
+        
         for h in range(height):
             for w in range(width):
-                pom = (image[h, w] * constValue) / maxValue
-                result[h, w] = numpy.ceil(pom)
+                pom = image[h, w] * constValue
+                result[h, w] = pom if pom <= maxValue else maxValue
 
         img = Image.fromarray(result, mode='L')
         img.save('Resources/result/multiply-gray-const-{}.png'.format(constValue))
@@ -112,8 +110,8 @@ class ArithmeticSumGray(object):
         result = numpy.ones((height, width), numpy.uint8)
         for h in range(height):
             for w in range(width):
-                pom = (int(firstImage[h, w]) * int(secondImage[h, w])) / maxValue
-                result[h, w] = numpy.ceil(pom)
+                pom = int(firstImage[h, w]) * int(secondImage[h, w]) / maxValue
+                result[h, w] = pom
 
         img = Image.fromarray(result, mode='L')
         img.save('Resources/result/multiply-gray-images.png')
