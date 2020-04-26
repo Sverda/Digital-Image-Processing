@@ -22,6 +22,7 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ArithmeticSumGray.py" />
     <Compile Include="ImageDecoder.py" />
     <Compile Include="Geometric.py">
       <SubType>Code</SubType>
@@ -42,9 +43,12 @@
     <Content Include="Resources\cat.png" />
     <Content Include="Resources\coffee.png" />
     <Content Include="Resources\field.png" />
+    <Content Include="Resources\lena.png" />
+    <Content Include="Resources\mask.png" />
     <Content Include="Resources\phone.png" />
     <Content Include="Resources\photoman.png" />
     <Content Include="Resources\sea.png" />
+    <Content Include="Resources\window-mask.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>

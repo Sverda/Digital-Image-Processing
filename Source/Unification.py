@@ -1,6 +1,7 @@
 import numpy
 import collections
 from PIL import Image
+
 from ImageDecoder import ImageDecoder
 
 class Unification(object):
@@ -17,11 +18,19 @@ class Unification(object):
 
     # Ex1.1
     def geometricGray(self):
-        print('geometric gray unificaiton start')
+        print('geometric gray unification start')
+        firstResult, secondResult = self.grayUnification()
+        img = Image.fromarray(firstResult, mode='L')
+        img.save('Resources/result/ggUnification_1.png')
+        img = Image.fromarray(secondResult, mode='L')
+        img.save('Resources/result/ggUnification_2.png')
+        print('geometric gray unification done')
+
+    def grayUnification(self):
+        # Create black background
+        firstResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
         width, height = self.firstDecoder.width, self.firstDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            # Create black background
-            firstResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
@@ -29,14 +38,12 @@ class Unification(object):
             for h in range (0, height):
                 for w in range (0, width):
                     firstResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
-            img = Image.fromarray(firstResult, mode='L')
-            img.save('Resources/result/ggUnification_1.png')
-            print(' first image done')
+        else:
+            firstResult = self.firstDecoder.getPixels()
         
+        secondResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
         width, height = self.secondDecoder.width, self.secondDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            # Create black background
-            secondResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Copy smaller image to bigger
             startWidthIndex = int(round((self.maxWidth - width) / 2))
             startHeightIndex = int(round((self.maxHeight - height) / 2))
@@ -44,21 +51,23 @@ class Unification(object):
             for h in range (0, height):
                 for w in range (0, width):
                     secondResult[h + startHeightIndex, w + startWidthIndex] = pixelsBuffer[h, w]
-            img = Image.fromarray(secondResult, mode='L')
-            img.save('Resources/result/ggUnification_2.png')
-            print(' second image done')
-        print('geometric gray unification done')
+        else:
+            secondResult = self.secondDecoder.getPixels()
+
+        return firstResult, secondResult
 
     # Ex1.2
     def rasterGray(self):
         print('raster gray unification start')
-        self._scaleUpGray(self.firstDecoder, 'Resources/result/rgUnification_1.png')
-        print(' first image done')
-        self._scaleUpGray(self.secondDecoder, 'Resources/result/rgUnification_2.png')
-        print(' second image done')
-        print('raster gray unification done')
+        firstResult = self.scaleUpGray(self.firstDecoder)
+        secondResult = self.scaleUpGray(self.secondDecoder)
+        img = Image.fromarray(firstResult, mode='L')
+        img.save('Resources/result/rgUnification_1.png')
+        img = Image.fromarray(secondResult, mode='L')
+        img.save('Resources/result/rgUnification_2.png')
         
-    def _scaleUpGray(self, decoder, outputPath):
+        
+    def scaleUpGray(self, decoder):
         width, height = decoder.width, decoder.height
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
@@ -66,16 +75,17 @@ class Unification(object):
             pixelsBuffer = decoder.getPixels()
             result = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Fill values
-            for h in range(height):
-                for w in range(width):
+            for h in range(height - 1):
+                for w in range(width - 1):
                     if w%2 == 0:
                         result[int(scaleFactoryH * h), int(round(scaleFactoryW * w)) + 1] = pixelsBuffer[h, w]
                     if w%2 == 1:
                         result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
             # Interpolate
             self._interpolateGray(result)
-            img = Image.fromarray(result, mode='L')
-            img.save(outputPath)
+            return result
+        else: 
+            return decoder.getPixels()
     
     def _interpolateGray(self, result):
         for h in range(self.maxHeight):

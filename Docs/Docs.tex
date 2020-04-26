@@ -10,6 +10,9 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage[margin=1.5cm]{geometry}
+\usepackage{titlesec}
+
+\newcommand{\sectionbreak}{\clearpage}
 
 \hypersetup{
 	colorlinks=true,
@@ -51,10 +54,7 @@ Powyższa struktura przedstawia dokument składający się z jednej strony, na c
 \subsection{Instrukcja obsługi programu}
 W celu uruchomienia kodu źródłowego będzie niezbędny: 
 \begin{itemize}
-	\item \href{http://djvu.sourceforge.net/}{DjVuLibre} ($\geq$ 3.5.21)
 	\item \href{https://www.python.org/}{Python} ($\geq$ 2.6 lub 3.X)
-	\item \href{https://cython.org/}{Cython} ($\geq$ 0.19, lub $\geq$ 0.20 dla Python 3)
-	\item \href{https://wiki.freedesktop.org/www/Software/pkg-config/}{pkg-config} (POSIX)
 \end{itemize}
 
 \chapter{Operacje ujednolicania obrazów}
@@ -341,16 +341,244 @@ def _interpolateColor(self, result):
 \end{python}
 
 \chapter{Operacje sumowania arytmetycznego obrazów szarych}
-\section{Sumowanie (określonej) stałej z obrazem}
+Obraz jest macierzą wartości co pozwala nam wykonywać na nich operacje arytmetyczne tak samo jak na zwykłych macierzach. 
+Operacje takie jak: 
+\renewcommand{\labelitemi}{$*$}
+\begin{itemize}
+	\item dodawanie,
+	\item odejmowanie,
+	\item mnożenie,
+	\item dzielenie
+\end{itemize}
+obrazów może odbywać się w różnych kombinacjach rodzajów wartości: 
+\renewcommand{\labelitemi}{$*$}
+\begin{itemize}
+	\item obraz z obrazem
+	\item obraz ze stałą
+\end{itemize}
+Operacje te odbywają się na poziomie komórek macierz. 
+\\\\
+Po przeprowadzeniu operacji algebraicznych warto przeprowadzić normalizację w celu zmiany zakresu wartości \textit{(min, max)} na \textit{(newMin, newMax)}. 
+Do przeprowadzenia normalizacji w poniższych przykładach będziemy używać wzoru: 
+\[f_{norm}=Z_{rep}[(f-f_{min})/(f_{max}-f_{min})]\]
+
+\section{Sumowanie określonej stałej z obrazem}
+\subsection{Opis}
+W operacji sumowania obrazów szarych ze stałą ważne jest doprowadzenie do stanu w którym będziemy mogli dodać wartość 
+nie martwiąc się o przepełnienie zmiennej co mogłoby spowodować zniekształcenie obrazu. \\
+Aby tego uniknąć przeskalujemy wszystkie wartości macierzy obrazu tak, aby suma stałej i największej wartości macierzy 
+nie przekroczyła maksymalnej wartości dla zmiennej. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 300 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30-2.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-30-norm-2.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po dodaniu wartości 300 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300-2.png}
+	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300-norm-2.png}
+\end{figure}
+
+\subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{15}{41}
+
 \section{Sumowanie dwóch obrazów}
+\subsection{Opis}
+Dodanie dwóch obrazów jest analogiczne jak przy dodaniu stałej do obrazu, ale z tą różnicą, że maksymalnej wartości mogącej spowodować przepełnienie szukamy we wstępnym obrazie wynikowym sumy obu obrazów. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{lena-unmodified.png}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images.png}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images-2.png}
+	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images-2-norm.png}
+\end{figure}
+
+\subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{44}{74}
+
 \section{Mnożenie obrazu przez zadaną liczbę}
+\subsection{Opis}
+Mnożenie obrazu przychodzi w dwóch formach. Jednym z nich jest wykonanie tej operacji z użyciem stałej jako mnożnika. Na wykonanie tej czynności składa się mnożenie każdego z pikseli przez stałą, w ten sam sposób jak przy zwykłych macierzach: \\
+$
+\begin{bmatrix}
+a_{11} & a_{12} & a_{13}\\
+a_{21} & a_{22} & a_{23}\\
+a_{31} & a_{32} & a_{33}
+\end{bmatrix}
+* X = 
+\begin{bmatrix}
+a_{11} * X & a_{12} * X & a_{13} * X\\
+a_{21} * X & a_{22} * X & a_{23} * X\\
+a_{31} * X & a_{32} * X & a_{33} * X
+\end{bmatrix}
+$
+\\\\
+Mnożeniem obrazów szarych można nazwać też ich \textit{skalowaniem} i dla wartości $\{x: 0 < x < 1\}$ przyciemnij obrazy, a dla wartości $\{x: 1 < x\}$ rozjaśnij go. 
+Jednym z zagrożeń przy tej operacji jest przepełnienie, które objawia się czarnymi plamami (Rysunek 3.7). Aby go uniknąć dla wartości powyżej  $Z_{rep}$ (tzn. maksymalna wielkość zakresu reprezentacji tonalnej obrazu) program przytnie wartości do $Z_{rep}$ co będzie skutkowało coraz jaśniejszymi obrazami, a uniemożliwi czarne plamy. 
+
+\begin{figure}[H]
+	\caption{Przykład przekroczenia maksymalnej wartości}
+	\includegraphics[width=17cm, height=17cm]{2/multiply-gray-const-error.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-2.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-2-norm.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-3.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-3-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-4.png}
+	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-4-norm.png}
+\end{figure}
+
+\subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{77}{100}
+
 \section{Mnożenie obrazu przez inny obraz}
+\subsection{Opis}
+Drugą formą mnożenia obrazu jest sytuacja gdy mnożnikiem jest inny obraz. Operacja ta przebiega analogicznie jak przy stałej, ale z tą różnicą że każdy piksel mnożymy przez odpowiadający mu piksel w drugim obrazie, zgodnie ze wzorem: 
+\begin{gather}
+	Q(i,j) = P_1(i,j) \times P_2(i,j)
+\end{gather}
+W zależności od tego jakich wartości w obrazach użyjemy otrzymamy różne rezultaty: 
+\begin{enumerate}
+	\item Dla dwóch obrazów, które wartości posiadają z przedziału $(0, Z_{rep})$ obrazy będą się na siebie nakładać (Rysunek 3.12 i 3.13). 
+	\item Dla obrazów w których jeden z nich jest używany jako maska otrzymamy wyciętą zawartość drugiego obrazu (Rysunek 3.14). 
+\end{enumerate}
+Przydatną własnością tej operacji jest możliwość wyciągania części wspólnych z obrazów, dzięki czemu wykrywanie ruch na obrazach po-klatkowych jest łatwiejsze. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{lena-unmodified.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-2.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+\includegraphics[width=7cm, height=7cm]{mask-unmodified.png}
+\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
+\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
+\end{figure}
+
+\subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{103}{129}
+
 \section{Mieszanie obrazów z określonym współczynnikiem}
-\section{Potęgowanie obrazu (z zadaną potęgą)}
-\section{Dzielenie obrazu przez (zadaną) liczbę}
-\section{Dzielenie obrazu przez przez inny obraz}
-\section{Pierwiastkowanie obrazu}
-\section{Logarytmowanie obrazu}
+\subsection{Opis}
+Operator liniowego mieszania przyjmuje dwa obrazy tych samych rozmiarów, co wymaga skalowania geometrycznego, i zwraca liniową kombinację odpowiadających sobie pikseli (tak samo jak w przypadku dodawania). Wynikiem jest efekt przechodzenia obrazu $f$ w obraz $f^\prime$, a jego natężenie ustala się z pomocą specjalnego współczynnika. \\
+Współczynnik $\alpha$ jest wartością określaną przez użytkownika z zakresu $[0,1]$. Jego zadaniem jest skalowanie wartości każdego piksela w obu obrazach przed ich połączeniem, dzięki czemu raz mogą być faworyzowane wartości z $f^\prime$ i raz z $f$. \\
+Do obliczeń operatora będzie używany wzór: 
+\begin{gather}
+	f_{result}(i,j) = \alpha \times f(i,j) + (1 - \alpha) \times f^\prime(i,j)
+\end{gather}
+Wadą mieszania względem dodawania obrazów jest sam proces skalowania wartości pikseli, który sprawia, że przy wybraniu zbyt małej wartości $\alpha$ kontrast między pikselami jest zatracany. Problem występuje głównie gdy kontrast na samych obrazach jest dość ubogi. Aby podtrzymać kontrast możemy zwiększyć współczynnik $\alpha$ lub zdefiniować odpowiednią maskę dla naszego obrazu. Maska $f_m$ jest rozmiaru $f_{result}$ i składa się z wartości z zakresu $[0, Z_p]$. Każda wartość takiej maski odpowiada współczynnikowi $\alpha$ dla każdego piksela w $f$ i $f^\prime$. Wzór wygląda wtedy tak: 
+\begin{gather}
+	f_{result}(i,j) = \frac{f_m(i,j)}{Z_p} \times f(i,j) + (1 - \frac{f_m(i,j)}{Z_p}) \times f^\prime(i,j)
+\end{gather}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy, górny obraz), po mieszaniu o wartość 0.2 (prawy, górny obraz), po mieszaniu o wartość 0.5 (lewy, dolny obraz), po mieszaniu o wartość 0.8 (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-2.png}
+	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-5.png}
+	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-8.png}
+\end{figure}
+
+\subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{130}{147}
+
+\section{Potęgowanie obrazu z zadaną potęgą}
+\subsection{Opis}
+Efektem operatora potęgowania jest zmniejszenie lub zwiększenie kontrastu pomiędzy pikselami. W przeciwieństwie do operacji dodawania, która zmniejszała lub zwiększała wartość wszystkich pikseli, potęgowanie wpływa na odległość pomiędzy wartościami na osi. Zachowanie wynika z własności funkcji wykładniczej (Rysunek 3.16) - im mniejsza wartość bazowa tym wolniejszy przyrost, a dla większych szybszy przyrost. 
+\begin{figure}[H]
+	\caption{Wykres eksponenty}
+	\includegraphics[width=10cm, height=10cm]{overview/exponential-curve.png}
+\end{figure}
+W zależności od dobrania odpowiedniej wartości \textit{wykładnika} możemy: 
+\begin{enumerate}
+	\item zwiększyć kontrast dla małych jaskrawości; wybierając $\alpha \in (0,1)$. 
+	\item zwiększyć kontrast dla dużych jaskrawości; wybierając $\alpha \in (1,\infty)$. 
+\end{enumerate}
+Obliczając wartości pikseli użyjemy wzoru: 
+\begin{gather}
+	f_m = f^\alpha
+\end{gather}
+Po wykonaniu tej operacji będzie potrzebne zastosowanie normalizacji do uwidocznienie wyników. 
+
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-5.png}
+	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-5-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-20.png}
+	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-20-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-5.png}
+\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-5-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-20.png}
+\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-20-norm.png}
+\end{figure}
+
+\subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{150}{172}
 
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
 \section{Sumowanie (określonej) stałej z obrazem}
@@ -359,10 +587,6 @@ def _interpolateColor(self, result):
 \section{Mnożenie obrazu przez inny obraz}
 \section{Mieszanie obrazów z określonym współczynnikiem}
 \section{Potęgowanie obrazu (z zadaną potęgą)}
-\section{Dzielenie obrazu przez (zadaną) liczbę}
-\section{Dzielenie obrazu przez przez inny obraz}
-\section{Pierwiastkowanie obrazu}
-\section{Logarytmowanie obrazu}
 
 \chapter{Operacje geometryczne na obrazie}
 Operacje geometryczne przekształcają położenie pikseli \textit{(x1, y1)} w obrazie wejściowym do nowej lokacji \textit{(x2, y2)} w obrazie wynikowym. Dzięki temu możemy dopasować obraz do odpowiedniego układu współrzędnych lub użyć tych operacji do eliminacji geometrycznych zakłóceń obrazu (dystorsji). 
