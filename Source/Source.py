@@ -41,9 +41,11 @@ def arithmeticSumModule():
     #gray.multiplyWithConst(0.5)
     #gray.multiplyWithConst(1.5)
     #gray.multiplyImages()
-    gray.blendImages(0.2)
-    gray.blendImages(0.5)
-    gray.blendImages(0.8)
+    #gray.blendImages(0.2)
+    #gray.blendImages(0.5)
+    #gray.blendImages(0.8)
+    #gray.powerFirstImage(0.5)
+    #gray.powerFirstImage(2)
 
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/photoman.png', 'L')
     #gray.sumWithConst(30)
@@ -52,6 +54,8 @@ def arithmeticSumModule():
     #gray.multiplyWithConst(0.5)
     #gray.multiplyWithConst(1.5)
     #gray.multiplyImages()
+    gray.powerFirstImage(0.5)
+    gray.powerFirstImage(2)
 
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/window-mask.png', 'L')
     #gray.multiplyImages()

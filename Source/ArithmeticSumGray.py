@@ -145,3 +145,28 @@ class ArithmeticSumGray(object):
 
         img = Image.fromarray(result, mode='L')
         img.save('Resources/result/blend-gray-images-{}.png'.format(int(ratio*10)))
+
+    # Ex2.4
+    def powerFirstImage(self, powerIndex):
+        print('Power gray image {} with image {} and index {}'.format(self.firstDecoder.name, self.secondDecoder.name, powerIndex))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        
+        maxValue = float(numpy.iinfo(image.dtype).max)
+        result = numpy.ones((height, width), numpy.uint32)
+        for h in range(height):
+            for w in range(width):
+                result[h, w] = image[h, w]**powerIndex
+
+        img = Image.fromarray(result.astype(numpy.uint8), mode='L')
+        img.save('Resources/result/power-gray-{}-{}.png'.format(self.firstDecoder.name.split('/')[1].split('.')[0], int(powerIndex*10)))
+
+        maxValue = numpy.iinfo(image.dtype).max
+        fmin = numpy.amin(result)
+        fmax = numpy.amax(result)
+        result = result.astype(numpy.float32)
+        result = maxValue * ((result - fmin) / (fmax - fmin))
+        result = result.astype(numpy.uint8)
+        
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/result/power-gray-{}-{}-norm.png'.format(self.firstDecoder.name.split('/')[1].split('.')[0], int(powerIndex*10)))
