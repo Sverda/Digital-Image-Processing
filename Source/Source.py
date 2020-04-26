@@ -41,6 +41,9 @@ def arithmeticSumModule():
     #gray.multiplyWithConst(0.5)
     #gray.multiplyWithConst(1.5)
     #gray.multiplyImages()
+    gray.blendImages(0.2)
+    gray.blendImages(0.5)
+    gray.blendImages(0.8)
 
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/photoman.png', 'L')
     #gray.sumWithConst(30)
@@ -54,7 +57,7 @@ def arithmeticSumModule():
     #gray.multiplyImages()
 
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/mask.png', 'L')
-    gray.multiplyImages()
+    #gray.multiplyImages()
 
 if __name__ == '__main__':
     main()

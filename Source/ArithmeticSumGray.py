@@ -13,7 +13,7 @@ class ArithmeticSumGray(object):
 
     # Ex2.1
     def sumWithConst(self, constValue):
-        print('sum gray image {} with const {}'.format(self.firstDecoder.name, constValue))
+        print('Sum gray image {} with const {}'.format(self.firstDecoder.name, constValue))
         height, width = self.firstDecoder.height, self.firstDecoder.width
         image = self.firstDecoder.getPixels()
         
@@ -42,7 +42,7 @@ class ArithmeticSumGray(object):
         
     # Ex2.1
     def sumImages(self):
-        print('sum gray image {} with image {}'.format(self.firstDecoder.name, self.secondDecoder.name))
+        print('Sum gray image {} with image {}'.format(self.firstDecoder.name, self.secondDecoder.name))
         unification = Unification(self.firstDecoder.name, self.secondDecoder.name, 'L')
         firstImage, secondImage = unification.grayUnification()
         width, height = firstImage.shape[0], firstImage.shape[1]
@@ -75,7 +75,7 @@ class ArithmeticSumGray(object):
 
     # Ex2.2
     def multiplyWithConst(self, constValue):
-        print('multiply gray image {} with const {}'.format(self.firstDecoder.name, constValue))
+        print('Multiply gray image {} with const {}'.format(self.firstDecoder.name, constValue))
         height, width = self.firstDecoder.height, self.firstDecoder.width
         image = self.firstDecoder.getPixels()
         maxValue = numpy.iinfo(image.dtype).max
@@ -101,7 +101,7 @@ class ArithmeticSumGray(object):
 
     # Ex2.2
     def multiplyImages(self):
-        print('multiply gray image {} with image {}'.format(self.firstDecoder.name, self.secondDecoder.name))
+        print('Multiply gray image {} with image {}'.format(self.firstDecoder.name, self.secondDecoder.name))
         unification = Unification(self.firstDecoder.name, self.secondDecoder.name, 'L')
         firstImage, secondImage = unification.grayUnification()
         width, height = firstImage.shape[0], firstImage.shape[1]
@@ -125,3 +125,23 @@ class ArithmeticSumGray(object):
         
         img = Image.fromarray(result, mode='L')
         img.save('Resources/result/multiply-gray-images-norm.png')
+
+    # Ex2.3
+    def blendImages(self, ratio):
+        print('Blending gray image {} with image {} and ratio {}'.format(self.firstDecoder.name, self.secondDecoder.name, ratio))
+        if ratio < 0 or ratio > 1.0:
+            raise ValueError('ratio is wrong')
+
+        unification = Unification(self.firstDecoder.name, self.secondDecoder.name, 'L')
+        firstImage = unification.scaleUpGray(self.firstDecoder)
+        secondImage = unification.scaleUpGray(self.secondDecoder)
+        width, height = firstImage.shape[0], firstImage.shape[1]
+        
+        result = numpy.ones((height, width), numpy.uint8)
+        for h in range(height):
+            for w in range(width):
+                pom = ratio * firstImage[h, w] + (1 - ratio) * secondImage[h, w]
+                result[h, w] = pom
+
+        img = Image.fromarray(result, mode='L')
+        img.save('Resources/result/blend-gray-images-{}.png'.format(int(ratio*10)))

@@ -513,8 +513,26 @@ Przydatną własnością tej operacji jest możliwość wyciągania części wsp
 
 \section{Mieszanie obrazów z określonym współczynnikiem}
 \subsection{Opis}
+Operator liniowego mieszania przyjmuje dwa obrazy tych samych rozmiarów, co wymaga unifikacji, i zwraca liniową kombinację odpowiadających sobie pikseli (tak samo jak w przypadku dodawania). Wynikiem jest efekt przechodzenia obrazu $f$ w obraz $f^\prime$, a jego natężenie ustala się z pomocą specjalnego współczynnika. \\
+Współczynnik $\alpha$ jest wartością określaną przez użytkownika z zakresu $[0,1]$. Jego zadaniem jest skalowanie wartości każdego piksela w obu obrazach przed ich połączeniem, dzięki czemu raz mogą być faworyzowane wartości z $f^\prime$ i raz z $f$. \\
+Do obliczeń operatora będzie używany wzór: 
+\begin{gather}
+	f_{result}(i,j) = \alpha \times f(i,j) + (1 - \alpha) \times f^\prime(i,j)
+\end{gather}
+Wadą mieszania względem dodawania obrazów jest sam proces skalowania wartości pikseli, który sprawia, że przy wybraniu zbyt małej wartości $\alpha$ kontrast między pikselami jest zatracany. Problem występuje głównie gdy kontrast na samych obrazach jest dość ubogi. Aby podtrzymać kontrast możemy zwiększyć współczynnik $\alpha$ lub zdefiniować odpowiednią maskę dla naszego obrazu. Maska $f_m$ jest rozmiaru $f_{result}$ i składa się z wartości z zakresu $[0, Z_p]$. Każda wartość takiej maski odpowiada współczynnikowi $\alpha$ dla każdego piksela w $f$ i $f^\prime$. Wzór wygląda wtedy tak: 
+\begin{gather}
+	f_{result}(i,j) = \frac{f_m(i,j)}{Z_p} \times f(i,j) + (1 - \frac{f_m(i,j)}{Z_p}) \times f^\prime(i,j)
+\end{gather}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy, górny obraz), po mieszaniu o wartość 0.2 (prawy, górny obraz), po mieszaniu o wartość 0.5 (lewy, dolny obraz), po mieszaniu o wartość 0.8 (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-2.png}
+	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-5.png}
+	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-8.png}
+\end{figure}
 
 \subsection{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumGray.py}{130}{147}
 
 \section{Potęgowanie obrazu z zadaną potęgą}
 \subsection{Opis}

@@ -59,13 +59,15 @@ class Unification(object):
     # Ex1.2
     def rasterGray(self):
         print('raster gray unification start')
-        self._scaleUpGray(self.firstDecoder, 'Resources/result/rgUnification_1.png')
-        print(' first image done')
-        self._scaleUpGray(self.secondDecoder, 'Resources/result/rgUnification_2.png')
-        print(' second image done')
-        print('raster gray unification done')
+        firstResult = self.scaleUpGray(self.firstDecoder)
+        secondResult = self.scaleUpGray(self.secondDecoder)
+        img = Image.fromarray(firstResult, mode='L')
+        img.save('Resources/result/rgUnification_1.png')
+        img = Image.fromarray(secondResult, mode='L')
+        img.save('Resources/result/rgUnification_2.png')
         
-    def _scaleUpGray(self, decoder, outputPath):
+        
+    def scaleUpGray(self, decoder):
         width, height = decoder.width, decoder.height
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
@@ -73,16 +75,17 @@ class Unification(object):
             pixelsBuffer = decoder.getPixels()
             result = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
             # Fill values
-            for h in range(height):
-                for w in range(width):
+            for h in range(height - 1):
+                for w in range(width - 1):
                     if w%2 == 0:
                         result[int(scaleFactoryH * h), int(round(scaleFactoryW * w)) + 1] = pixelsBuffer[h, w]
                     if w%2 == 1:
                         result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
             # Interpolate
             self._interpolateGray(result)
-            img = Image.fromarray(result, mode='L')
-            img.save(outputPath)
+            return result
+        else: 
+            return decoder.getPixels()
     
     def _interpolateGray(self, result):
         for h in range(self.maxHeight):
