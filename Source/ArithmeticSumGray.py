@@ -5,11 +5,13 @@ from PIL import Image
 
 from ImageDecoder import ImageDecoder
 from Unification import Unification
+from ImageHelper import ImageHelper
 
 class ArithmeticSumGray(object):
     def __init__(self, firstPath, secondPath, imageType):
         self.firstDecoder = ImageDecoder(firstPath, imageType)
         self.secondDecoder = ImageDecoder(secondPath, imageType)
+        self.imageType = imageType
 
     # Ex2.1
     def sumWithConst(self, constValue):
@@ -27,8 +29,7 @@ class ArithmeticSumGray(object):
                 pom = (image[h, w] - (image[h, w] * scaleFactor)) + (constValue - (constValue * scaleFactor))
                 result[h, w] = numpy.ceil(pom)
 
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/sum-gray-const-{}.png'.format(constValue))
+        ImageHelper.Save(result, self.imageType, 'sum-gray-const', False, self.firstDecoder, None, constValue)
 
         maxValue = numpy.iinfo(image.dtype).max
         fmin = numpy.amin(result)
@@ -37,8 +38,7 @@ class ArithmeticSumGray(object):
         result = maxValue * ((result - fmin) / (fmax - fmin))
         result = result.astype(numpy.uint8)
         
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/sum-gray-const-{}-norm.png'.format(constValue))
+        ImageHelper.Save(result, self.imageType, 'sum-gray-const', True, self.firstDecoder, None, constValue)
         
     # Ex2.1
     def sumImages(self):
@@ -60,8 +60,7 @@ class ArithmeticSumGray(object):
                 pom = (firstImage[h, w] - (firstImage[h, w] * scaleFactor)) + (secondImage[h, w] - (secondImage[h, w] * scaleFactor))
                 result[h, w] = numpy.ceil(pom)
 
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/sum-gray-images.png')
+        ImageHelper.Save(result, self.imageType, 'sum-gray-images', False, self.firstDecoder, self.secondDecoder)
 
         maxValue = numpy.iinfo(firstImage.dtype).max
         fmin = numpy.amin(result)
@@ -70,8 +69,8 @@ class ArithmeticSumGray(object):
         result = maxValue * ((result - fmin) / (fmax - fmin))
         result = result.astype(numpy.uint8)
         
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/sum-gray-images-norm.png')
+        ImageHelper.Save(result, self.imageType, 'sum-gray-images', True, self.firstDecoder, self.secondDecoder)
+
 
     # Ex2.2
     def multiplyWithConst(self, constValue):
@@ -86,8 +85,7 @@ class ArithmeticSumGray(object):
                 pom = image[h, w] * constValue
                 result[h, w] = pom if pom <= maxValue else maxValue
 
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/multiply-gray-const-{}.png'.format(constValue))
+        ImageHelper.Save(result, self.imageType, 'multiply-gray-const', False, self.firstDecoder, None, constValue)
 
         maxValue = numpy.iinfo(image.dtype).max
         fmin = numpy.amin(result)
@@ -96,8 +94,7 @@ class ArithmeticSumGray(object):
         result = maxValue * ((result - fmin) / (fmax - fmin))
         result = result.astype(numpy.uint8)
         
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/multiply-gray-const-{}-norm.png'.format(constValue))
+        ImageHelper.Save(result, self.imageType, 'multiply-gray-const', True, self.firstDecoder, None, constValue)
 
     # Ex2.2
     def multiplyImages(self):
@@ -113,8 +110,7 @@ class ArithmeticSumGray(object):
                 pom = int(firstImage[h, w]) * int(secondImage[h, w]) / maxValue
                 result[h, w] = pom
 
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/multiply-gray-images.png')
+        ImageHelper.Save(result, self.imageType, 'multiply-gray-images', False, self.firstDecoder, self.secondDecoder)
 
         maxValue = numpy.iinfo(firstImage.dtype).max
         fmin = numpy.amin(result)
@@ -123,8 +119,7 @@ class ArithmeticSumGray(object):
         result = maxValue * ((result - fmin) / (fmax - fmin))
         result = result.astype(numpy.uint8)
         
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/multiply-gray-images-norm.png')
+        ImageHelper.Save(result, self.imageType, 'multiply-gray-images', True, self.firstDecoder, self.secondDecoder)
 
     # Ex2.3
     def blendImages(self, ratio):
@@ -143,8 +138,7 @@ class ArithmeticSumGray(object):
                 pom = ratio * firstImage[h, w] + (1 - ratio) * secondImage[h, w]
                 result[h, w] = pom
 
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/blend-gray-images-{}.png'.format(int(ratio*10)))
+        ImageHelper.Save(result, self.imageType, 'blend-gray-images', False, self.firstDecoder, None, ratio)
 
     # Ex2.4
     def powerFirstImage(self, powerIndex):
@@ -158,8 +152,7 @@ class ArithmeticSumGray(object):
             for w in range(width):
                 result[h, w] = image[h, w]**powerIndex
 
-        img = Image.fromarray(result.astype(numpy.uint8), mode='L')
-        img.save('Resources/result/power-gray-{}-{}.png'.format(self.firstDecoder.name.split('/')[1].split('.')[0], int(powerIndex*10)))
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-gray', False, self.firstDecoder, None, powerIndex)
 
         maxValue = numpy.iinfo(image.dtype).max
         fmin = numpy.amin(result)
@@ -168,5 +161,4 @@ class ArithmeticSumGray(object):
         result = maxValue * ((result - fmin) / (fmax - fmin))
         result = result.astype(numpy.uint8)
         
-        img = Image.fromarray(result, mode='L')
-        img.save('Resources/result/power-gray-{}-{}-norm.png'.format(self.firstDecoder.name.split('/')[1].split('.')[0], int(powerIndex*10)))
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-gray', True, self.firstDecoder, None, powerIndex)

@@ -27,6 +27,9 @@
     <Compile Include="Geometric.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ImageHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Source.py" />
     <Compile Include="Unification.py">
       <SubType>Code</SubType>
