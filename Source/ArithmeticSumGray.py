@@ -6,6 +6,7 @@ from PIL import Image
 from ImageDecoder import ImageDecoder
 from Unification import Unification
 from ImageHelper import ImageHelper
+from Commons import Commons
 
 class ArithmeticSumGray(object):
     def __init__(self, firstPath, secondPath, imageType):
@@ -30,14 +31,7 @@ class ArithmeticSumGray(object):
                 result[h, w] = numpy.ceil(pom)
 
         ImageHelper.Save(result, self.imageType, 'sum-gray-const', False, self.firstDecoder, None, constValue)
-
-        maxValue = numpy.iinfo(image.dtype).max
-        fmin = numpy.amin(result)
-        fmax = numpy.amax(result)
-        result = result.astype(numpy.float32)
-        result = maxValue * ((result - fmin) / (fmax - fmin))
-        result = result.astype(numpy.uint8)
-        
+        result = Commons.Normalization(image, result)
         ImageHelper.Save(result, self.imageType, 'sum-gray-const', True, self.firstDecoder, None, constValue)
         
     # Ex2.1
@@ -61,14 +55,7 @@ class ArithmeticSumGray(object):
                 result[h, w] = numpy.ceil(pom)
 
         ImageHelper.Save(result, self.imageType, 'sum-gray-images', False, self.firstDecoder, self.secondDecoder)
-
-        maxValue = numpy.iinfo(firstImage.dtype).max
-        fmin = numpy.amin(result)
-        fmax = numpy.amax(result)
-        result = result.astype(numpy.float32)
-        result = maxValue * ((result - fmin) / (fmax - fmin))
-        result = result.astype(numpy.uint8)
-        
+        result = Commons.Normalization(firstImage, result)
         ImageHelper.Save(result, self.imageType, 'sum-gray-images', True, self.firstDecoder, self.secondDecoder)
 
 
@@ -86,14 +73,7 @@ class ArithmeticSumGray(object):
                 result[h, w] = pom if pom <= maxValue else maxValue
 
         ImageHelper.Save(result, self.imageType, 'multiply-gray-const', False, self.firstDecoder, None, constValue)
-
-        maxValue = numpy.iinfo(image.dtype).max
-        fmin = numpy.amin(result)
-        fmax = numpy.amax(result)
-        result = result.astype(numpy.float32)
-        result = maxValue * ((result - fmin) / (fmax - fmin))
-        result = result.astype(numpy.uint8)
-        
+        result = Commons.Normalization(image, result)
         ImageHelper.Save(result, self.imageType, 'multiply-gray-const', True, self.firstDecoder, None, constValue)
 
     # Ex2.2
@@ -111,14 +91,7 @@ class ArithmeticSumGray(object):
                 result[h, w] = pom
 
         ImageHelper.Save(result, self.imageType, 'multiply-gray-images', False, self.firstDecoder, self.secondDecoder)
-
-        maxValue = numpy.iinfo(firstImage.dtype).max
-        fmin = numpy.amin(result)
-        fmax = numpy.amax(result)
-        result = result.astype(numpy.float32)
-        result = maxValue * ((result - fmin) / (fmax - fmin))
-        result = result.astype(numpy.uint8)
-        
+        result = Commons.Normalization(firstImage, result)
         ImageHelper.Save(result, self.imageType, 'multiply-gray-images', True, self.firstDecoder, self.secondDecoder)
 
     # Ex2.3
@@ -153,12 +126,5 @@ class ArithmeticSumGray(object):
                 result[h, w] = image[h, w]**powerIndex
 
         ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-gray', False, self.firstDecoder, None, powerIndex)
-
-        maxValue = numpy.iinfo(image.dtype).max
-        fmin = numpy.amin(result)
-        fmax = numpy.amax(result)
-        result = result.astype(numpy.float32)
-        result = maxValue * ((result - fmin) / (fmax - fmin))
-        result = result.astype(numpy.uint8)
-        
+        result = Commons.Normalization(image, result)
         ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-gray', True, self.firstDecoder, None, powerIndex)
