@@ -363,7 +363,8 @@ Do przeprowadzenia normalizacji w poniższych przykładach będziemy używać wz
 \[f_{norm}=Z_{rep}[(f-f_{min})/(f_{max}-f_{min})]\]
 
 \section{Sumowanie określonej stałej z obrazem}
-\subsection{Opis}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
 W operacji sumowania obrazów szarych ze stałą ważne jest doprowadzenie do stanu w którym będziemy mogli dodać wartość 
 nie martwiąc się o przepełnienie zmiennej co mogłoby spowodować zniekształcenie obrazu. \\
 Aby tego uniknąć przeskalujemy wszystkie wartości macierzy obrazu tak, aby suma stałej i największej wartości macierzy 
@@ -394,11 +395,12 @@ nie przekroczyła maksymalnej wartości dla zmiennej.
 	\includegraphics[width=5cm, height=5cm]{2/sum-gray-const-300-norm-2.png}
 \end{figure}
 
-\subsection{Kod źródłowy programu}
+\subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumGray.py}{15}{41}
 
 \section{Sumowanie dwóch obrazów}
-\subsection{Opis}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
 Dodanie dwóch obrazów jest analogiczne jak przy dodaniu stałej do obrazu, ale z tą różnicą, że maksymalnej wartości mogącej spowodować przepełnienie szukamy we wstępnym obrazie wynikowym sumy obu obrazów. 
 
 \begin{figure}[H]
@@ -416,11 +418,12 @@ Dodanie dwóch obrazów jest analogiczne jak przy dodaniu stałej do obrazu, ale
 	\includegraphics[width=7cm, height=7cm]{2/sum-gray-images-2-norm.png}
 \end{figure}
 
-\subsection{Kod źródłowy programu}
+\subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumGray.py}{44}{74}
 
 \section{Mnożenie obrazu przez zadaną liczbę}
-\subsection{Opis}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
 Mnożenie obrazu przychodzi w dwóch formach. Jednym z nich jest wykonanie tej operacji z użyciem stałej jako mnożnika. Na wykonanie tej czynności składa się mnożenie każdego z pikseli przez stałą, w ten sam sposób jak przy zwykłych macierzach: \\
 $
 \begin{bmatrix}
@@ -470,11 +473,12 @@ Jednym z zagrożeń przy tej operacji jest przepełnienie, które objawia się c
 	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-4-norm.png}
 \end{figure}
 
-\subsection{Kod źródłowy programu}
+\subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumGray.py}{77}{100}
 
 \section{Mnożenie obrazu przez inny obraz}
-\subsection{Opis}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
 Drugą formą mnożenia obrazu jest sytuacja gdy mnożnikiem jest inny obraz. Operacja ta przebiega analogicznie jak przy stałej, ale z tą różnicą że każdy piksel mnożymy przez odpowiadający mu piksel w drugim obrazie, zgodnie ze wzorem: 
 \begin{gather}
 	Q(i,j) = P_1(i,j) \times P_2(i,j)
@@ -508,11 +512,12 @@ Przydatną własnością tej operacji jest możliwość wyciągania części wsp
 \includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
 \end{figure}
 
-\subsection{Kod źródłowy programu}
+\subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumGray.py}{103}{129}
 
 \section{Mieszanie obrazów z określonym współczynnikiem}
-\subsection{Opis}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
 Operator liniowego mieszania przyjmuje dwa obrazy tych samych rozmiarów, co wymaga skalowania geometrycznego, i zwraca liniową kombinację odpowiadających sobie pikseli (tak samo jak w przypadku dodawania). Wynikiem jest efekt przechodzenia obrazu $f$ w obraz $f^\prime$, a jego natężenie ustala się z pomocą specjalnego współczynnika. \\
 Współczynnik $\alpha$ jest wartością określaną przez użytkownika z zakresu $[0,1]$. Jego zadaniem jest skalowanie wartości każdego piksela w obu obrazach przed ich połączeniem, dzięki czemu raz mogą być faworyzowane wartości z $f^\prime$ i raz z $f$. \\
 Do obliczeń operatora będzie używany wzór: 
@@ -531,11 +536,12 @@ Wadą mieszania względem dodawania obrazów jest sam proces skalowania wartośc
 	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-8.png}
 \end{figure}
 
-\subsection{Kod źródłowy programu}
+\subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumGray.py}{130}{147}
 
 \section{Potęgowanie obrazu z zadaną potęgą}
-\subsection{Opis}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
 Efektem operatora potęgowania jest zmniejszenie lub zwiększenie kontrastu pomiędzy pikselami. W przeciwieństwie do operacji dodawania, która zmniejszała lub zwiększała wartość wszystkich pikseli, potęgowanie wpływa na odległość pomiędzy wartościami na osi. Zachowanie wynika z własności funkcji wykładniczej (Rysunek 3.16) - im mniejsza wartość bazowa tym wolniejszy przyrost, a dla większych szybszy przyrost. 
 \begin{figure}[H]
 	\caption{Wykres eksponenty}
@@ -577,16 +583,40 @@ Po wykonaniu tej operacji będzie potrzebne zastosowanie normalizacji do uwidocz
 \includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-20-norm.png}
 \end{figure}
 
-\subsection{Kod źródłowy programu}
+\subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumGray.py}{150}{172}
 
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
 \section{Sumowanie (określonej) stałej z obrazem}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsection*{Kod źródłowy programu}
+
 \section{Sumowanie dwóch obrazów}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsection*{Kod źródłowy programu}
+
 \section{Mnożenie obrazu przez zadaną liczbę}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsection*{Kod źródłowy programu}
+
 \section{Mnożenie obrazu przez inny obraz}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsection*{Kod źródłowy programu}
+
 \section{Mieszanie obrazów z określonym współczynnikiem}
+
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsection*{Kod źródłowy programu}
+
 \section{Potęgowanie obrazu (z zadaną potęgą)}
+\subsection*{Algorytm}
+\subsubsection*{Opis}
+\subsection*{Kod źródłowy programu}
 
 \chapter{Operacje geometryczne na obrazie}
 Operacje geometryczne przekształcają położenie pikseli \textit{(x1, y1)} w obrazie wejściowym do nowej lokacji \textit{(x2, y2)} w obrazie wynikowym. Dzięki temu możemy dopasować obraz do odpowiedniego układu współrzędnych lub użyć tych operacji do eliminacji geometrycznych zakłóceń obrazu (dystorsji). 
