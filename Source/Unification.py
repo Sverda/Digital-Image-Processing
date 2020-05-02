@@ -141,13 +141,14 @@ class Unification(object):
     # Ex1.4
     def rasterColor(self):
         print('rastar color unification start')
-        self._scaleUpColor(self.firstDecoder, 'Resources/result/rcUnification_1.png')
-        print(' first image done')
-        self._scaleUpColor(self.secondDecoder, 'Resources/result/rcUnification_2.png')
-        print(' second image done')
-        print('rastar color unification done')
+        firstResult = self.scaleUpColor(self.firstDecoder)
+        secondResult = self.scaleUpColor(self.secondDecoder)
+        img = Image.fromarray(firstResult, mode='RGB')
+        img.save('Resources/result/rcUnification_1.png')
+        img = Image.fromarray(secondResult, mode='RGB')
+        img.save('Resources/result/rcUnification_2.png')
 
-    def _scaleUpColor(self, decoder, outputPath):
+    def scaleUpColor(self, decoder):
         width, height = decoder.width, decoder.height
         scaleFactoryW = float(self.maxWidth) / width
         scaleFactoryH = float(self.maxHeight) / height
@@ -163,8 +164,9 @@ class Unification(object):
                         result[int(round(scaleFactoryH * h)) + 1, int(scaleFactoryW * w)] = pixelsBuffer[h, w]
             # Interpolate
             self._interpolateColor(result)
-            img = Image.fromarray(result, mode='RGB')
-            img.save(outputPath)
+            return result;
+        else: 
+            return decoder.getPixels()
 
     def _interpolateColor(self, result):
         for h in range(self.maxHeight):

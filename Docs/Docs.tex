@@ -527,16 +527,20 @@ Do obliczeń operatora będzie używany wzór:
 \begin{gather}
 	f_{result}(i,j) = \alpha \times f(i,j) + (1 - \alpha) \times f^\prime(i,j)
 \end{gather}
-Wadą mieszania względem dodawania obrazów jest sam proces skalowania wartości pikseli, który sprawia, że przy wybraniu zbyt małej wartości $\alpha$ kontrast między pikselami jest zatracany. Problem występuje głównie gdy kontrast na samych obrazach jest dość ubogi. Aby podtrzymać kontrast możemy zwiększyć współczynnik $\alpha$ lub zdefiniować odpowiednią maskę dla naszego obrazu. Maska $f_m$ jest rozmiaru $f_{result}$ i składa się z wartości z zakresu $[0, Z_p]$. Każda wartość takiej maski odpowiada współczynnikowi $\alpha$ dla każdego piksela w $f$ i $f^\prime$. Wzór wygląda wtedy tak: 
+Wadą mieszania względem dodawania obrazów jest sam proces skalowania wartości pikseli, który sprawia, że przy wybraniu zbyt małej wartości $\alpha$ kontrast między pikselami jest zatracany. Problem występuje głównie, gdy kontrast na samych obrazach jest dość ubogi. Aby podtrzymać kontrast możemy zwiększyć współczynnik $\alpha$ lub zdefiniować odpowiednią maskę dla naszego obrazu. Maska $f_m$ jest rozmiaru $f_{result}$ i składa się z wartości z zakresu $[0, Z_p]$. Każda wartość takiej maski odpowiada współczynnikowi $\alpha$ dla każdego piksela w $f$ i $f^\prime$. Wzór wygląda wtedy tak: 
 \begin{gather}
 	f_{result}(i,j) = \frac{f_m(i,j)}{Z_p} \times f(i,j) + (1 - \frac{f_m(i,j)}{Z_p}) \times f^\prime(i,j)
 \end{gather}
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy, górny obraz), po mieszaniu o wartość 0.2 (prawy, górny obraz), po mieszaniu o wartość 0.5 (lewy, dolny obraz), po mieszaniu o wartość 0.8 (prawy, dolny obraz)}
-	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
-	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-2.png}
-	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-5.png}
-	\includegraphics[width=7cm, height=7cm]{2/blend-gray-images-8.png}
+	\caption{Przed uruchomieniem algorytmu}
+	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Po mieszaniu o wartość 0.2 (lewy obraz), po mieszaniu o wartość 0.5 (środkowy obraz), po mieszaniu o wartość 0.8 (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{2/blend-gray-images-2.png}
+	\includegraphics[width=5cm, height=5cm]{2/blend-gray-images-5.png}
+	\includegraphics[width=5cm, height=5cm]{2/blend-gray-images-8.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -701,10 +705,22 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 \inputpython{../Source/ArithmeticSumColor.py}{88}{104}
 
 \section{Mieszanie obrazów z określonym współczynnikiem}
-
 \subsection*{Algorytm}
 \subsubsection*{Opis}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+\end{figure}
+\begin{figure}[H]
+	\caption{Po mieszaniu o wartość 0.2 (lewy obraz), po mieszaniu o wartość 0.5 (środkowy obraz), po mieszaniu o wartość 0.8 (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{3-3/blend-color-images-coffee-2.png}
+	\includegraphics[width=5cm, height=5cm]{3-3/blend-color-images-coffee-5.png}
+	\includegraphics[width=5cm, height=5cm]{3-3/blend-color-images-coffee-8.png}
+\end{figure}
+
 \subsection*{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumColor.py}{107}{124}
 
 \section{Potęgowanie obrazu (z zadaną potęgą)}
 \subsection*{Algorytm}

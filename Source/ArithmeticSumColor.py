@@ -102,3 +102,23 @@ class ArithmeticSumColor(object):
         ImageHelper.Save(result, self.imageType, 'multiply-color-images', False, self.firstDecoder, self.secondDecoder)
         result = Commons.Normalization(firstImage, result)
         ImageHelper.Save(result, self.imageType, 'multiply-color-images', True, self.firstDecoder, self.secondDecoder)
+
+    # Ex3.3
+    def blendImages(self, ratio):
+        print('Blending color image {} with image {} and ratio {}'.format(self.firstDecoder.name, self.secondDecoder.name, ratio))
+        if ratio < 0 or ratio > 1.0:
+            raise ValueError('ratio is wrong')
+
+        unification = Unification(self.firstDecoder.name, self.secondDecoder.name, self.imageType)
+        firstImage = unification.scaleUpColor(self.firstDecoder)
+        secondImage = unification.scaleUpColor(self.secondDecoder)
+        width, height = firstImage.shape[0], firstImage.shape[1]
+        
+        result = numpy.ones((height, width, 3), numpy.uint8)
+        for h in range(height):
+            for w in range(width):
+                result[h, w, 0] = ratio * firstImage[h, w, 0] + (1 - ratio) * secondImage[h, w, 0]
+                result[h, w, 1] = ratio * firstImage[h, w, 1] + (1 - ratio) * secondImage[h, w, 1]
+                result[h, w, 2] = ratio * firstImage[h, w, 2] + (1 - ratio) * secondImage[h, w, 2]
+
+        ImageHelper.Save(result, self.imageType, 'blend-color-images', False, self.firstDecoder, None, ratio)
