@@ -64,15 +64,21 @@ def grayArithmeticSumModule():
 
 def colorArithmeticSumModule():
     color = ArithmeticSumColor('Resources/coffee.png', 'Resources/phone.png', 'RGB')
-    color.sumWithConst(30)
-    color.sumWithConst(200)
+    #color.sumWithConst(30)
+    #color.sumWithConst(200)
     #color.sumWithConst(300)
     #color.sumImages()
+    #color.multiplyWithConst(0.5)
+    #color.multiplyWithConst(1.5)
+    color.multiplyImages()
     color = ArithmeticSumColor('Resources/phone.png', 'Resources/sea.png', 'RGB')
-    color.sumWithConst(30)
-    color.sumWithConst(200)
+    #color.sumWithConst(30)
+    #color.sumWithConst(200)
     #color.sumWithConst(300)
     #color.sumImages()
+    #color.multiplyWithConst(0.5)
+    #color.multiplyWithConst(1.5)
+    color.multiplyImages()
 
 if __name__ == '__main__':
     main()

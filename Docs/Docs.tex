@@ -631,14 +631,14 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 \subsection*{Algorytm}
 \subsubsection*{Opis}
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\caption{Przed (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
 	\includegraphics[width=7cm, height=7cm]{coffee-unmodified.jpg}
 	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
 	\includegraphics[width=7cm, height=7cm]{3-1/sum-color-images-coffee-phone.png}
 	\includegraphics[width=7cm, height=7cm]{3-1/sum-color-images-coffee-phone-norm.png}
 \end{figure}
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\caption{Przed (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
 	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
 	\includegraphics[width=7cm, height=7cm]{sea-unmodified.jpg}
 	\includegraphics[width=7cm, height=7cm]{3-1/sum-color-images-phone-sea.png}
@@ -651,12 +651,54 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 \section{Mnożenie obrazu przez zadaną liczbę}
 \subsection*{Algorytm}
 \subsubsection*{Opis}
+\begin{figure}[H]
+	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-5.png}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-5-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-5.png}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-5-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
+\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15.png}
+\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
+\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15.png}
+\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15-norm.png}
+\end{figure}
+
 \subsection*{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumColor.py}{67}{85}
 
 \section{Mnożenie obrazu przez inny obraz}
 \subsection*{Algorytm}
 \subsubsection*{Opis}
+\begin{figure}[H]
+	\caption{Przed (górne obrazy), po pomnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{coffee-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{3-2/multiply-color-images-coffee-phone.png}
+	\includegraphics[width=7cm, height=7cm]{3-2/multiply-color-images-coffee-phone-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed (górne obrazy), po pomnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{sea-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{3-2/multiply-color-images-phone-sea.png}
+	\includegraphics[width=7cm, height=7cm]{3-2/multiply-color-images-phone-sea-norm.png}
+\end{figure}
+
 \subsection*{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumColor.py}{88}{104}
 
 \section{Mieszanie obrazów z określonym współczynnikiem}
 
