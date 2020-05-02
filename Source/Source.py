@@ -4,11 +4,13 @@ import sys
 from Unification import Unification
 from Geometric import Geometric
 from ArithmeticSumGray import ArithmeticSumGray
+from ArithmeticSumColor import ArithmeticSumColor
 
 def main():
     #unificationModule()
     #geometricModule()
-    arithmeticSumModule()
+    #grayArithmeticSumModule()
+    colorArithmeticSumModule()
 
 def unificationModule():
     unification = Unification('Resources/cat.png', 'Resources/photoman.png', "L")
@@ -33,7 +35,7 @@ def geometricModule():
     point1, point2 = (50, 50), (100, 100)
     geometric.copy(point1, point2)
 
-def arithmeticSumModule():
+def grayArithmeticSumModule():
     gray = ArithmeticSumGray('Resources/photoman.png', 'Resources/lena.png', 'L')
     gray.sumWithConst(30)
     gray.sumWithConst(300)
@@ -46,7 +48,6 @@ def arithmeticSumModule():
     gray.blendImages(0.8)
     gray.powerFirstImage(0.5)
     gray.powerFirstImage(2)
-
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/photoman.png', 'L')
     gray.sumWithConst(30)
     gray.sumWithConst(300)
@@ -56,12 +57,22 @@ def arithmeticSumModule():
     gray.multiplyImages()
     gray.powerFirstImage(0.5)
     gray.powerFirstImage(2)
-
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/window-mask.png', 'L')
     gray.multiplyImages()
-
     gray = ArithmeticSumGray('Resources/cat.png', 'Resources/mask.png', 'L')
     gray.multiplyImages()
+
+def colorArithmeticSumModule():
+    color = ArithmeticSumColor('Resources/coffee.png', 'Resources/phone.png', 'RGB')
+    color.sumWithConst(30)
+    color.sumWithConst(200)
+    #color.sumWithConst(300)
+    #color.sumImages()
+    color = ArithmeticSumColor('Resources/phone.png', 'Resources/sea.png', 'RGB')
+    color.sumWithConst(30)
+    color.sumWithConst(200)
+    #color.sumWithConst(300)
+    #color.sumImages()
 
 if __name__ == '__main__':
     main()

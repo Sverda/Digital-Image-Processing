@@ -347,7 +347,7 @@ Operacje takie jak:
 \begin{itemize}
 	\item dodawanie,
 	\item odejmowanie,
-	\item mnożenie,
+	\item mnożenie (wyjątkowo wykonywane inaczej niż w przypadku dwóch macierzy),
 	\item dzielenie
 \end{itemize}
 obrazów może odbywać się w różnych kombinacjach rodzajów wartości: 
@@ -356,11 +356,14 @@ obrazów może odbywać się w różnych kombinacjach rodzajów wartości:
 	\item obraz z obrazem
 	\item obraz ze stałą
 \end{itemize}
-Operacje te odbywają się na poziomie komórek macierz. 
-\\\\
-Po przeprowadzeniu operacji algebraicznych warto przeprowadzić normalizację w celu zmiany zakresu wartości \textit{(min, max)} na \textit{(newMin, newMax)}. 
+Operacje te odbywają się na poziomie komórek macierz i są też nazywane \textbf{operatorami punktowymi}. Co oznacza, że przy przetwarzaniu dwóch obrazów liczą się tylko wartości znajdujące się na tej samej pozycji wysokości i szerokości w obrazie $P_1(i,j)$ i $P_2(i,j)$. 
+\\
+Po przeprowadzeniu niektórych operacji algebraicznych należy przeprowadzić normalizację w celu zmiany zakresu wartości \textit{(min, max)} na \textit{(newMin, newMax)}. 
 Do przeprowadzenia normalizacji w poniższych przykładach będziemy używać wzoru: 
 \[f_{norm}=Z_{rep}[(f-f_{min})/(f_{max}-f_{min})]\]
+Gdzie $Z_{rep}$ oznacza maksymalną wartość dla naszej struktury piksela. Dla obrazów szarych może przybrać wartość \textit{\#FF} (system szesnastkowy) lub dla wersji kolorowej \textit{\#FFFFFF}. 
+W celu uniknięcia powtórzeń w kodzie źródłowym wydzieliłem funkcję normalizacji, która dla obrazów szarych prezentuje się następująco: 
+\inputpython{../Source/Commons.py}{8}{15}
 
 \section{Sumowanie określonej stałej z obrazem}
 \subsection*{Algorytm}
@@ -587,15 +590,63 @@ Po wykonaniu tej operacji będzie potrzebne zastosowanie normalizacji do uwidocz
 \inputpython{../Source/ArithmeticSumGray.py}{117}{130}
 
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
+Rodzaje operatorów arytmetycznych używane na obrazach barwowych różnią się względem ich szarych odpowiedników tylko strukturą na której pracują. Piksel obrazów szarych składa się z jednej wartości z zakresu $[0,255]$. W przypadku kolorowych obrazów potrzebne są trzy wartości na każdą barwę \textit{RGB}. 
+\\
+Funkcja normalizacji w przypadku tego rodzaju obrazu wygląda tak: 
+\inputpython{../Source/Commons.py}{8}{15}
+Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $maxValue$ (w tym wypadku 255). Po czym wśród wszystkich pikselach i ich składowych znajduje najmniejszą i największą wartość $fmin$ i $fmax$. Następnie wykonywane są obliczenia mające na celu przeskalowanie wartości do innego przedziału. W wypadku gdy $fmin$ i $fmax$ znajdują się niedaleko od siebie, normalizacja zapewni aby wartości obrazu wynikowego będą rozpięte na przedział $[0,255]$ z $fmin$ i $fmax$, który może być mniejszy (np z zakresu $[50,90]$). Dzięki temu zabiegowi proporcje między barwami zostaną zachowane i obraz ożywi się trochę kolorami. 
+
 \section{Sumowanie (określonej) stałej z obrazem}
 \subsection*{Algorytm}
 \subsubsection*{Opis}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-30.png}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-30-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
+\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-30.png}
+\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-30-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 200 (środkowy obraz), po normalizacji (prawy obraz)}
+\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-200.png}
+\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-200-norm.png}
+\end{figure}
+\begin{figure}[H]
+\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 200 (środkowy obraz), po normalizacji (prawy obraz)}
+\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-200.png}
+\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-200-norm.png}
+\end{figure}
+
 \subsection*{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumColor.py}{18}{37}
 
 \section{Sumowanie dwóch obrazów}
 \subsection*{Algorytm}
 \subsubsection*{Opis}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{coffee-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{3-1/sum-color-images-coffee-phone.png}
+	\includegraphics[width=7cm, height=7cm]{3-1/sum-color-images-coffee-phone-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po dodaniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{sea-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{3-1/sum-color-images-phone-sea.png}
+	\includegraphics[width=7cm, height=7cm]{3-1/sum-color-images-phone-sea-norm.png}
+\end{figure}
+
 \subsection*{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumColor.py}{40}{63}
 
 \section{Mnożenie obrazu przez zadaną liczbę}
 \subsection*{Algorytm}

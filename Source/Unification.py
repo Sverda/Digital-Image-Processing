@@ -66,7 +66,6 @@ class Unification(object):
         img = Image.fromarray(secondResult, mode='L')
         img.save('Resources/result/rgUnification_2.png')
         
-        
     def scaleUpGray(self, decoder):
         width, height = decoder.width, decoder.height
         scaleFactoryW = float(self.maxWidth) / width
@@ -104,21 +103,27 @@ class Unification(object):
 
     # Ex1.3
     def geometricColor(self):
-        print('geometric color unificaiton start')
+        print('geometric color unification start')
+        firstResult, secondResult = self.colorUnification()
+        img = Image.fromarray(firstResult, 'RGB')
+        img.save('Resources/result/gcUnification_1.png')
+        img = Image.fromarray(secondResult, 'RGB')
+        img.save('Resources/result/gcUnification_2.png')
+
+    def colorUnification(self):
         width, height = self.firstDecoder.width, self.firstDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            result = self._paintInMiddleColor(self.firstDecoder)
-            img = Image.fromarray(result, 'RGB')
-            img.save('Resources/result/gcUnification_1.png')
-            print(' first image done')
+            firstResult = self._paintInMiddleColor(self.firstDecoder)
+        else:
+            firstResult = self.firstDecoder.getPixels()
 
         width, height = self.secondDecoder.width, self.secondDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
-            result = self._paintInMiddleColor(self.secondDecoder)
-            img = Image.fromarray(result, 'RGB')
-            img.save('Resources/result/gcUnification_2.png')
-            print(' second image done')
-        print('geometric color unification done')
+            secondResult = self._paintInMiddleColor(self.secondDecoder)
+        else:
+            secondResult = self.secondDecoder.getPixels()
+
+        return firstResult, secondResult
 
     def _paintInMiddleColor(self, decoder):
         # Create black background
