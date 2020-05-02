@@ -5,12 +5,14 @@ from Unification import Unification
 from Geometric import Geometric
 from ArithmeticSumGray import ArithmeticSumGray
 from ArithmeticSumColor import ArithmeticSumColor
+from HistogramGray import HistogramGray
 
 def main():
     #unificationModule()
     #geometricModule()
     #grayArithmeticSumModule()
-    colorArithmeticSumModule()
+    #colorArithmeticSumModule()
+    grayHistogramModule()
 
 def unificationModule():
     unification = Unification('Resources/cat.png', 'Resources/photoman.png', "L")
@@ -64,28 +66,34 @@ def grayArithmeticSumModule():
 
 def colorArithmeticSumModule():
     color = ArithmeticSumColor('Resources/coffee.png', 'Resources/phone.png', 'RGB')
-    #color.sumWithConst(30)
-    #color.sumWithConst(200)
-    #color.sumWithConst(300)
-    #color.sumImages()
-    #color.multiplyWithConst(0.5)
-    #color.multiplyWithConst(1.5)
-    #color.multiplyImages()
-    #color.blendImages(0.2)
-    #color.blendImages(0.5)
-    #color.blendImages(0.8)
+    color.sumWithConst(30)
+    color.sumWithConst(200)
+    color.sumWithConst(300)
+    color.sumImages()
+    color.multiplyWithConst(0.5)
+    color.multiplyWithConst(1.5)
+    color.multiplyImages()
+    color.blendImages(0.2)
+    color.blendImages(0.5)
+    color.blendImages(0.8)
     color.powerFirstImage(0.5)
     color.powerFirstImage(2)
     color = ArithmeticSumColor('Resources/phone.png', 'Resources/sea.png', 'RGB')
-    #color.sumWithConst(30)
-    #color.sumWithConst(200)
-    #color.sumWithConst(300)
-    #color.sumImages()
-    #color.multiplyWithConst(0.5)
-    #color.multiplyWithConst(1.5)
-    #color.multiplyImages()
+    color.sumWithConst(30)
+    color.sumWithConst(200)
+    color.sumWithConst(300)
+    color.sumImages()
+    color.multiplyWithConst(0.5)
+    color.multiplyWithConst(1.5)
+    color.multiplyImages()
     color.powerFirstImage(0.5)
     color.powerFirstImage(2)
+
+def grayHistogramModule():
+    gray = HistogramGray('Resources/photoman.png', 'L')
+    gray.calculateHistogram()
+    gray = HistogramGray('Resources/lena.png', 'L')
+    gray.calculateHistogram()
 
 if __name__ == '__main__':
     main()
