@@ -668,16 +668,16 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-5-norm.png}
 \end{figure}
 \begin{figure}[H]
-\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
-\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
-\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15.png}
-\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15-norm.png}
+	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15.png}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15-norm.png}
 \end{figure}
 \begin{figure}[H]
-\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
-\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
-\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15.png}
-\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15-norm.png}
+	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15.png}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15-norm.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -725,7 +725,33 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 \section{Potęgowanie obrazu (z zadaną potęgą)}
 \subsection*{Algorytm}
 \subsubsection*{Opis}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-5.png}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-5-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-2.png}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-phone-5.png}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-phone-5-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-phone-2.png}
+	\includegraphics[width=5cm, height=5cm]{3-4/power-color-phone-2-norm.png}
+\end{figure}
+
 \subsection*{Kod źródłowy programu}
+\inputpython{../Source/ArithmeticSumColor.py}{127}{142}
 
 \chapter{Operacje geometryczne na obrazie}
 Operacje geometryczne przekształcają położenie pikseli \textit{(x1, y1)} w obrazie wejściowym do nowej lokacji \textit{(x2, y2)} w obrazie wynikowym. Dzięki temu możemy dopasować obraz do odpowiedniego układu współrzędnych lub użyć tych operacji do eliminacji geometrycznych zakłóceń obrazu (dystorsji). 

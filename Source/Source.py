@@ -71,9 +71,11 @@ def colorArithmeticSumModule():
     #color.multiplyWithConst(0.5)
     #color.multiplyWithConst(1.5)
     #color.multiplyImages()
-    color.blendImages(0.2)
-    color.blendImages(0.5)
-    color.blendImages(0.8)
+    #color.blendImages(0.2)
+    #color.blendImages(0.5)
+    #color.blendImages(0.8)
+    color.powerFirstImage(0.5)
+    color.powerFirstImage(2)
     color = ArithmeticSumColor('Resources/phone.png', 'Resources/sea.png', 'RGB')
     #color.sumWithConst(30)
     #color.sumWithConst(200)
@@ -82,6 +84,8 @@ def colorArithmeticSumModule():
     #color.multiplyWithConst(0.5)
     #color.multiplyWithConst(1.5)
     #color.multiplyImages()
+    color.powerFirstImage(0.5)
+    color.powerFirstImage(2)
 
 if __name__ == '__main__':
     main()

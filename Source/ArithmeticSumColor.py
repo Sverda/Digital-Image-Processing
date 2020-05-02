@@ -122,3 +122,21 @@ class ArithmeticSumColor(object):
                 result[h, w, 2] = ratio * firstImage[h, w, 2] + (1 - ratio) * secondImage[h, w, 2]
 
         ImageHelper.Save(result, self.imageType, 'blend-color-images', False, self.firstDecoder, None, ratio)
+
+    # Ex3.4
+    def powerFirstImage(self, powerIndex):
+        print('Power color image {} with image {} and index {}'.format(self.firstDecoder.name, self.secondDecoder.name, powerIndex))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        
+        maxValue = float(numpy.iinfo(image.dtype).max)
+        result = numpy.ones((height, width, 3), numpy.uint32)
+        for h in range(height):
+            for w in range(width):
+                result[h, w, 0] = image[h, w, 0]**powerIndex
+                result[h, w, 1] = image[h, w, 1]**powerIndex
+                result[h, w, 2] = image[h, w, 2]**powerIndex
+
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-color', False, self.firstDecoder, None, powerIndex)
+        result = Commons.Normalization(image, result)
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-color', True, self.firstDecoder, None, powerIndex)
