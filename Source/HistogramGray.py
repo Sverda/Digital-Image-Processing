@@ -20,3 +20,22 @@ class HistogramGray(object):
         image = self.firstDecoder.getPixels()
         bins, histogram = Commons.CalculateHistogram(image, height, width)
         ImageHelper.SaveHistogram(bins, histogram, 'calculate', False, self.firstDecoder)
+
+    # Ex5.2
+    def moveHistogram(self, constValue):
+        print('Move histogram in gray image {} about {}'.format(self.firstDecoder.name, constValue))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        maxValue = float(numpy.iinfo(image.dtype).max)
+        minValue = float(numpy.iinfo(image.dtype).min)
+        result = numpy.ones((height, width), numpy.uint8)
+        for h in range(height):
+            for w in range(width):
+                computed = int(image[h, w]) + constValue
+                computed = maxValue if computed > maxValue else computed
+                computed = minValue if computed < minValue else computed
+                result[h, w] = computed
+                
+        ImageHelper.Save(result, self.imageType, 'move-histogram-image', False, self.firstDecoder, None, constValue)
+        bins, histogram = Commons.CalculateHistogram(result, height, width)
+        ImageHelper.SaveHistogram(bins, histogram, 'move-histogram', False, self.firstDecoder, None, constValue)

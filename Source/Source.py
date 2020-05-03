@@ -91,9 +91,13 @@ def colorArithmeticSumModule():
 
 def grayHistogramModule():
     gray = HistogramGray('Resources/photoman.png', 'L')
-    gray.calculateHistogram()
+    #gray.calculateHistogram()
+    gray.moveHistogram(30)
+    gray.moveHistogram(-30)
     gray = HistogramGray('Resources/lena.png', 'L')
-    gray.calculateHistogram()
+    #gray.calculateHistogram()
+    gray.moveHistogram(30)
+    gray.moveHistogram(-30)
 
 if __name__ == '__main__':
     main()

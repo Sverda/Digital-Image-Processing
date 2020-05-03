@@ -1141,29 +1141,59 @@ Ta operacja jest wstępem do następnych ponieważ samo obliczenie histogramu da
 \inputpython{../Source/Commons.py}{18}{27}
 
 \section{Przemieszczanie histogramu}
-\subsection*{Algorytm}
-\subsubsection*{Opis}
+\subsection*{Wstęp}
+Przemieszczenie histogramu jest efektem po zastosowaniu operatora punktowego, który dodaje lub odejmuje stałą wartość od każdego piksela. Wykres histogramu w tym wypadku przemieszcza się wzdłuż osi OX, zawierającej zakres wartości tonalnej obrazu. 
 
-\subsection*{Kod źródłowy programu}
+\subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramGray.py}{25}{41}
+
+\subsection*{Wynik algorytmu}
+Rozjaśnienie obrazu spowodowało przesunięcie histogramu w prawą stronę, a przyciemnienie go spowodowało efekt odwrotny. \\
+W miejscu gdzie wartości chciały wyjść poza dostępny zakres można zaobserwować znaczący wzrost występowania pikseli o wartościach granicznych (0 i 255). 
+
+\begin{figure}[H]
+	\label{fig:man-moved-histogram}
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman.png}
+	
+	\caption{Po przesunięciu histogramu o wartość 30 i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-photoman-30.png}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-photoman-30.png}
+	
+	\caption{Po przesunięciu histogramu o wartość -30 i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-photoman--30.png}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-photoman--30.png}
+\end{figure}
+\begin{figure}[H]
+	\label{fig:lena-moved-histogram}
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-lena.png}
+	
+	\caption{Po przesunięciu histogramu o wartość 30 i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-lena-30.png}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-lena-30.png}
+	
+	\caption{Po przesunięciu histogramu o wartość -30 i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-lena--30.png}
+	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-lena--30.png}
+\end{figure}
 
 \section{Rozciąganie histogramu}
-\subsection*{Algorytm}
-\subsubsection*{Opis}
-
-\subsection*{Kod źródłowy programu}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
 
 \section{Progowanie lokalne}
-\subsection*{Algorytm}
-\subsubsection*{Opis}
-
-\subsection*{Kod źródłowy programu}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
 
 \section{Progowanie globalne}
-\subsection*{Algorytm}
-\subsubsection*{Opis}
-
-\subsection*{Kod źródłowy programu}
-
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
 
 \chapter{Operacje na histogramie obrazu barwowego}
 \section{Obliczanie histogramu}
