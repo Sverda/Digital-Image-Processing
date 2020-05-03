@@ -1114,24 +1114,31 @@ def copy(self, (x1, y1), (x2, y2)):
 \end{python}
 
 \chapter{Operacje na histogramie obrazu szarego}
-
+Histogram obrazu to typ histogramu, który na osi poziomej przyjmuje rozpiętość tonalną obrazu szarego, a na pionowej zliczone występowania wartości tych tonów. Dzięki temu zabiegowi można na jednym wykresie przedstawić rozkład kolorów danego obrazu i odczytać dane o jego jasności i intensywności.  Umożliwia to świadome manipulowanie jego cechami w celu ulepszenia obrazu (zmiana jasności lub kontrastu z pomocą normalizacji) lub uwydatnienia jego cech (na przykład przy progowaniu obrazu). 
 
 \section{Obliczanie histogramu}
 \subsection*{Algorytm}
 \subsubsection*{Opis}
+Przy obliczaniu wartości histogramu należy wziąć pod uwagę zakres jaki mogą przyjmować piksele. Przy obrazie szarym zakres ten wynosi od 0 do 255. Dla każdej liczby całkowitej w tym zakresie jest zliczana ilość jej wystąpień w obrazie co daje nam pełny pogląd jakie wartości w nim dominują.  \\
+Na rysunku \ref{fig:man-histogram} można zaobserwować dominujące wartości. Są to głównie jasne odcienie szarości widoczne w tle obrazu, ale można też zobaczyć, że histogram posiada jeden słupek przewyższający inne w ciemniejszym zakresie odcieni - jest to mężczyzna przedstawiony na pierwszym planie fotografii. \\
+Natomiast rysunek \ref{fig:lena-histogram} jest bardziej stonowany pod względem rozłożenia pikseli na skali szarości. \\
+Ta operacja jest wstępem do następnych ponieważ samo obliczenie histogramu daje inny pogląd na analizę obrazu, ale nie wpływa bezpośrednio na jego cechy. Dopiero operacje świadomie zmieniające wartości histogramu są użyteczne. 
 
 \begin{figure}[H]
+	\label{fig:man-histogram}
 	\caption{Obraz bazowy i jego obliczony histogram}
 	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
 	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman.png}
 \end{figure}
 \begin{figure}[H]
+	\label{fig:lena-histogram}
 	\caption{Obraz bazowy i jego obliczony histogram}
 	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
 	\includegraphics[width=8cm, height=8cm]{5-1/calculate-lena.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
+\inputpython{../Source/Commons.py}{18}{27}
 
 \section{Przemieszczanie histogramu}
 \subsection*{Algorytm}
