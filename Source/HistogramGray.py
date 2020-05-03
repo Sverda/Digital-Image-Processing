@@ -39,3 +39,14 @@ class HistogramGray(object):
         ImageHelper.Save(result, self.imageType, 'move-histogram-image', False, self.firstDecoder, None, constValue)
         bins, histogram = Commons.CalculateHistogram(result, height, width)
         ImageHelper.SaveHistogram(bins, histogram, 'move-histogram', False, self.firstDecoder, None, constValue)
+
+    # Ex5.3
+    def extendHistogram(self):
+        print('Extend histogram in gray image {}'.format(self.firstDecoder.name))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        result = Commons.Normalization(image, image)
+
+        ImageHelper.Save(result, self.imageType, 'extend-histogram-image', False, self.firstDecoder)
+        bins, histogram = Commons.CalculateHistogram(result, height, width)
+        ImageHelper.SaveHistogram(bins, histogram, 'extend-histogram', False, self.firstDecoder)

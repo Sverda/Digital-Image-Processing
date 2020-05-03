@@ -1125,16 +1125,28 @@ Natomiast rysunek \ref{fig:lena-histogram} jest bardziej stonowany pod względem
 Ta operacja jest wstępem do następnych ponieważ samo obliczenie histogramu daje inny pogląd na analizę obrazu, ale nie wpływa bezpośrednio na jego cechy. Dopiero operacje świadomie zmieniające wartości histogramu są użyteczne. 
 
 \begin{figure}[H]
+	\label{fig:lena-histogram}
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-lena.png}
+\end{figure}
+\begin{figure}[H]
 	\label{fig:man-histogram}
 	\caption{Obraz bazowy i jego obliczony histogram}
 	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
 	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman.png}
 \end{figure}
 \begin{figure}[H]
-	\label{fig:lena-histogram}
+	\label{fig:man-bright-histogram}
 	\caption{Obraz bazowy i jego obliczony histogram}
-	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
-	\includegraphics[width=8cm, height=8cm]{5-1/calculate-lena.png}
+	\includegraphics[width=8cm, height=8cm]{man-bright-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman-bright.png}
+\end{figure}
+\begin{figure}[H]
+	\label{fig:cat-bright-histogram}
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{cat-bright-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-cat-bright.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -1157,11 +1169,11 @@ W miejscu gdzie wartości chciały wyjść poza dostępny zakres można zaobserw
 	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
 	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman.png}
 	
-	\caption{Po przesunięciu histogramu o wartość 30 i jego obliczony histogram}
+	\caption{Po przesunięciu histogramu w górę o 30 wraz z jego obliczony histogram}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-photoman-30.png}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-photoman-30.png}
 	
-	\caption{Po przesunięciu histogramu o wartość -30 i jego obliczony histogram}
+	\caption{Po przesunięciu histogramu w dół o 30 wraz z jego obliczony histogram}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-photoman--30.png}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-photoman--30.png}
 \end{figure}
@@ -1171,19 +1183,48 @@ W miejscu gdzie wartości chciały wyjść poza dostępny zakres można zaobserw
 	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
 	\includegraphics[width=8cm, height=8cm]{5-1/calculate-lena.png}
 	
-	\caption{Po przesunięciu histogramu o wartość 30 i jego obliczony histogram}
+	\caption{Po przesunięciu histogramu w górę o 30 wraz z jego obliczony histogram}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-lena-30.png}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-lena-30.png}
 	
-	\caption{Po przesunięciu histogramu o wartość -30 i jego obliczony histogram}
+	\caption{Po przesunięciu histogramu w dół o 30 wraz z jego obliczony histogram}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-image-lena--30.png}
 	\includegraphics[width=8cm, height=8cm]{5-2/move-histogram-lena--30.png}
 \end{figure}
 
 \section{Rozciąganie histogramu}
 \subsection*{Wstęp}
+Wyróżnia się dwie metody \textbf{skalowania histogramu}, mogące wpływać na jego kształt. Pierwszą z nich jest \textbf{skalowanie pionowe}, które rozciąga histogram z użyciem operatora mnożenia obrazu przez skalar większy od jedności lub zwęża histogram gdy użyjemy operatora mnożenia z wartością mniejszą od jedności. Drugą jest \textbf{skalowanie poziome}, które przekształci wąski zakres wartości tonalnych do jego odpowiednika o pełnym zakresie. \\
+Na przykład jeśli w pewnym obrazie najmniejsza wartość ($min$) wynosi 60, a największa ($max$) wynosi 180 rozciągnięcie histogramu z pomocą \textit{normalizacji} przekształci zbiór $[60,180]$ na $[0,MAX_{ton}]$, czyli w tym wypadku $[0,255]$. 
+
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramGray.py}{44}{52}
+Używałem tej samej funkcji \textit{normalizacji} co w innych przykładach: 
+\inputpython{../Source/Commons.py}{8}{15}
+
 \subsection*{Wynik algorytmu}
+Na przedstawionych rysunkach \ref{fig:man-bright-extend-histogram} i \ref{fig:cat-bright-extend-histogram} widać zwiększenie się poziomu kontrastu wraz z rozszerzeniem się histogramu i wykorzystaniem większej gradacji barw. Funkcja \textit{normalizacji} zostawiła tą samą ilość słupków, ale zmieniła ich rozmieszczenie na osi OX. Dzięki temu na zdjęciach wynikowych widać nawet odcienie czerni i brudnej bieli, których obrazy bazowe nie posiadają. 
+
+\begin{figure}[H]
+	\label{fig:man-bright-extend-histogram}
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{man-bright-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman-bright.png}
+	
+	\caption{Po rozszerzeniu histogramu z pomocą normalizacji}
+	\includegraphics[width=8cm, height=8cm]{5-3/extend-histogram-image-photoman-bright.png}
+	\includegraphics[width=8cm, height=8cm]{5-3/extend-histogram-photoman-bright.png}
+\end{figure}
+\begin{figure}[H]
+	\label{fig:cat-bright-extend-histogram}
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{cat-bright-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-cat-bright.png}
+	
+	\caption{Po rozszerzeniu histogramu z pomocą normalizacji}
+	\includegraphics[width=8cm, height=8cm]{5-3/extend-histogram-image-cat-bright.png}
+	\includegraphics[width=8cm, height=8cm]{5-3/extend-histogram-cat-bright.png}
+\end{figure}
 
 \section{Progowanie lokalne}
 \subsection*{Wstęp}

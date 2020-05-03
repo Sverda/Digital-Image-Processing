@@ -50,12 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\binary.png" />
+    <Content Include="Resources\cat-bright.png" />
     <Content Include="Resources\cat.png" />
     <Content Include="Resources\coffee.png" />
     <Content Include="Resources\field.png" />
     <Content Include="Resources\lena.png" />
+    <Content Include="Resources\london.png" />
     <Content Include="Resources\mask.png" />
     <Content Include="Resources\phone.png" />
+    <Content Include="Resources\photoman-bright.png" />
     <Content Include="Resources\photoman.png" />
     <Content Include="Resources\sea.png" />
     <Content Include="Resources\window-mask.png" />
