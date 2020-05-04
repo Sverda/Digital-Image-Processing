@@ -1228,11 +1228,71 @@ Na przedstawionych rysunkach \ref{fig:man-bright-extend-histogram} i \ref{fig:ca
 
 \section{Progowanie lokalne}
 \subsection*{Wstęp}
+\textbf{Progowanie} jest operatorem służącym do konwersji obrazu szarego lub kolorowego do jego binarnej formy. Jest to też rodzaj \textbf{segmentacji obrazu}, w którym \textit{próg} zależy od wartości danego piksela $f(x,y)$ i od jego lokalnej właściwości $p(x,y)$.  \\
+Obrazy binarne posiadają tylko dwie wartości \textit{prawdę} i \textit{fałsz}, więc aby zmienić macierz w której komórki mogą przyjmować więcej niż dwie wartości niezbędne jest ustalenie \textbf{progu jasności}. Liczby większe od progu będą przyjmowały wartość oznaczoną jako \textit{prawda}, a mniejsze bądź równe otrzymają \textit{fałsz}. Inaczej można też powiedzieć, że wartości mniejsze od progu będą tłem, a większe obiektem. W świecie obrazów szarych \textit{prawdą} będzie wartość maksymalna $MAX_{ton}$ czyli $255$, a \textit{fałszem} wartość minimalna $MIN_{ton}$ czyli $0$. \\
+Przy \textbf{progowaniu lokalnym} dla każdego piksela ustala się \textit{próg jasności} indywidualnie. W tym przykładzie użyję implementacji progowania Bernsen'a. \\
+\textbf{Progowanie Bernsen'a} używa w swojej metodzie jednej z wartości podanej przez użytkownika - \textit{kontrastu progowego l}. Jeżeli \textit{kontrast lokalny ($f_{high} - f_{low}$)} jest większy bądź równy \textit{kontrastowi progowemu}, wtedy \textit{próg T(x,y)} jest ustawiany do średniej wartości maksymalnego i minimalnego elementu w oknie. W przypadku gdy prawdziwe jest stwierdzenie $C(x,y)$ całe sąsiedztwo piksela uznaje się jako obiekt lub tło w zależności od $T(x,y) \geq 128$. 
+\begin{gather}
+	T(x,y) = \frac{f_{low} + f_{high}}{2}
+\end{gather}
+\begin{gather}
+	C(x,y) = f_{high} - f_{low}<l
+\end{gather}
+
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramGray.py}{55}{94}
+
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-lena.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 5 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-lena-5.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-lena-5.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 15 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-lena-15.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-lena-15.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 25 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-lena-25.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-lena-25.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 50 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-lena-50.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-lena-50.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 5 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-photoman-5.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-photoman-5.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 15 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-photoman-15.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-photoman-15.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 25 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-photoman-25.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-photoman-25.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 50 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-image-photoman-50.png}
+	\includegraphics[width=8cm, height=8cm]{5-4/local-threshold-photoman-50.png}
+\end{figure}
 
 \section{Progowanie globalne}
 \subsection*{Wstęp}
+Dla \textbf{progowania globalnego} ustala się jeden \textit{próg jasności}, które ma zastosowanie do wszystkich pikseli w obrazie. Wtedy \textit{progiem jasności} nazywamy wartość, która będzie klinem wbijanym w histogram obrazu. 
+
 \subsection*{Kod algorytmu}
 \subsection*{Wynik algorytmu}
 

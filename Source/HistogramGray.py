@@ -50,3 +50,45 @@ class HistogramGray(object):
         ImageHelper.Save(result, self.imageType, 'extend-histogram-image', False, self.firstDecoder)
         bins, histogram = Commons.CalculateHistogram(result, height, width)
         ImageHelper.SaveHistogram(bins, histogram, 'extend-histogram', False, self.firstDecoder)
+        
+    # Ex5.4
+    def localThresholding(self, contrastThreshold, windowSize=3):
+        print('Local thresholding gray image {} with contrast threshold of {}'.format(self.firstDecoder.name, contrastThreshold))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        maxValue = int(numpy.iinfo(image.dtype).max)
+        minValue = int(numpy.iinfo(image.dtype).min)
+        if contrastThreshold <= minValue or contrastThreshold >= maxValue:
+            raise ValueError("A contrast threshold has to be in range of ({},{})".format(minValue, maxValue))
+
+        result = numpy.zeros((height, width), numpy.uint8)
+        overlap = int(math.ceil(windowSize/2))
+        for h in range(height):
+            for w in range(width):
+                minH = minValue if h-overlap < 0 else h-overlap
+                maxH = maxValue if h+overlap+1 > height else h+overlap+1
+                minW = minValue if w-overlap < 0 else w-overlap
+                maxW = maxValue if w+overlap+1 > height else w+overlap+1
+                if minH >= maxH or minW >= maxW:
+                    continue
+
+                window = image[minH:maxH, minW:maxW]
+                localMin = numpy.amin(window)
+                localMax = numpy.amax(window)
+                localContrast = localMax-localMin
+                midGray = (int(localMax)+int(localMin))/2
+                if localContrast < contrastThreshold:
+                    if midGray >= maxValue/2:
+                        result[minH:maxH, minW:maxW] = numpy.full((maxH-minH, maxW-minW), maxValue)
+                    else:
+                        result[minH:maxH, minW:maxW] = numpy.full((maxH-minH, maxW-minW), minValue)
+                else:
+                    if image[h, w] >= midGray:
+                        result[h, w] = maxValue
+                    else:
+                        result[h, w] = minValue
+
+
+        ImageHelper.Save(result, self.imageType, 'local-threshold-image', False, self.firstDecoder, None, contrastThreshold)
+        bins, histogram = Commons.CalculateHistogram(result, height, width)
+        ImageHelper.SaveHistogram(bins, histogram, 'local-threshold', False, self.firstDecoder, None, contrastThreshold)
