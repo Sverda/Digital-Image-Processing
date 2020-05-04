@@ -1240,7 +1240,7 @@ Przy \textbf{progowaniu lokalnym} dla każdego piksela ustala się \textit{próg
 \end{gather}
 
 \subsection*{Kod algorytmu}
-\inputpython{../Source/HistogramGray.py}{55}{94}
+\inputpython{../Source/HistogramGray.py}{55}{97}
 
 \subsection*{Wynik algorytmu}
 \begin{figure}[H]
@@ -1291,10 +1291,44 @@ Przy \textbf{progowaniu lokalnym} dla każdego piksela ustala się \textit{próg
 
 \section{Progowanie globalne}
 \subsection*{Wstęp}
-Dla \textbf{progowania globalnego} ustala się jeden \textit{próg jasności}, które ma zastosowanie do wszystkich pikseli w obrazie. Wtedy \textit{progiem jasności} nazywamy wartość, która będzie klinem wbijanym w histogram obrazu. 
+Dla \textbf{progowania globalnego} ustala się jeden \textit{próg jasności T}, które ma zastosowanie do wszystkich pikseli w obrazie. Wtedy \textit{progiem jasności} nazywamy wartość, która będzie klinem wbijanym w histogram obrazu. \\
+Dla wszystkich wartości: 
+\begin{enumerate}
+	\item $f(x,y) \geq T$ otrzymają wartość obiektu
+	\item $f(x,y) < T$ otrzymają wartość tła
+\end{enumerate}
 
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramGray.py}{100}{117}
+
 \subsection*{Wynik algorytmu}
+Można zaobserwować zależność pomiędzy wielkością wartości progowej $T$ a ilością detalów w obrazie binarnym. Im wyższe $T$ tym więcej detali, co również oznacza wyższy słupek koloru czarnego na histogramie. 
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{man-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-photoman.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania globalnego o wartości 64 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-image-photoman-64.png}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-photoman-64.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania globalnego o wartości 128 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-image-photoman-128.png}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-photoman-128.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{lena-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{5-1/calculate-lena.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania globalnego o wartości 64 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-image-lena-64.png}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-lena-64.png}
+	
+	\caption{Obraz binarny po zastosowaniu progowania globalnego o wartości 128 wraz z jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-image-lena-128.png}
+	\includegraphics[width=8cm, height=8cm]{5-5/global-threshold-lena-128.png}
+\end{figure}
 
 \chapter{Operacje na histogramie obrazu barwowego}
 \section{Obliczanie histogramu}
