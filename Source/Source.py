@@ -6,19 +6,20 @@ from Geometric import Geometric
 from ArithmeticSumGray import ArithmeticSumGray
 from ArithmeticSumColor import ArithmeticSumColor
 from HistogramGray import HistogramGray
+from HistogramColor import HistogramColor
 
 def main():
     #unificationModule()
     #geometricModule()
     #grayArithmeticSumModule()
     #colorArithmeticSumModule()
-    grayHistogramModule()
+    #grayHistogramModule()
+    colorHistogramModule()
 
 def unificationModule():
     unification = Unification('Resources/cat.png', 'Resources/photoman.png', "L")
     unification.geometricGray()
     unification.rasterGray()
-
     unification = Unification('Resources/coffee.png', 'Resources/phone.png', "RGB")
     unification.geometricColor()
     unification.rasterColor()
@@ -91,31 +92,37 @@ def colorArithmeticSumModule():
 
 def grayHistogramModule():
     gray = HistogramGray('Resources/photoman.png', 'L')
-    #gray.calculateHistogram()
-    #gray.moveHistogram(30)
-    #gray.moveHistogram(-30)
-    #gray.localThresholding(5)
-    #gray.localThresholding(15)
-    #gray.localThresholding(25)
-    #gray.localThresholding(50)
+    gray.calculateHistogram()
+    gray.moveHistogram(30)
+    gray.moveHistogram(-30)
+    gray.localThresholding(5)
+    gray.localThresholding(15)
+    gray.localThresholding(25)
+    gray.localThresholding(50)
     gray.globalThresholding(64)
     gray.globalThresholding(128)
     gray = HistogramGray('Resources/lena.png', 'L')
-    #gray.calculateHistogram()
-    #gray.moveHistogram(30)
-    #gray.moveHistogram(-30)
-    #gray.localThresholding(5)
-    #gray.localThresholding(15)
-    #gray.localThresholding(25)
-    #gray.localThresholding(50)
+    gray.calculateHistogram()
+    gray.moveHistogram(30)
+    gray.moveHistogram(-30)
+    gray.localThresholding(5)
+    gray.localThresholding(15)
+    gray.localThresholding(25)
+    gray.localThresholding(50)
     gray.globalThresholding(64)
     gray.globalThresholding(128)
     gray = HistogramGray('Resources/photoman-bright.png', 'L')
-    #gray.calculateHistogram()
-    #gray.extendHistogram()
+    gray.calculateHistogram()
+    gray.extendHistogram()
     gray = HistogramGray('Resources/cat-bright.png', 'L')
-    #gray.calculateHistogram()
-    #gray.extendHistogram()
+    gray.calculateHistogram()
+    gray.extendHistogram()
+
+def colorHistogramModule():
+    color = HistogramColor('Resources/coffee.png', 'RGB')
+    color.calculateHistogram()
+    color = HistogramColor('Resources/phone.png', 'RGB')
+    color.calculateHistogram()
 
 if __name__ == '__main__':
     main()

@@ -1291,7 +1291,7 @@ Przy \textbf{progowaniu lokalnym} dla każdego piksela ustala się \textit{próg
 
 \section{Progowanie globalne}
 \subsection*{Wstęp}
-Dla \textbf{progowania globalnego} ustala się jeden \textit{próg jasności T}, które ma zastosowanie do wszystkich pikseli w obrazie. Wtedy \textit{progiem jasności} nazywamy wartość, która będzie klinem wbijanym w histogram obrazu. \\
+Dla \textbf{progowania globalnego} ustala się jeden \textit{próg jasności T}, które ma zastosowanie do wszystkich pikseli w obrazie. Wtedy \textit{progiem jasności} nazywamy wartość, która będzie klinem wbijanym w histogram obrazu dzieląc go na dwie części - część obiektów i tła. \\
 Dla wszystkich wartości: 
 \begin{enumerate}
 	\item $f(x,y) \geq T$ otrzymają wartość obiektu
@@ -1331,13 +1331,57 @@ Można zaobserwować zależność pomiędzy wielkością wartości progowej $T$ 
 \end{figure}
 
 \chapter{Operacje na histogramie obrazu barwowego}
+Zasadniczą różnicą w przedstawieniu histogramu obrazu barwowego jest ilość kanałów, które trzeba przetworzyć w celu otrzymania ilości wystąpień różnych tonów barw. Dla każdej barwy RGB należy bowiem z osobna obliczyć histogram w celu wyciągnięcia pełnej informacji o stanie barw obrazu jak i również samo przetwarzanie musi się odbywać z uwzględnieniem tych trzech barw. \\
+Ilość barw w typ wypadku jest sposobnością, aby użyć \textit{progowania wielo-progowego}, gdyż na każdą barwę będzie mógł przypadać jeden próg. 
+
 \section{Obliczanie histogramu}
+\subsection*{Wstęp}
+Obliczenie histogramu obrazu barwnego odbywa się poprzez zliczenie ilości występowania każdej wartości tonalnej dla każdej z trzech barw RGB. Oznacza to, że dla barwy czerwonej będziemy liczyć histogram osobno tak jakbyśmy to robili dla obrazu szarego, z tym wyjątkiem że będzie to powtórzyć również dla koloru zielonego i niebieskiego. 
+
+\subsection*{Kod algorytmu}
+\inputpython{../Source/Commons.py}{30}{43}
+
+\subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone.png}
+\end{figure}
+
 \section{Przemieszczanie histogramu}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
+
 \section{Rozciąganie histogramu}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
+
 \section{Progowanie 1-progowe lokalne}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
+
 \section{Progowanie wielo-progowe lokalne}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
+
 \section{Progowanie 1-progowe globalne}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
+
 \section{Progowanie wielo-progowe globalne}
+\subsection*{Wstęp}
+\subsection*{Kod algorytmu}
+\subsection*{Wynik algorytmu}
 
 
 \end{document}

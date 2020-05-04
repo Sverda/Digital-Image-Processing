@@ -18,8 +18,8 @@ class HistogramGray(object):
         print('Compute histogram from gray image {}'.format(self.firstDecoder.name))
         height, width = self.firstDecoder.height, self.firstDecoder.width
         image = self.firstDecoder.getPixels()
-        bins, histogram = Commons.CalculateHistogram(image, height, width)
-        ImageHelper.SaveHistogram(bins, histogram, 'calculate', False, self.firstDecoder)
+        bins, histogram = Commons.CalculateGrayHistogram(image, height, width)
+        ImageHelper.SaveGrayHistogram(bins, histogram, 'calculate', False, self.firstDecoder)
 
     # Ex5.2
     def moveHistogram(self, constValue):
@@ -37,8 +37,8 @@ class HistogramGray(object):
                 result[h, w] = computed
                 
         ImageHelper.Save(result, self.imageType, 'move-histogram-image', False, self.firstDecoder, None, constValue)
-        bins, histogram = Commons.CalculateHistogram(result, height, width)
-        ImageHelper.SaveHistogram(bins, histogram, 'move-histogram', False, self.firstDecoder, None, constValue)
+        bins, histogram = Commons.CalculateGrayHistogram(result, height, width)
+        ImageHelper.SaveGrayHistogram(bins, histogram, 'move-histogram', False, self.firstDecoder, None, constValue)
 
     # Ex5.3
     def extendHistogram(self):
@@ -48,8 +48,8 @@ class HistogramGray(object):
         result = Commons.Normalization(image, image)
 
         ImageHelper.Save(result, self.imageType, 'extend-histogram-image', False, self.firstDecoder)
-        bins, histogram = Commons.CalculateHistogram(result, height, width)
-        ImageHelper.SaveHistogram(bins, histogram, 'extend-histogram', False, self.firstDecoder)
+        bins, histogram = Commons.CalculateGrayHistogram(result, height, width)
+        ImageHelper.SaveGrayHistogram(bins, histogram, 'extend-histogram', False, self.firstDecoder)
         
     # Ex5.4
     def localThresholding(self, contrastThreshold, windowSize=3):
@@ -93,8 +93,8 @@ class HistogramGray(object):
 
 
         ImageHelper.Save(result, self.imageType, 'local-threshold-image', False, self.firstDecoder, None, contrastThreshold)
-        bins, histogram = Commons.CalculateHistogram(result, height, width)
-        ImageHelper.SaveHistogram(bins, histogram, 'local-threshold', False, self.firstDecoder, None, contrastThreshold)
+        bins, histogram = Commons.CalculateGrayHistogram(result, height, width)
+        ImageHelper.SaveGrayHistogram(bins, histogram, 'local-threshold', False, self.firstDecoder, None, contrastThreshold)
         
     # Ex5.5
     def globalThresholding(self, threshold):
@@ -113,5 +113,5 @@ class HistogramGray(object):
 
 
         ImageHelper.Save(result, self.imageType, 'global-threshold-image', False, self.firstDecoder, None, threshold)
-        bins, histogram = Commons.CalculateHistogram(result, height, width)
-        ImageHelper.SaveHistogram(bins, histogram, 'global-threshold', False, self.firstDecoder, None, threshold)
+        bins, histogram = Commons.CalculateGrayHistogram(result, height, width)
+        ImageHelper.SaveGrayHistogram(bins, histogram, 'global-threshold', False, self.firstDecoder, None, threshold)

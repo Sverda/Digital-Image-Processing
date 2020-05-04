@@ -27,6 +27,7 @@
     <Compile Include="Commons.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HistogramColor.py" />
     <Compile Include="HistogramGray.py">
       <SubType>Code</SubType>
     </Compile>

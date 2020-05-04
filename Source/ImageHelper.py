@@ -12,7 +12,7 @@ class ImageHelper(object):
         img.save('Resources/result/' + imageName + '.png')
         
     @staticmethod
-    def SaveHistogram(bins, histogram, operationName, isNorm, firstDecoder, secondDecoder = None, idValue = None):
+    def SaveGrayHistogram(bins, histogram, operationName, isNorm, firstDecoder, secondDecoder = None, idValue = None):
         fig = pyplot.figure(figsize=[9, 7])
         pyplot.bar(bins[:-1], histogram, width=0.8, color='#606060')
         pyplot.xlim(min(bins), max(bins))
@@ -24,6 +24,16 @@ class ImageHelper(object):
         pyplot.ylabel('Frequency Count', fontsize=15)
 
         imageName = ImageHelper._composeName(operationName, isNorm, firstDecoder, secondDecoder, idValue)
+        pyplot.savefig('Resources/result/' + imageName + '.png')
+        
+    @staticmethod
+    def SaveColorHistogram(bins, histogram, operationName, firstDecoder, idValue = None):
+        fig, (axR, axG, axB) = pyplot.subplots(3)
+        axR.bar(bins, histogram[0, :], width=0.8, color='red')
+        axG.bar(bins, histogram[1, :], width=0.8, color='green')
+        axB.bar(bins, histogram[2, :], width=0.8, color='blue')
+
+        imageName = ImageHelper._composeName(operationName, False, firstDecoder, None, idValue)
         pyplot.savefig('Resources/result/' + imageName + '.png')
 
     @staticmethod
