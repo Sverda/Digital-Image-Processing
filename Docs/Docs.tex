@@ -1352,6 +1352,16 @@ Obliczenie histogramu obrazu barwnego odbywa się poprzez zliczenie ilości wyst
 	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
 	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone.png}
 \end{figure}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{coffee-dark-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee-dark.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{phone-dark-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone-dark.png}
+\end{figure}
 
 \section{Przemieszczanie histogramu}
 \subsection*{Wstęp}
@@ -1405,8 +1415,30 @@ Przemieszczanie histogramu odbywa się poprzez zmniejszenie lub zwiększenie war
 
 \section{Rozciąganie histogramu}
 \subsection*{Wstęp}
+Rozszerzanie histogramu odbywa się w tym przykładzie poprzez \textit{normalizację}. 
+
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramColor.py}{52}{61}
+
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{coffee-dark-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee-dark.png}
+	
+	\caption{Po rozszerzeniu histogramu z pomocą normalizacji}
+	\includegraphics[width=8cm, height=8cm]{6-3/extend-histogram-image-coffee-dark.png}
+	\includegraphics[width=8cm, height=8cm]{6-3/extend-histogram-coffee-dark.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{phone-dark-unmodified.png}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone-dark.png}
+	
+	\caption{Po rozszerzeniu histogramu z pomocą normalizacji}
+	\includegraphics[width=8cm, height=8cm]{6-3/extend-histogram-image-phone-dark.png}
+	\includegraphics[width=8cm, height=8cm]{6-3/extend-histogram-phone-dark.png}
+\end{figure}
 
 \section{Progowanie 1-progowe lokalne}
 \subsection*{Wstęp}

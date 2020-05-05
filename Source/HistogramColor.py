@@ -47,3 +47,14 @@ class HistogramColor(object):
         ImageHelper.Save(result, self.imageType, 'move-histogram-image', False, self.firstDecoder, None, constValue)
         bins, histogram = Commons.CalculateColorHistogram(result, height, width)
         ImageHelper.SaveColorHistogram(bins, histogram, 'move-histogram', self.firstDecoder, constValue)
+        
+    # Ex6.3
+    def extendHistogram(self):
+        print('Extend histogram in color image {}'.format(self.firstDecoder.name))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        result = Commons.Normalization(image, image)
+
+        ImageHelper.Save(result, self.imageType, 'extend-histogram-image', False, self.firstDecoder)
+        bins, histogram = Commons.CalculateColorHistogram(result, height, width)
+        ImageHelper.SaveColorHistogram(bins, histogram, 'extend-histogram', self.firstDecoder)
