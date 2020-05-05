@@ -48,6 +48,8 @@ class ImageHelper(object):
             imageName += '-'
             if isinstance(idValue, float):
                 imageName += str(int(idValue*10))
+            elif type(idValue) is tuple:
+                imageName += str(idValue).replace(" ", "")
             else:
                 imageName += str(idValue)
 

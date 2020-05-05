@@ -120,9 +120,15 @@ def grayHistogramModule():
 
 def colorHistogramModule():
     color = HistogramColor('Resources/coffee.png', 'RGB')
-    color.calculateHistogram()
+    #color.calculateHistogram()
+    color.moveHistogram((50, 50, 50))
+    color.moveHistogram((-50, -50, -50))
+    color.moveHistogram((50, 0, 0))
     color = HistogramColor('Resources/phone.png', 'RGB')
-    color.calculateHistogram()
+    #color.calculateHistogram()
+    color.moveHistogram((50, 50, 50))
+    color.moveHistogram((-50, -50, -50))
+    color.moveHistogram((50, 0, 0))
 
 if __name__ == '__main__':
     main()

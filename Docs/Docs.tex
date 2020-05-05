@@ -1355,8 +1355,53 @@ Obliczenie histogramu obrazu barwnego odbywa się poprzez zliczenie ilości wyst
 
 \section{Przemieszczanie histogramu}
 \subsection*{Wstęp}
+Przemieszczanie histogramu odbywa się poprzez zmniejszenie lub zwiększenie wartości dla wszystkich pikseli w obrazie. W ramach piksela mogą zostać zmodyfikowane wartości z trzech barw RGB. Zwiększenie wartość dla trzech barw przyciemni obraz, a zmniejszenie rozjaśni. Przesuwanie histogramu może zostać też zastosowane do pojedynczych barw RGB, gdzie zwiększenie jednej z nich spowoduje dominację przypisanego koloru w pikselach co będzie skutkowało zmianą kolorów pikseli. 
+
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramColor.py}{25}{50}
+
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po przesunięciu histogramu o wartość 50 dla wszystkich barw i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-image-coffee-(50,50,50).png}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-coffee-(50,50,50).png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po przesunięciu histogramu o wartość -50 dla wszystkich barw i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-image-coffee-(-50,-50,-50).png}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-coffee-(-50,-50,-50).png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po przesunięciu histogramu o wartość 50 dla barwy czerwonej i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-image-coffee-(50,0,0).png}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-coffee-(50,0,0).png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po przesunięciu histogramu o wartość 50 dla wszystkich barw i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-image-phone-(50,50,50).png}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-phone-(50,50,50).png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po przesunięciu histogramu o wartość -50 dla wszystkich barw i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-image-phone-(-50,-50,-50).png}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-phone-(-50,-50,-50).png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po przesunięciu histogramu o wartość 50 dla barwy czerwonej i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-image-phone-(50,0,0).png}
+	\includegraphics[width=8cm, height=8cm]{6-2/move-histogram-phone-(50,0,0).png}
+\end{figure}
 
 \section{Rozciąganie histogramu}
 \subsection*{Wstęp}
