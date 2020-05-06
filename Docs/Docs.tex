@@ -1453,15 +1453,51 @@ Progowanie 1-progowe lokalne odbywa się w tym przykładzie z pomocą \textit{me
 	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee.png}
 \end{figure}
 \begin{figure}[H]	
-	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 15 wraz z jego obliczonym histogramem}
+	\caption{Obraz po zastosowaniu progowania Bernstena o kontraście progowym 15 wraz z jego obliczonym histogramem}
 	\includegraphics[width=8cm, height=8cm]{6-4/single-local-threshold-image-coffee-15.png}
 	\includegraphics[width=8cm, height=8cm]{6-4/single-local-threshold-coffee.png}
 \end{figure}
 
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone.png}
+\end{figure}
+\begin{figure}[H]	
+	\caption{Obraz po zastosowaniu progowania Bernstena o kontraście progowym 15 wraz z jego obliczonym histogramem}
+	\includegraphics[width=8cm, height=8cm]{6-4/single-local-threshold-image-phone-15.png}
+	\includegraphics[width=8cm, height=8cm]{6-4/single-local-threshold-phone.png}
+\end{figure}
+
 \section{Progowanie wielo-progowe lokalne}
 \subsection*{Wstęp}
+Progowanie wielo-progowe lokalne używa wielu progów w celu podzielenia zawartości przesuwającego się okna na $T-1$ przedziałów w celu redukcji ilości kolorów w obrazie. Wynikiem tej operacji jest zmniejszenie gęstości histogramu. 
+
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramColor.py}{109}{137}
+
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee.png}
+\end{figure}
+\begin{figure}[H]	
+	\caption{Obraz po zastosowaniu progowania z czterema progami wraz z jego obliczonym histogramem}
+	\includegraphics[width=8cm, height=8cm]{6-5/multi-local-threshold-image-coffee-4.png}
+	\includegraphics[width=8cm, height=8cm]{6-5/multi-local-threshold-coffee-4.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone.png}
+\end{figure}
+\begin{figure}[H]	
+	\caption{Obraz po zastosowaniu progowania z czterema progami wraz z jego obliczonym histogramem}
+	\includegraphics[width=8cm, height=8cm]{6-5/multi-local-threshold-image-phone-4.png}
+	\includegraphics[width=8cm, height=8cm]{6-5/multi-local-threshold-phone-4.png}
+\end{figure}
 
 \section{Progowanie 1-progowe globalne}
 \subsection*{Wstęp}

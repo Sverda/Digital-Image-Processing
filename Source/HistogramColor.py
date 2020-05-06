@@ -104,3 +104,34 @@ class HistogramColor(object):
         ImageHelper.Save(result, self.imageType, 'single-local-threshold-image', False, self.firstDecoder, None, contrastThreshold)
         bins, histogram = Commons.CalculateColorHistogram(result, height, width)
         ImageHelper.SaveColorHistogram(bins, histogram, 'single-local-threshold', self.firstDecoder)
+        
+    # Ex6.5
+    def localMultiThresholding(self, amountOfThresholds=4, windowSize=3):
+        print('Local multi thresholding color image {} with amount of thresholds equals to {}'.format(self.firstDecoder.name, amountOfThresholds))
+        if windowSize % 2 == 0:
+            raise ValueError("Window size can't be even")
+
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+
+        result = numpy.zeros((height, width, 3), numpy.uint8)
+        overlap = int(math.ceil(windowSize/2))
+        for h in range(height):
+            for w in range(width):
+                minH = 0 if h-overlap < 0 else h-overlap
+                maxH = height if h+overlap+1 > height else h+overlap+1
+                minW = 0 if w-overlap < 0 else w-overlap
+                maxW = width if w+overlap+1 > width else w+overlap+1
+                if minH >= maxH or minW >= maxW:
+                    continue
+
+                window = image[minH:maxH, minW:maxW]
+                for color in range(3):
+                    localMax = float(numpy.amax(window[:, :, color]))
+                    scale = localMax / amountOfThresholds if localMax != 0 else 1
+                    result[h, w, color] = int(round(image[h, w, color] / scale)) * int(scale)
+
+
+        ImageHelper.Save(result, self.imageType, 'multi-local-threshold-image', False, self.firstDecoder, None, amountOfThresholds)
+        bins, histogram = Commons.CalculateColorHistogram(result, height, width)
+        ImageHelper.SaveColorHistogram(bins, histogram, 'multi-local-threshold', self.firstDecoder, amountOfThresholds)
