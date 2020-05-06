@@ -1442,8 +1442,21 @@ Rozszerzanie histogramu odbywa się w tym przykładzie poprzez \textit{normaliza
 
 \section{Progowanie 1-progowe lokalne}
 \subsection*{Wstęp}
+Progowanie 1-progowe lokalne odbywa się w tym przykładzie z pomocą \textit{metody Bernsen'a} zmodyfikowanej pod kątem wielu kanałów formatu RGB. 
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramColor.py}{63}{106}
+
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee.png}
+\end{figure}
+\begin{figure}[H]	
+	\caption{Obraz binarny po zastosowaniu progowania Bernstena o kontraście progowym 15 wraz z jego obliczonym histogramem}
+	\includegraphics[width=8cm, height=8cm]{6-4/single-local-threshold-image-coffee-15.png}
+	\includegraphics[width=8cm, height=8cm]{6-4/single-local-threshold-coffee.png}
+\end{figure}
 
 \section{Progowanie wielo-progowe lokalne}
 \subsection*{Wstęp}

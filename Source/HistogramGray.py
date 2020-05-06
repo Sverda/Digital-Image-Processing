@@ -68,10 +68,10 @@ class HistogramGray(object):
         overlap = int(math.ceil(windowSize/2))
         for h in range(height):
             for w in range(width):
-                minH = minValue if h-overlap < 0 else h-overlap
-                maxH = maxValue if h+overlap+1 > height else h+overlap+1
-                minW = minValue if w-overlap < 0 else w-overlap
-                maxW = maxValue if w+overlap+1 > height else w+overlap+1
+                minH = 0 if h-overlap < 0 else h-overlap
+                maxH = height if h+overlap+1 > height else h+overlap+1
+                minW = 0 if w-overlap < 0 else w-overlap
+                maxW = width if w+overlap+1 > width else w+overlap+1
                 if minH >= maxH or minW >= maxW:
                     continue
 
