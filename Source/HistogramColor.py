@@ -128,7 +128,7 @@ class HistogramColor(object):
                 window = image[minH:maxH, minW:maxW]
                 for color in range(3):
                     localMax = float(numpy.amax(window[:, :, color]))
-                    scale = localMax / amountOfThresholds if localMax != 0 else 1
+                    scale = localMax / (amountOfThresholds-1) if localMax != 0 else 1
                     result[h, w, color] = int(round(image[h, w, color] / scale)) * int(scale)
 
 
@@ -159,3 +159,28 @@ class HistogramColor(object):
         ImageHelper.Save(result, self.imageType, 'single-global-threshold-image', False, self.firstDecoder)
         bins, histogram = Commons.CalculateColorHistogram(result, height, width)
         ImageHelper.SaveColorHistogram(bins, histogram, 'single-global-threshold', self.firstDecoder)
+        
+    # Ex6.7
+    def globalMultiThresholding(self, amountOfThresholds=4):
+        print('Global multi thresholding color image {} with amount of thresholds equals to {}'.format(self.firstDecoder.name, amountOfThresholds))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+
+        maxR = numpy.amax(image[:, :, 0])
+        maxG = numpy.amax(image[:, :, 1])
+        maxB = numpy.amax(image[:, :, 2])
+        scaleR = maxR / (amountOfThresholds-1)
+        scaleG = maxG / (amountOfThresholds-1)
+        scaleB = maxB / (amountOfThresholds-1)
+
+        result = numpy.zeros((height, width, 3), numpy.uint8)
+        for h in range(height):
+            for w in range(width):
+                result[h, w, 0] = int(round(image[h, w, 0] / scaleR)) * int(scaleR)
+                result[h, w, 1] = int(round(image[h, w, 1] / scaleG)) * int(scaleG)
+                result[h, w, 2] = int(round(image[h, w, 2] / scaleB)) * int(scaleB)
+
+
+        ImageHelper.Save(result, self.imageType, 'multi-global-threshold-image', False, self.firstDecoder, None, amountOfThresholds)
+        bins, histogram = Commons.CalculateColorHistogram(result, height, width)
+        ImageHelper.SaveColorHistogram(bins, histogram, 'multi-global-threshold', self.firstDecoder, amountOfThresholds)
