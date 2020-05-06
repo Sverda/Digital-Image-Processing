@@ -135,3 +135,27 @@ class HistogramColor(object):
         ImageHelper.Save(result, self.imageType, 'multi-local-threshold-image', False, self.firstDecoder, None, amountOfThresholds)
         bins, histogram = Commons.CalculateColorHistogram(result, height, width)
         ImageHelper.SaveColorHistogram(bins, histogram, 'multi-local-threshold', self.firstDecoder, amountOfThresholds)
+        
+    # Ex6.6
+    def globalSingleThresholding(self):
+        print('Global single thresholding color image {}'.format(self.firstDecoder.name))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        maxValue = int(numpy.iinfo(image.dtype).max)
+        minValue = int(numpy.iinfo(image.dtype).min)
+
+        thresholdR = numpy.mean(image[:, :, 0])
+        thresholdG = numpy.mean(image[:, :, 1])
+        thresholdB = numpy.mean(image[:, :, 2])
+
+        result = numpy.zeros((height, width, 3), numpy.uint8)
+        for h in range(height):
+            for w in range(width):
+                result[h, w, 0] = maxValue if image[h, w, 0] >= thresholdR else minValue
+                result[h, w, 1] = maxValue if image[h, w, 1] >= thresholdG else minValue
+                result[h, w, 2] = maxValue if image[h, w, 2] >= thresholdB else minValue
+
+
+        ImageHelper.Save(result, self.imageType, 'single-global-threshold-image', False, self.firstDecoder)
+        bins, histogram = Commons.CalculateColorHistogram(result, height, width)
+        ImageHelper.SaveColorHistogram(bins, histogram, 'single-global-threshold', self.firstDecoder)

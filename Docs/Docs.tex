@@ -1501,8 +1501,33 @@ Progowanie wielo-progowe lokalne używa wielu progów w celu podzielenia zawarto
 
 \section{Progowanie 1-progowe globalne}
 \subsection*{Wstęp}
+Progowanie 1-progowe globalne dla obrazów barwnych opera się o ustalenie progu dla każdej z trzech barw RGB. Próg jest wyliczany ze wszystkich pikseli na podstawie średniej arytmetycznej. 
+
 \subsection*{Kod algorytmu}
+\inputpython{../Source/HistogramColor.py}{140}{161}
+
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{coffee-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-coffee.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po zastosowaniu progowania globalnego wraz z jego obliczonym histogramem}
+	\includegraphics[width=8cm, height=8cm]{6-6/single-global-threshold-image-coffee.png}
+	\includegraphics[width=8cm, height=8cm]{6-6/single-global-threshold-coffee.png}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Obraz bazowy i jego obliczony histogram}
+	\includegraphics[width=8cm, height=8cm]{phone-unmodified.jpg}
+	\includegraphics[width=8cm, height=8cm]{6-1/calculate-phone.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Obraz po zastosowaniu progowania globalnego wraz z jego obliczonym histogramem}
+	\includegraphics[width=8cm, height=8cm]{6-6/single-global-threshold-image-phone.png}
+	\includegraphics[width=8cm, height=8cm]{6-6/single-global-threshold-phone.png}
+\end{figure}
 
 \section{Progowanie wielo-progowe globalne}
 \subsection*{Wstęp}
