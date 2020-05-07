@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[polish]{babel}
 \usepackage[unicode]{hyperref}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{tabto}
 \usepackage{graphicx}
 \usepackage{pythonhighlight}
@@ -16,16 +17,14 @@
 
 \hypersetup{
 	colorlinks=true,
-	linkcolor=blue,
-	filecolor=magenta,      
-	urlcolor=cyan,
+	linkcolor=ForestGreen,
+	filecolor=YellowOrange,      
+	urlcolor=BrickRed,
 }
 \graphicspath{ {./images/} }
 
 \title{\Large{\textbf{Przetwarzanie Obrazów: Sprawozdanie}}}
-\author{
-	Damian Ubowski
-}
+\author{Damian Ubowski}
 \date{Warszawa, 2020}
 
 \begin{document}
@@ -34,28 +33,29 @@
 
 \chapter{Wstęp}
 \section{Format obrazu}
-Wybranym przez nas formatem obrazów cyfrowych jest DjVu, który jest oparty na zaawansowanej metodzie segmentacji obrazu. Tworzenie pliku DjVu polega na rozdzieleniu dowolnie skomplikowanego obrazu na odrębne warstwy, a następnie poddaniu warst odrębnym optymalizacjom i kompresjom. Format ten stosuje ładowanie progresywne, kodowanie arytmetyczne, oraz kompresję stratną dzięki czemu przy minimalnej ilości przestrzeni dyskowej można delektować się obrazami i dokumentami w wysokiej jakości. 
+Wybranym formatem obrazów cyfrowych jest PNG \textit{(ang. The Portable Network Graphics)}, a jego możliwości sprowadzają się do: obsługi kanału alfa (w celu imitacji przezroczystości obrazu), korekcji gamma (w celu dostosowania jasności obrazu), czymś co nazywa się \textit{two-dimensional interlacing}, oraz dobrej jakości kompresję bezstratną, która w porównaniu wypada lepiej na korzyść PNG, a nie GIF. Natomiast wybrany format PNG nie wspiera żadnego rodzaju animacji, co jest korzyścią dla GIF. \\
+PNG jest formatem rastrowym co oznacza, że jego strukturę można sprowadzić do dwuwymiarowej tablicy (macierzy) w której komórkach (pikselach) trzymane są wartości dotyczące kolorów. 
+
 \subsection{Struktura formatu}
-Pliki DjVu rozpoczynają się od swojej ``Magic number'' potwierdzającej rodzaj pliku i mającej wartość \textit{0x41 0x54 0x26 0x54}. Następnie czerpiąc inspirację ze struktury IFF \textbf{(Interchange File Format)} plik dzieli się na kawałki (\textit{ang. chunks}) zawierające interesujące nas cenne dane. Takie jak szerokość lub wysokość obrazu, dpi, informacje o kolorach, rozmieszczeniu pikseli, etc. Każdy kawałek składając się z ID typu, długości zawartości i samej zawartości tworzy zwarty format. Identyfikator typu określa rolę w jakiej przyjdzie służyć kawałkowi. Do dyspozycji ma ich całkiem sporo, ale uwzględniając najbardziej przydatne w naszym kontekście to ograniczymy liczbę do: 
-\renewcommand{\labelitemi}{$*$}
-\begin{itemize}
-	\item BGjp - warstwa tylna przechowywana przy użyciu kodowania JPEG. 
-	\item BFjp - warstwa przednia w formacie JPEG. 
-	\item INFO - opisuje wysokość, szerokość, rozdzielczość, wersję kodera, oraz flagi wskazujące na obrót obrazu. 
-\end{itemize}
-\subsection{Przykładowa struktura IFF}
-FORM:DJVU [14260] \newline
-\tabto{5mm} INFO [10] \newline
-\tabto{5mm} Sjbz [13133] \newline
-\tabto{5mm} FG44 [181] \newline
-\tabto{5mm} BG44 [935] \newline
-\newline
-Powyższa struktura przedstawia dokument składający się z jednej strony, na co wskazuje \textit{FORM:DJVU}, wraz z grafiką. Ten znacznik informuje, że mamy do czynienia z kontenerem o długości 14260 bajtów, który może zawierać inne kawałki dokumentu. Zgodnie z konwencją, po identyfikatorze typu i informacji o długości znajduje się zawartość kawałka. W tym wypadku jak i w każdym innym po \textit{FORM:DJVU} powinno znaleźć się \textit{INFO} z podstawowymi informacjami. Jeśli konwencji i wymagań specyfikacyjnych stało się zadość wtedy czas nastał na jakieś wizualne atrakcje takie jak \textit{Sjbz}, czyli masce wyboru pomiędzy kolorami z warstwy przedniej (\textit{FG44}) i tylnej (\textit{BG44}). 
+Pliki PNG rozpoczynają się od swojej ``Magic number'' potwierdzającej rodzaj pliku i mającej wartość \textit{137 80 78 71 13 10 26 10}. Następnie czerpiąc inspirację ze struktury IFF \textbf{(Interchange File Format)} plik dzieli się na kawałki (\textit{ang. chunks}) zawierające interesujące nas cenne dane - takie jak szerokość lub wysokość obrazu, dpi, informacje o kolorach, rozmieszczeniu pikseli, etc. \\
+Każda informacja jest włożona pomiędzy parę \textit{IHDR}-\textit{IEND}. Każdy kawałek składając się z długości, typu i danych, a nad jego integralnością sprawuję pieczę suma kontrolna \textit{CRC}. Wszystko to tworzy zwarty format. \\
+Identyfikator typu określa rolę w jakiej przyjdzie służyć kawałkowi. 
+
+\subsection*{Przykładowa struktura prostego pliku PNG}
+\begin{figure}[H]
+	\includegraphics[width=1\textwidth]{./overview/examplePNG.png}
+	\caption{Przykładowa struktura pliku PNG [źródło: wikipedia.org]}
+\end{figure}
+
 \subsection{Instrukcja obsługi programu}
 W celu uruchomienia kodu źródłowego będzie niezbędny: 
 \begin{itemize}
-	\item \href{https://www.python.org/}{Python} ($\geq$ 2.6 lub 3.X)
+	\item \href{https://www.python.org/}{Python} ($\geq$ 2.7, 32 bit)
+	\item \href{https://numpy.org/}{NumPy} ($\geq$ 1.16.3)
+	\item \href{https://matplotlib.org/}{matplotlib} ($\geq$ 2.2.5)
+	\item \href{https://pillow.readthedocs.io/en/stable/}{Pillow} ($\geq$ 6.0.0)
 \end{itemize}
+Uruchomienie programu sprowadza się do użycia komendy \textit{python source.py} w folderze \textit{./Exercises/Source} co spowoduje wygenerowanie się odpowiednich obrazów w folderze \textit{./Exercises/Source/Resources/result}. 
 
 \chapter{Operacje ujednolicania obrazów}
 Ujednolicanie obrazów oznacza sprowadzenie ich do wspólnego gruntu pod względem określonego parametru. W tym wypadku będziemy ujednolicać obrazy pod względem geometrycznym (ilości kolumn i wierszy pikseli) i następnie rozdzielczościowym (wypełnienia pikselami). Sekwencyjność tych operacji jak i one same nie są w stanie spowodować spadku jakości obrazu. 

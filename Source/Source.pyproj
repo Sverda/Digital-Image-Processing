@@ -53,7 +53,7 @@
     <Content Include="Resources\binary.png" />
     <Content Include="Resources\cat-bright.png" />
     <Content Include="Resources\cat.png" />
-    <Content Include="Resources\coffee-bright.png" />
+    <Content Include="Resources\coffee-dark.png" />
     <Content Include="Resources\coffee.png" />
     <Content Include="Resources\field.png" />
     <Content Include="Resources\lena.png" />
