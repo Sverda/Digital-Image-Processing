@@ -62,7 +62,6 @@ class ArithmeticSumColor(object):
         result = Commons.Normalization(firstImage, result)
         ImageHelper.Save(result, self.imageType, 'sum-color-images', True, self.firstDecoder, self.secondDecoder)
 
-
     # Ex3.2
     def multiplyWithConst(self, constValue):
         print('Multiply color image {} with const {}'.format(self.firstDecoder.name, constValue))
@@ -140,3 +139,59 @@ class ArithmeticSumColor(object):
         ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-color', False, self.firstDecoder, None, powerIndex)
         result = Commons.Normalization(image, result)
         ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-color', True, self.firstDecoder, None, powerIndex)
+
+    # Ex3.5
+    def divideWithConst(self, constValue):
+        print('Divide color image {} with const {}'.format(self.firstDecoder.name, constValue))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        maxValue = numpy.iinfo(image.dtype).max
+        result = numpy.ones((height, width, 3), numpy.uint8)
+        
+        for h in range(height):
+            for w in range(width):
+                result[h, w, 0] = image[h, w, 0] / constValue
+                result[h, w, 1] = image[h, w, 1] / constValue
+                result[h, w, 2] = image[h, w, 2] / constValue
+
+        ImageHelper.Save(result, self.imageType, 'divide-color-const', False, self.firstDecoder, None, constValue)
+        result = Commons.Normalization(image, result)
+        ImageHelper.Save(result, self.imageType, 'divide-color-const', True, self.firstDecoder, None, constValue)
+
+    # Ex3.5
+    def divideImages(self):
+        print('Divide color image {} with image {}'.format(self.firstDecoder.name, self.secondDecoder.name))
+        unification = Unification(self.firstDecoder.name, self.secondDecoder.name, self.imageType)
+        firstImage, secondImage = unification.colorUnification()
+        width, height = firstImage.shape[0], firstImage.shape[1]
+        
+        maxValue = float(numpy.iinfo(firstImage.dtype).max)
+        sumR = float(
+            numpy.amax(
+                numpy.add(firstImage[:, :, 0].astype(numpy.uint32), 
+                          secondImage[:, :, 0].astype(numpy.uint32))))
+        sumG = float(
+            numpy.amax(
+                numpy.add(firstImage[:, :, 1].astype(numpy.uint32), 
+                          secondImage[:, :, 1].astype(numpy.uint32))))
+        sumB = float(
+            numpy.amax(
+                numpy.add(firstImage[:, :, 2].astype(numpy.uint32), 
+                          secondImage[:, :, 2].astype(numpy.uint32))))
+        scaleR = maxValue / sumR
+        scaleG = maxValue / sumG
+        scaleB = maxValue / sumB
+
+        result = numpy.ones((height, width, 3), numpy.uint8)
+        for h in range(height):
+            for w in range(width):
+                R = (int(firstImage[h, w, 0]) + int(secondImage[h, w, 0])) * scaleR
+                G = (int(firstImage[h, w, 1]) + int(secondImage[h, w, 1])) * scaleG
+                B = (int(firstImage[h, w, 2]) + int(secondImage[h, w, 2])) * scaleB
+                result[h, w, 0] = numpy.ceil(R)
+                result[h, w, 1] = numpy.ceil(G)
+                result[h, w, 2] = numpy.ceil(B)
+
+        ImageHelper.Save(result, self.imageType, 'divide-color-images', False, self.firstDecoder, self.secondDecoder)
+        result = Commons.Normalization(firstImage, result)
+        ImageHelper.Save(result, self.imageType, 'divide-color-images', True, self.firstDecoder, self.secondDecoder)

@@ -442,38 +442,37 @@ a_{31} * X & a_{32} * X & a_{33} * X
 \end{bmatrix}
 $
 \\\\
-Mnożeniem obrazów szarych można nazwać też ich \textit{skalowaniem} i dla wartości $\{x: 0 < x < 1\}$ przyciemnij obrazy, a dla wartości $\{x: 1 < x\}$ rozjaśnij go. 
+Mnożeniem obrazów szarych można nazwać też ich \textit{skalowaniem} i dla wartości $\{x: 1 < x\}$ rozjaśnij go. 
 Jednym z zagrożeń przy tej operacji jest przepełnienie, które objawia się czarnymi plamami (Rysunek 3.7). Aby go uniknąć dla wartości powyżej  $Z_{rep}$ (tzn. maksymalna wielkość zakresu reprezentacji tonalnej obrazu) program przytnie wartości do $Z_{rep}$ co będzie skutkowało coraz jaśniejszymi obrazami, a uniemożliwi czarne plamy. 
 
 \begin{figure}[H]
 	\caption{Przykład przekroczenia maksymalnej wartości}
-	\includegraphics[width=17cm, height=17cm]{2/multiply-gray-const-error.png}
+	\includegraphics[width=17cm, height=17cm]{2-2/multiply-gray-const-error.png}
 \end{figure}
 
-\begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const.png}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-norm.png}
-\end{figure}
 \begin{figure}[H]
 	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-2.png}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-2-norm.png}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-photoman-15.png}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-photoman-15-norm.png}
 \end{figure}
-
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-3.png}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-3-norm.png}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 3.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-photoman-35.png}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-photoman-35-norm.png}
 \end{figure}
 \begin{figure}[H]
 	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-4.png}
-	\includegraphics[width=5cm, height=5cm]{2/multiply-gray-const-4-norm.png}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-cat-15.png}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-cat-15-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po pomnożeniu przez wartość 3.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-cat-35.png}
+	\includegraphics[width=5cm, height=5cm]{2-2/multiply-gray-const-cat-35-norm.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -508,11 +507,11 @@ Przydatną własnością tej operacji jest możliwość wyciągania części wsp
 	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-norm.png}
 \end{figure}
 \begin{figure}[H]
-\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
-\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
-\includegraphics[width=7cm, height=7cm]{mask-unmodified.png}
-\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
-\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po przemnożeniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{mask-unmodified.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
+	\includegraphics[width=7cm, height=7cm]{2/multiply-gray-images-mask.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -593,6 +592,96 @@ Po wykonaniu tej operacji będzie potrzebne zastosowanie normalizacji do uwidocz
 \subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumGray.py}{117}{130}
 
+\section{Dzielenie obrazu przez liczbę}
+\subsection*{Wstęp}
+Operator dzielenia obrazu przez liczbę przyjmuje dwie wartości: macierz obrazu $P_1$ i stałą liczbową $C$ i polega na podzieleniu każdego piksla w obrazie przez stałą. Wynikiem tej operacji będzie liczba zmiennoprzecinkowa, więc należy ją zaokrąglić do najbliższej wartości całkowitej. 
+\begin{gather}
+	Q(i,j) = P_1(i,j) \div C
+\end{gather}
+Efektem tej operacji będzie przyciemnienie obrazu i zmniejszenie kontrastu pomiędzy pikselami. Z tego względu po operacji dzielenia warto zastosować \textit{normalizację}, aby wartości stłoczone bliżej zera \textquotedblright rozciągnąć\textquotedblright na cały możliwy przedział wartości od $0$ do $Z_p$. 
+
+\subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumGray.py}{133}{146}
+
+\subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-cat-2.png}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-cat-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-photoman-2.png}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-photoman-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 10 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-cat-10.png}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-cat-10-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 10 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-photoman-10.png}
+	\includegraphics[width=5cm, height=5cm]{2-5/divide-gray-const-photoman-10-norm.png}
+\end{figure}
+
+\section{Dzielenie obrazu przez inny obraz}
+\subsection*{Wstęp}
+Dzielenie dwóch obrazów odbywa się z pomocą formuły: 
+\begin{gather}
+	Q(i,j) = P_1(i,j) \div P_2(i,j)
+\end{gather}
+Aby operacja się powiodła oba obrazy muszą być tych samych rozmiarów, a dla wartości w których dzielnik ma wartość $0$ przyjmuje się że wynikiem dzielenia jest dzielna tego działania. \\
+Pierwszy problem pojawia się gdy chcemy zwyczajnie podzielić odpowiadające sobie piksele $P_1$ i $P_2$, gdyż dostaniemy stosunek jednej wartości do drugiej. Wynik takiej operacji będzie bardzo mały jeśli $P_1(i,j) < P_2(i,j)$ lub proporcjonalnie większy jeśli $P_1(i,j) > P_2(i,j)$ co niszczy harmoniczny kontrast piksli i w rezultacie otrzymujemy to co na rysunku poniżej:
+\begin{figure}[H]
+	\caption{Rezultat dzielenia obrazu przez inny bez zachowania odpowiedniego balansu pomiędzy pikslami}
+	\includegraphics[width=8cm, height=8cm]{2-5/divide-gray-error.png}
+\end{figure}
+Remedium na ten błąd jest znalezienie największej sumy $P_1$ i $P_2$ określonej jako $Q_{max}$. Następnie dla każdej pary odpowiadających sobie piksli używamy wzoru: 
+\begin{gather}
+	Q(i,j) = (P_1(i,j) + P_2(i,j)) \times \frac{Z_p}{Q_{max}}
+\end{gather}
+Wzór ten pozwoli na zachowanie odpowiednich zależności pomiędzy wartościami piksli. \\
+Jednym z częstszych zastosowań dzielenia obrazów jest wykrywanie zmian (np w filmach po-klatkowych), w podobny sposób jak używane jest odejmowanie obrazów w tym celu. Ponad to dzielenie obrazów nie może zostać użyte jako operacja maskowania przy użyciu odpowiedniego drugiego obrazu - w przeciwieństwie do operacji mnożenia
+
+\subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumGray.py}{149}{170}
+
+\subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po podzieleniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{cat-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{2-5/divide-gray-images-cat-photoman.png}
+	\includegraphics[width=7cm, height=7cm]{2-5/divide-gray-images-cat-photoman-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po podzieleniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{man-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{lena-unmodified.png}
+	\includegraphics[width=7cm, height=7cm]{2-5/divide-gray-images-photoman-lena.png}
+	\includegraphics[width=7cm, height=7cm]{2-5/divide-gray-images-photoman-lena-norm.png}
+\end{figure}
+
+\section{Pierwiastkowanie obrazu}
+\subsection*{Wstęp}
+
+\subsection*{Kod algorytmu}
+
+\subsection*{Wynik algorytmu}
+
+\section{Logarytmowanie obrazu}
+\subsection*{Wstęp}
+
+\subsection*{Kod algorytmu}
+
+\subsection*{Wynik algorytmu}
+
+
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
 Rodzaje operatorów arytmetycznych używane na obrazach barwowych różnią się względem ich szarych odpowiedników tylko strukturą na której pracują. Piksel obrazów szarych składa się z jednej wartości z zakresu $[0,255]$. W przypadku kolorowych obrazów potrzebne są trzy wartości na każdą barwę \textit{RGB}. 
 \\
@@ -610,22 +699,22 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-30-norm.png}
 \end{figure}
 \begin{figure}[H]
-\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
-\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
-\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-30.png}
-\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-30-norm.png}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 30 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-30.png}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-30-norm.png}
 \end{figure}
 \begin{figure}[H]
-\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 200 (środkowy obraz), po normalizacji (prawy obraz)}
-\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
-\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-200.png}
-\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-200-norm.png}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 200 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-200.png}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-coffee-200-norm.png}
 \end{figure}
 \begin{figure}[H]
-\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 200 (środkowy obraz), po normalizacji (prawy obraz)}
-\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
-\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-200.png}
-\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-200-norm.png}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu dodawania o wartości 200 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-200.png}
+	\includegraphics[width=5cm, height=5cm]{3-1/sum-color-const-phone-200-norm.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -656,28 +745,28 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 \subsection*{Algorytm}
 \subsubsection*{Opis}
 \begin{figure}[H]
-	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-5.png}
-	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-5-norm.png}
-\end{figure}
-\begin{figure}[H]
-	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-5.png}
-	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-5-norm.png}
-\end{figure}
-\begin{figure}[H]
 	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
 	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15.png}
 	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-15-norm.png}
 \end{figure}
 \begin{figure}[H]
+	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 3.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-35.png}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-coffee-35-norm.png}
+\end{figure}
+\begin{figure}[H]
 	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 1.5 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
 	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15.png}
 	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-15-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed (lewy obraz), po pomnożeniu przez wartości 3.5 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-35.png}
+	\includegraphics[width=5cm, height=5cm]{3-2/multiply-color-const-phone-35-norm.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -752,6 +841,79 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 
 \subsection*{Kod źródłowy programu}
 \inputpython{../Source/ArithmeticSumColor.py}{127}{142}
+
+\section{Dzielenie obrazu przez liczbę}
+\subsection*{Wstęp}
+W wypadku gdy wartość piksla jest skalarem - tak jak w przypadku obrazów kolorowych. Stała $C$ jest dzielona przez każdy z trzech kanałów. 
+
+\subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumColor.py}{144}{159}
+
+\subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-coffee-2.png}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-coffee-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-phone-2.png}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-phone-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 10 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-coffee-10.png}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-coffee-10-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem (lewy obraz), po dzieleniu przez wartość 10 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-phone-10.png}
+	\includegraphics[width=5cm, height=5cm]{3-5/divide-color-const-phone-10-norm.png}
+\end{figure}
+
+\section{Dzielenie obrazu przez inny obraz}
+\subsection*{Wstęp}
+Jedyna różnica pomiędzy sposobem dzielenia obrazów szarych od barwnych polega na innej wartości piksla, który w przypadku tych drugich jest wektorem trzech wartości. Wymusza to znalezienie maksymalnej sumy na przestrzeni każdej z trzech składowych RGB i na ich podstawie wytyczyć można odpowiednia wartość dzielenia za pomocą wzoru: 
+\begin{gather}
+Q(i,j) = (P_1(i,j) + P_2(i,j)) \times \frac{Z_p}{Q_{max}}
+\end{gather}
+
+\subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumColor.py}{162}{197}
+
+\subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po podzieleniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{coffee-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{3-5/divide-color-images-coffee-phone.png}
+	\includegraphics[width=7cm, height=7cm]{3-5/divide-color-images-coffee-phone-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (obrazy na górze), po podzieleniu obrazów (lewy, dolny obraz), po normalizacji (prawy, dolny obraz)}
+	\includegraphics[width=7cm, height=7cm]{phone-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{sea-unmodified.jpg}
+	\includegraphics[width=7cm, height=7cm]{3-5/divide-color-images-phone-sea.png}
+	\includegraphics[width=7cm, height=7cm]{3-5/divide-color-images-phone-sea-norm.png}
+\end{figure}
+
+\section{Pierwiastkowanie obrazu}
+\subsection*{Wstęp}
+
+\subsection*{Kod algorytmu}
+
+\subsection*{Wynik algorytmu}
+
+\section{Logarytmowanie obrazu}
+\subsection*{Wstęp}
+
+\subsection*{Kod algorytmu}
+
+\subsection*{Wynik algorytmu}
 
 \chapter{Operacje geometryczne na obrazie}
 Operacje geometryczne przekształcają położenie pikseli \textit{(x1, y1)} w obrazie wejściowym do nowej lokacji \textit{(x2, y2)} w obrazie wynikowym. Dzięki temu możemy dopasować obraz do odpowiedniego układu współrzędnych lub użyć tych operacji do eliminacji geometrycznych zakłóceń obrazu (dystorsji). 

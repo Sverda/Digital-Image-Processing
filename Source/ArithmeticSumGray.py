@@ -128,3 +128,43 @@ class ArithmeticSumGray(object):
         ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-gray', False, self.firstDecoder, None, powerIndex)
         result = Commons.Normalization(image, result)
         ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'power-gray', True, self.firstDecoder, None, powerIndex)
+
+    # Ex2.5
+    def divideWithConst(self, constValue):
+        print('Divide gray image {} with const {}'.format(self.firstDecoder.name, constValue))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        maxValue = numpy.iinfo(image.dtype).max
+        result = numpy.ones((height, width), numpy.uint8)
+        
+        for h in range(height):
+            for w in range(width):
+                result[h, w] = image[h, w] / constValue
+
+        ImageHelper.Save(result, self.imageType, 'divide-gray-const', False, self.firstDecoder, None, constValue)
+        result = Commons.Normalization(image, result)
+        ImageHelper.Save(result, self.imageType, 'divide-gray-const', True, self.firstDecoder, None, constValue)
+
+    # Ex2.5
+    def divideImages(self):
+        print('Divide gray image {} with image {}'.format(self.firstDecoder.name, self.secondDecoder.name))
+        unification = Unification(self.firstDecoder.name, self.secondDecoder.name, 'L')
+        firstImage, secondImage = unification.grayUnification()
+        width, height = firstImage.shape[0], firstImage.shape[1]
+        
+        maxSum = float(
+            numpy.amax(
+                numpy.add(firstImage.astype(numpy.uint32), 
+                          secondImage.astype(numpy.uint32))))
+        maxValue = float(numpy.iinfo(firstImage.dtype).max)
+        scaleFactor = maxValue / maxSum
+
+        result = numpy.ones((height, width), numpy.uint8)
+        for h in range(height):
+            for w in range(width):
+                pom = (int(firstImage[h, w]) + int(secondImage[h, w])) * scaleFactor
+                result[h, w] = math.ceil(pom)
+
+        ImageHelper.Save(result, self.imageType, 'divide-gray-images', False, self.firstDecoder, self.secondDecoder)
+        result = Commons.Normalization(firstImage, result)
+        ImageHelper.Save(result, self.imageType, 'divide-gray-images', True, self.firstDecoder, self.secondDecoder)
