@@ -3,11 +3,13 @@ import collections
 from PIL import Image
 
 from ImageDecoder import ImageDecoder
+from ImageHelper import ImageHelper
 
 class Unification(object):
     def __init__(self, firstPath, secondPath, imageType):
         self.firstDecoder = ImageDecoder(firstPath, imageType)
         self.secondDecoder = ImageDecoder(secondPath, imageType)
+        self.imageType = imageType
         self.maxHeight, self.maxWidth = self._findMaxSize()
         
     def _findMaxSize(self):
@@ -18,16 +20,12 @@ class Unification(object):
 
     # Ex1.1
     def geometricGray(self):
-        print('geometric gray unification start')
+        print('Geometric gray unification for image {} and {}'.format(self.firstDecoder.name, self.secondDecoder.name))
         firstResult, secondResult = self.grayUnification()
-        img = Image.fromarray(firstResult, mode='L')
-        img.save('Resources/result/ggUnification_1.png')
-        img = Image.fromarray(secondResult, mode='L')
-        img.save('Resources/result/ggUnification_2.png')
-        print('geometric gray unification done')
+        ImageHelper.Save(firstResult.astype(numpy.uint8), self.imageType, 'geometric-gray', False, self.firstDecoder, self.secondDecoder)
+        ImageHelper.Save(secondResult.astype(numpy.uint8), self.imageType, 'geometric-gray', False, self.secondDecoder, self.firstDecoder)
 
     def grayUnification(self):
-        # Create black background
         firstResult = numpy.zeros((self.maxHeight, self.maxWidth), numpy.uint8)
         width, height = self.firstDecoder.width, self.firstDecoder.height
         if width < self.maxWidth or height < self.maxHeight:
@@ -58,13 +56,11 @@ class Unification(object):
 
     # Ex1.2
     def rasterGray(self):
-        print('raster gray unification start')
+        print('Raster gray unification for image {} and {}'.format(self.firstDecoder.name, self.secondDecoder.name))
         firstResult = self.scaleUpGray(self.firstDecoder)
         secondResult = self.scaleUpGray(self.secondDecoder)
-        img = Image.fromarray(firstResult, mode='L')
-        img.save('Resources/result/rgUnification_1.png')
-        img = Image.fromarray(secondResult, mode='L')
-        img.save('Resources/result/rgUnification_2.png')
+        ImageHelper.Save(firstResult.astype(numpy.uint8), self.imageType, 'raster-gray', False, self.firstDecoder, self.secondDecoder)
+        ImageHelper.Save(secondResult.astype(numpy.uint8), self.imageType, 'raster-gray', False, self.secondDecoder, self.firstDecoder)
         
     def scaleUpGray(self, decoder):
         width, height = decoder.width, decoder.height
@@ -103,12 +99,10 @@ class Unification(object):
 
     # Ex1.3
     def geometricColor(self):
-        print('geometric color unification start')
+        print('Geometric color unification for image {} and {}'.format(self.firstDecoder.name, self.secondDecoder.name))
         firstResult, secondResult = self.colorUnification()
-        img = Image.fromarray(firstResult, 'RGB')
-        img.save('Resources/result/gcUnification_1.png')
-        img = Image.fromarray(secondResult, 'RGB')
-        img.save('Resources/result/gcUnification_2.png')
+        ImageHelper.Save(firstResult.astype(numpy.uint8), self.imageType, 'geometric-color', False, self.firstDecoder, self.secondDecoder)
+        ImageHelper.Save(secondResult.astype(numpy.uint8), self.imageType, 'geometric-color', False, self.secondDecoder, self.firstDecoder)
 
     def colorUnification(self):
         width, height = self.firstDecoder.width, self.firstDecoder.height
@@ -126,7 +120,6 @@ class Unification(object):
         return firstResult, secondResult
 
     def _paintInMiddleColor(self, decoder):
-        # Create black background
         result = numpy.full((self.maxHeight, self.maxWidth, 3), 0, numpy.uint8)
         # Copy smaller image to bigger
         width, height = decoder.width, decoder.height
@@ -140,13 +133,11 @@ class Unification(object):
 
     # Ex1.4
     def rasterColor(self):
-        print('rastar color unification start')
+        print('Raster color unification for image {} and {}'.format(self.firstDecoder.name, self.secondDecoder.name))
         firstResult = self.scaleUpColor(self.firstDecoder)
         secondResult = self.scaleUpColor(self.secondDecoder)
-        img = Image.fromarray(firstResult, mode='RGB')
-        img.save('Resources/result/rcUnification_1.png')
-        img = Image.fromarray(secondResult, mode='RGB')
-        img.save('Resources/result/rcUnification_2.png')
+        ImageHelper.Save(firstResult.astype(numpy.uint8), self.imageType, 'raster-color', False, self.firstDecoder, self.secondDecoder)
+        ImageHelper.Save(secondResult.astype(numpy.uint8), self.imageType, 'raster-color', False, self.secondDecoder, self.firstDecoder)
 
     def scaleUpColor(self, decoder):
         width, height = decoder.width, decoder.height
