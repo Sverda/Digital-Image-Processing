@@ -2,17 +2,17 @@ import argparse
 import sys
 
 from Unification import Unification
-from Geometric import Geometric
+from Geometric import GeometricColor
 from ArithmeticSumGray import ArithmeticSumGray
 from ArithmeticSumColor import ArithmeticSumColor
 from HistogramGray import HistogramGray
 from HistogramColor import HistogramColor
 
 def main():
-    unificationModule()
-    #geometricModule()
+    #unificationModule()
     #grayArithmeticSumModule()
     #colorArithmeticSumModule()
+    geometricModule()
     #grayHistogramModule()
     #colorHistogramModule()
 
@@ -29,20 +29,6 @@ def unificationModule():
     unification = Unification('Resources/phone.png', 'Resources/sea.png', 'RGB')
     unification.geometricColor()
     unification.rasterColor()
-
-def geometricModule():
-    geometric = Geometric('Resources/phone.png', "RGB")
-    geometric.translate(100, -100)
-    geometric.homogeneousScaling(2.0)
-    geometric.nonUniformScaling(2.0, 1.0)
-    geometric.rotation(45)
-    geometric.axisSymmetry(True, True)
-    geometric.customSymmetryX(356)
-    geometric.customSymmetryY(356)
-    point1, point2 = (50, 50), (100, 100)
-    geometric.crop(point1, point2)
-    point1, point2 = (50, 50), (100, 100)
-    geometric.copy(point1, point2)
 
 def grayArithmeticSumModule():
     gray = ArithmeticSumGray('Resources/photoman.png', 'Resources/lena.png', 'L')
@@ -119,6 +105,32 @@ def colorArithmeticSumModule():
     color.rootFirstImage(2)
     color.rootFirstImage(4)
     color.logarithm()
+
+def geometricModule():
+    color = GeometricColor('Resources/phone.png', "RGB")
+    #color.translate(100, -100)
+    #color.homogeneousScaling(2.0)
+    #color.nonUniformScaling(2.0, 1.0)
+    #color.rotation(45)
+    #color.axisSymmetry(True, True)
+    #color.axisSymmetry(True, False)
+    #color.axisSymmetry(False, True)
+    #color.customSymmetryX(64)
+    #color.customSymmetryY(64)
+    color.crop((50, 50), (100, 100))
+    color.copy((50, 50), (100, 100))
+    color = GeometricColor('Resources/sea.png', "RGB")
+    #color.translate(100, -100)
+    #color.homogeneousScaling(2.0)
+    #color.nonUniformScaling(2.0, 1.0)
+    #color.rotation(45)
+    #color.axisSymmetry(True, True)
+    #color.axisSymmetry(True, False)
+    #color.axisSymmetry(False, True)
+    #color.customSymmetryX(356)
+    #color.customSymmetryY(356)
+    color.crop((50, 50), (100, 100))
+    color.copy((50, 50), (100, 100))
 
 def grayHistogramModule():
     gray = HistogramGray('Resources/photoman.png', 'L')

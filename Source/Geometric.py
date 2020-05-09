@@ -2,15 +2,18 @@ import math
 import numpy
 import collections
 from PIL import Image
-from ImageDecoder import ImageDecoder
 
-class Geometric(object):
+from ImageDecoder import ImageDecoder
+from ImageHelper import ImageHelper
+
+class GeometricColor(object):
     def __init__(self, firstPath, imageType):
         self.decoder = ImageDecoder(firstPath, imageType)
+        self.imageType = imageType
 
     # Ex4.1
     def translate(self, deltaX = 0, deltaY = 0):
-        print('translation start')
+        print('Translation color image {} to point ({},{})'.format(self.decoder.name, deltaX, deltaY))
         height, width = self.decoder.height, self.decoder.width
         image = self.decoder.getPixels()
         result = numpy.zeros((height, width, 3), numpy.uint8)
@@ -19,38 +22,28 @@ class Geometric(object):
             for x in range(width):  
                 if 0 < y + deltaY < height and 0 < x + deltaX < width:
                     result[y + deltaY][x + deltaX] = image[y][x]
-
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/tGeometric.png')
-        print('translation done')
+                    
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'translate', False, self.decoder)
 
     # Ex4.2
     def homogeneousScaling(self, scale = 1.0):
-        print('homogeneous scaling start')
+        print('Homogeneous scaling color image {} about scale {}'.format(self.decoder.name, scale))
         image = self.decoder.getPixels()
 
-        print('scaling')
         result = self._scale(image, scale, scale)
-        print('interpolation')
         self._interpolateColor(result)
+        
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'homogeneous-scaling', False, self.decoder)
 
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/hsGeometric.png')
-        print('homogeneous scaling done')
-
-    # Ex4.3
+    # Ex4.2
     def nonUniformScaling(self, scaleX = 1.0, scaleY = 1.0):
-        print('non-uniform scaling start')
+        print('Non-uniform scaling color image {} with scale ({},{})'.format(self.decoder.name, scaleX, scaleY))
         image = self.decoder.getPixels()
 
-        print('scaling')
         result = self._scale(image, scaleX, scaleY)
-        print('interpolation')
         self._interpolateColor(result)
-
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/nusGeometric.png')
-        print('non-uniform scaling done')
+        
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'nonuniform-scaling', False, self.decoder)
 
     def _scale(self, matrix, scaleX, scaleY):
         height, width = self.decoder.height, self.decoder.width
@@ -61,19 +54,15 @@ class Geometric(object):
                     result[int(scaleY * y)][int(scaleX * x)] = matrix[y][x]
         return result
 
-    # Ex4.4
+    # Ex4.3
     def rotation(self, phi):
-        print('rotation start')
+        print('Rotation color image {} about angle {}'.format(self.decoder.name, phi))
         image = self.decoder.getPixels()
 
-        print('rotating')
         result = self._rotate(image, phi)
-        print('interpolation')
         self._interpolateColor(result)
-
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/rGeometric.png')
-        print('rotation done')
+        
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'rotate', False, self.decoder)
 
     def _rotate(self, image, phi):
         height, width = self.decoder.height, self.decoder.width
@@ -87,17 +76,14 @@ class Geometric(object):
                     result[int(newY)][int(newX)] = image[y][x]
         return result
 
-    # Ex4.5
+    # Ex4.4
     def axisSymmetry(self, ox, oy):
-        print('axis symmetry start')
+        print('Axis symmetry color image {} on axis {} and {}'.format(self.decoder.name, ox, oy))
         image = self.decoder.getPixels()
 
-        print('symmetry operation')
         result = self._symmetryOXorOY(image, ox, oy)
-
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/Geometric-AxisSymmetry.png')
-        print('axis symmetry done')
+        
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'axis-symmetry-{}-{}'.format(ox, oy), False, self.decoder)
 
     def _symmetryOXorOY(self, image, ox, oy):
         height, width = self.decoder.height, self.decoder.width
@@ -112,13 +98,12 @@ class Geometric(object):
                     result[y][x] = image[(height-1)-y][(width-1)-x]
         return result
 
-    # Ex4.6a
+    # Ex4.4
     def customSymmetryX(self, ox):
-        print('custom axis symmetry X start')
+        print('Custom axis symmetry X color image {} on axis {}'.format(self.decoder.name, ox))
         if not self._validateSymmetryAxisX(ox):
             return
 
-        print('symmetry operation X')
         image = self.decoder.getPixels()
         height, width = self.decoder.height, self.decoder.width
         resultWidth = ox*2
@@ -127,24 +112,21 @@ class Geometric(object):
             for x in range(ox):
                 result[y][x] = image[y][x]
                 result[y][resultWidth-1-x] = image[y][x]
+                
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'x-symmetry', False, self.decoder, None, ox)
 
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/Geometric-CustomSymmetryX.png')
-        print('custom axis symmetry X done')
-
-    # Ex4.6b
     def _validateSymmetryAxisX(self, ox):
         width = self.decoder.width
         if ox <= 0 or ox > width:
             return False
         return True
-
+    
+    # Ex4.4
     def customSymmetryY(self, oy):
-        print('custom axis symmetry Y start')
+        print('Custom axis symmetry Y color image {} on axis {}'.format(self.decoder.name, oy))
         if not self._validateSymmetryAxisY(oy):
             return
 
-        print('symmetry operation Y')
         image = self.decoder.getPixels()
         height, width = self.decoder.height, self.decoder.width
         resultHeight = oy*2
@@ -153,10 +135,8 @@ class Geometric(object):
             for x in range(width):
                 result[y][x] = image[y][x]
                 result[resultHeight-1-y][x] = image[y][x]
-
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/Geometric-CustomSymmetryY.png')
-        print('custom axis symmetry Y done')
+                
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'y-symmetry', False, self.decoder, None, oy)
 
     def _validateSymmetryAxisY(self, oy):
         height = self.decoder.height
@@ -182,32 +162,26 @@ class Geometric(object):
                                 n += 1
                     result[h, w] = (r/n, g/n, b/n)
 
-    # Ex4.7
+    # Ex4.5
     def crop(self, (x1, y1), (x2, y2)):
-        print('croping image start')
+        print('Crop image {} from ({},{}) to ({},{})'.format(self.decoder.name, x1, y1, x2, y2))
         image = self.decoder.getPixels()
 
-        print('croping')
         for x in range(x1, x2+1):
             for y in range(y1, y2+1):
                 image[y, x] = (0, 0, 0)
+                
+        ImageHelper.Save(image, self.imageType, 'crop', False, self.decoder)
 
-        img = Image.fromarray(image, mode='RGB')
-        img.save('Resources/result/Geometric-Crop.png')
-        print('croping image done')
-
-    # Ex4.8
+    # Ex4.6
     def copy(self, (x1, y1), (x2, y2)):
-        print('copying image start')
+        print('Copy image {} from ({},{}) to ({},{})'.format(self.decoder.name, x1, y1, x2, y2))
         image = self.decoder.getPixels()
         height, width = self.decoder.height, self.decoder.width
         result = numpy.zeros((height, width, 3), numpy.uint8)
 
-        print('copying')
         for x in range(x1, x2+1):
             for y in range(y1, y2+1):
                 result[y, x] = image[y, x]
-
-        img = Image.fromarray(result, mode='RGB')
-        img.save('Resources/result/Geometric-Copy.png')
-        print('copying image done')
+                
+        ImageHelper.Save(result, self.imageType, 'copy', False, self.decoder)
