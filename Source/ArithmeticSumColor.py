@@ -195,3 +195,40 @@ class ArithmeticSumColor(object):
         ImageHelper.Save(result, self.imageType, 'divide-color-images', False, self.firstDecoder, self.secondDecoder)
         result = Commons.Normalization(firstImage, result)
         ImageHelper.Save(result, self.imageType, 'divide-color-images', True, self.firstDecoder, self.secondDecoder)
+
+    # Ex3.6
+    def rootFirstImage(self, rootIndex):
+        print('Root color image {} with image {} and index {}'.format(self.firstDecoder.name, self.secondDecoder.name, rootIndex))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        
+        maxValue = float(numpy.iinfo(image.dtype).max)
+        result = numpy.ones((height, width, 3), numpy.uint32)
+        for h in range(height):
+            for w in range(width):
+                result[h, w, 0] = image[h, w, 0]**(1.0/rootIndex)
+                result[h, w, 1] = image[h, w, 1]**(1.0/rootIndex)
+                result[h, w, 2] = image[h, w, 2]**(1.0/rootIndex)
+
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'root-color', False, self.firstDecoder, None, rootIndex)
+        result = Commons.Normalization(image, result)
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'root-color', True, self.firstDecoder, None, rootIndex)
+
+    # Ex3.7
+    def logarithm(self):
+        print('Logarithm color image {}'.format(self.firstDecoder.name))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        
+        maxValue = float(numpy.iinfo(image.dtype).max)
+        maxR = numpy.amax(image[:, :, 0])
+        maxG = numpy.amax(image[:, :, 1])
+        maxB = numpy.amax(image[:, :, 2])
+        result = numpy.ones((height, width, 3), numpy.uint32)
+        for h in range(height):
+            for w in range(width):
+                result[h, w, 0] = maxValue * (math.log10(1 + image[h, w, 0]) / math.log10(1 + maxR))
+                result[h, w, 1] = maxValue * (math.log10(1 + image[h, w, 1]) / math.log10(1 + maxG))
+                result[h, w, 2] = maxValue * (math.log10(1 + image[h, w, 2]) / math.log10(1 + maxB))
+
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'logarithm-color', False, self.firstDecoder)

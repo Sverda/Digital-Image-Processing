@@ -565,28 +565,16 @@ Obliczając wartości pikseli użyjemy wzoru:
 Po wykonaniu tej operacji będzie potrzebne zastosowanie normalizacji do uwidocznienie wyników. 
 
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-5.png}
-	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-5-norm.png}
-\end{figure}
-\begin{figure}[H]
 	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
 	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-20.png}
 	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-photoman-20-norm.png}
 \end{figure}
 \begin{figure}[H]
-\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
-\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-5.png}
-\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-5-norm.png}
-\end{figure}
-\begin{figure}[H]
-\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
-\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
-\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-20.png}
-\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-20-norm.png}
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-20.png}
+	\includegraphics[width=5cm, height=5cm]{2-4/power-gray-cat-20-norm.png}
 \end{figure}
 
 \subsection*{Kod źródłowy programu}
@@ -669,17 +657,64 @@ Jednym z częstszych zastosowań dzielenia obrazów jest wykrywanie zmian (np w 
 
 \section{Pierwiastkowanie obrazu}
 \subsection*{Wstęp}
+Pierwiastkowanie obrazu jest szczególnym rodzajem jego potęgowania gdy wykładnik potęgi jest mniejszy od jedności. Efektem tej operacji jest zwiększenie intensywności piksli, których wartości są bliższe zeru (tzn. zwiększenie kontrastu) i jednocześnie zmalenie intensywności piksli wyższych pasm (tzn. zmniejszenie kontrastu). Po operacji zwykle jest niezbędna normalizacja ze względu na ciemniejszy wąski zakres wartości obrazu wyjściowego. 
 
 \subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumGray.py}{173}{186}
 
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu pierwiastkowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-cat-2.png}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-cat-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu pierwiastkowania o wykładniku 4 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-cat-4.png}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-cat-4-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu pierwiastkowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-photoman-2.png}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-photoman-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu pierwiastkowania o wykładniku 4 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-photoman-4.png}
+	\includegraphics[width=5cm, height=5cm]{2-6/root-gray-photoman-4-norm.png}
+\end{figure}
 
 \section{Logarytmowanie obrazu}
 \subsection*{Wstęp}
+Przydatność tej operacji wynika z jej efektu. Polega on na rozjaśnieniu i zwiększeniu kontrastu w ciemniejszych rejonach obrazu. Ten efekt bierze się z kompresji \textit{rozpiętości tonalnej} z użyciem funkcji logarytmicznej. Każdy piksel w obrazie jest zamieniany ze swoim logarytmem. Użycie tego operatora punktowego może być przydatne gdy \textit{rozpiętość tonalna} jest zbyt duża aby ją wyświetlić na ekranie. \\
+\textbf{Logarytmowanie obrazu} odbywa się z pomocą wzoru, który uwzględnia nieograniczoność logarytmu w zerze poprzez dodanie wartości w argumencie logarytmu: 
+\begin{gather}
+	f_m = log(1 + f)
+\end{gather}
+Przy logarytmowaniu wartości piksli nie trudno o wyjście poza zakres, więc z tego powodu będziemy używać znormalizowanej wersji wzoru: 
+\begin{gather}
+	f_m = 255 * \left( \frac{log(1 + f(i,j))}{log(1 + f_{max})}\right)
+\end{gather}
+W tych przykładach będziemy używać logarytmu o bazie $10$, ale można też używać tego z podstawą naturalną gdyż nie wpływa to na kształt krzywej logarytmu. Jedyne co na niego wpływa to scala (wartość 255), która jest stosowana na każdą wartość wychodzącą z logarytmu. Użycie tej skali jest wymagane, aby prawidłowo wyświetlić obraz w systemie 8-bitowym. 
 
 \subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumGray.py}{189}{201}
 
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu logarytmu (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{man-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-7/logarithm-gray-photoman.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu logarytmu (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{cat-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{2-7/logarithm-gray-cat.png}
+\end{figure}
 
 
 \chapter{Operacje sumowania arytmetycznego obrazów barwowych}
@@ -815,22 +850,10 @@ Pobiera ona informacje o maksymalnej dostępnej wartości dla kanału piksela $m
 \subsection*{Algorytm}
 \subsubsection*{Opis}
 \begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-5.png}
-	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-5-norm.png}
-\end{figure}
-\begin{figure}[H]
 	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
 	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
 	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-2.png}
 	\includegraphics[width=5cm, height=5cm]{3-4/power-color-coffee-2-norm.png}
-\end{figure}
-\begin{figure}[H]
-	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 0.5 (środkowy obraz), po normalizacji (prawy obraz)}
-	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
-	\includegraphics[width=5cm, height=5cm]{3-4/power-color-phone-5.png}
-	\includegraphics[width=5cm, height=5cm]{3-4/power-color-phone-5-norm.png}
 \end{figure}
 \begin{figure}[H]
 	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
@@ -879,7 +902,7 @@ W wypadku gdy wartość piksla jest skalarem - tak jak w przypadku obrazów kolo
 \subsection*{Wstęp}
 Jedyna różnica pomiędzy sposobem dzielenia obrazów szarych od barwnych polega na innej wartości piksla, który w przypadku tych drugich jest wektorem trzech wartości. Wymusza to znalezienie maksymalnej sumy na przestrzeni każdej z trzech składowych RGB i na ich podstawie wytyczyć można odpowiednia wartość dzielenia za pomocą wzoru: 
 \begin{gather}
-Q(i,j) = (P_1(i,j) + P_2(i,j)) \times \frac{Z_p}{Q_{max}}
+	Q(i,j) = (P_1(i,j) + P_2(i,j)) \times \frac{Z_p}{Q_{max}}
 \end{gather}
 
 \subsection*{Kod algorytmu}
@@ -903,17 +926,64 @@ Q(i,j) = (P_1(i,j) + P_2(i,j)) \times \frac{Z_p}{Q_{max}}
 
 \section{Pierwiastkowanie obrazu}
 \subsection*{Wstęp}
+Pierwiastkowanie obrazu jest szczególnym rodzajem jego potęgowania gdy wykładnik potęgi jest mniejszy od jedności. Efektem tej operacji jest zwiększenie intensywności piksli, których wartości są bliższe zeru (tzn. zwiększenie kontrastu) i jednocześnie zmalenie intensywności piksli wyższych pasm (tzn. zmniejszenie kontrastu). Po operacji zwykle jest niezbędna normalizacja ze względu na ciemniejszy wąski zakres wartości obrazu wyjściowego. 
 
 \subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumColor.py}{200}{215}
 
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-coffee-2.png}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-coffee-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 4 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-coffee-4.png}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-coffee-4-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 2 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-phone-2.png}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-phone-2-norm.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu potęgowania o wykładniku 4 (środkowy obraz), po normalizacji (prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-phone-4.png}
+	\includegraphics[width=5cm, height=5cm]{3-6/root-color-phone-4-norm.png}
+\end{figure}
 
 \section{Logarytmowanie obrazu}
 \subsection*{Wstęp}
+Przydatność tej operacji wynika z jej efektu. Polega on na rozjaśnieniu i zwiększeniu kontrastu w ciemniejszych rejonach obrazu. Ten efekt bierze się z kompresji \textit{rozpiętości tonalnej} z użyciem funkcji logarytmicznej. Każdy piksel w obrazie jest zamieniany ze swoim logarytmem. Użycie tego operatora punktowego może być przydatne gdy \textit{rozpiętość tonalna} jest zbyt duża aby ją wyświetlić na ekranie. \\
+\textbf{Logarytmowanie obrazu} odbywa się z pomocą wzoru, który uwzględnia nieograniczoność logarytmu w zerze poprzez dodanie wartości w argumencie logarytmu: 
+\begin{gather}
+	f_m = log(1 + f)
+\end{gather}
+Przy logarytmowaniu wartości piksli nie trudno o wyjście poza zakres, więc z tego powodu będziemy używać znormalizowanej wersji wzoru: 
+\begin{gather}
+	f_m = 255 * \left( \frac{log(1 + f(i,j))}{log(1 + f_{max})}\right)
+\end{gather}
+W tych przykładach będziemy używać logarytmu o bazie $10$, ale można też używać tego z podstawą naturalną gdyż nie wpływa to na kształt krzywej logarytmu. Jedyne co na niego wpływa to scala (wartość 255), która jest stosowana na każdą wartość wychodzącą z logarytmu. Użycie tej skali jest wymagane, aby prawidłowo wyświetlić obraz w systemie 8-bitowym. 
 
 \subsection*{Kod algorytmu}
+\inputpython{../Source/ArithmeticSumColor.py}{218}{234}
 
 \subsection*{Wynik algorytmu}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu logarytmu(prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{phone-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-7/logarithm-color-phone.png}
+\end{figure}
+\begin{figure}[H]
+	\caption{Przed uruchomieniem algorytmu (lewy obraz), po użyciu logarytmu(prawy obraz)}
+	\includegraphics[width=5cm, height=5cm]{coffee-unmodified.jpg}
+	\includegraphics[width=5cm, height=5cm]{3-7/logarithm-color-coffee.png}
+\end{figure}
 
 \chapter{Operacje geometryczne na obrazie}
 Operacje geometryczne przekształcają położenie pikseli \textit{(x1, y1)} w obrazie wejściowym do nowej lokacji \textit{(x2, y2)} w obrazie wynikowym. Dzięki temu możemy dopasować obraz do odpowiedniego układu współrzędnych lub użyć tych operacji do eliminacji geometrycznych zakłóceń obrazu (dystorsji). 

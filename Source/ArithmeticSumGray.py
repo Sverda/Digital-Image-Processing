@@ -115,7 +115,7 @@ class ArithmeticSumGray(object):
 
     # Ex2.4
     def powerFirstImage(self, powerIndex):
-        print('Power gray image {} with image {} and index {}'.format(self.firstDecoder.name, self.secondDecoder.name, powerIndex))
+        print('Power gray image {} with index {}'.format(self.firstDecoder.name, powerIndex))
         height, width = self.firstDecoder.height, self.firstDecoder.width
         image = self.firstDecoder.getPixels()
         
@@ -152,11 +152,11 @@ class ArithmeticSumGray(object):
         firstImage, secondImage = unification.grayUnification()
         width, height = firstImage.shape[0], firstImage.shape[1]
         
+        maxValue = float(numpy.iinfo(firstImage.dtype).max)
         maxSum = float(
             numpy.amax(
                 numpy.add(firstImage.astype(numpy.uint32), 
                           secondImage.astype(numpy.uint32))))
-        maxValue = float(numpy.iinfo(firstImage.dtype).max)
         scaleFactor = maxValue / maxSum
 
         result = numpy.ones((height, width), numpy.uint8)
@@ -168,3 +168,34 @@ class ArithmeticSumGray(object):
         ImageHelper.Save(result, self.imageType, 'divide-gray-images', False, self.firstDecoder, self.secondDecoder)
         result = Commons.Normalization(firstImage, result)
         ImageHelper.Save(result, self.imageType, 'divide-gray-images', True, self.firstDecoder, self.secondDecoder)
+
+    # Ex2.6
+    def rootFirstImage(self, rootIndex):
+        print('Root gray image {} with index {}'.format(self.firstDecoder.name, rootIndex))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        
+        maxValue = float(numpy.iinfo(image.dtype).max)
+        result = numpy.ones((height, width), numpy.uint32)
+        for h in range(height):
+            for w in range(width):
+                result[h, w] = image[h, w]**(1.0/rootIndex)
+
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'root-gray', False, self.firstDecoder, None, rootIndex)
+        result = Commons.Normalization(image, result)
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'root-gray', True, self.firstDecoder, None, rootIndex)
+
+    # Ex2.7
+    def logarithm(self):
+        print('Logarithm gray image {}'.format(self.firstDecoder.name))
+        height, width = self.firstDecoder.height, self.firstDecoder.width
+        image = self.firstDecoder.getPixels()
+        
+        maxValue = float(numpy.iinfo(image.dtype).max)
+        maxImageValue = numpy.amax(image)
+        result = numpy.ones((height, width), numpy.uint32)
+        for h in range(height):
+            for w in range(width):
+                result[h, w] = maxValue * (math.log10(1 + image[h, w]) / math.log10(1 + maxImageValue))
+
+        ImageHelper.Save(result.astype(numpy.uint8), self.imageType, 'logarithm-gray', False, self.firstDecoder)
