@@ -36,7 +36,7 @@
 Wybranym formatem obrazów cyfrowych jest PNG \textit{(ang. The Portable Network Graphics)}, a jego możliwości sprowadzają się do: obsługi kanału alfa (w celu imitacji przezroczystości obrazu), korekcji gamma (w celu dostosowania jasności obrazu), czymś co nazywa się \textit{two-dimensional interlacing}, oraz dobrej jakości kompresję bezstratną, która w porównaniu wypada lepiej na korzyść PNG, a nie GIF. Natomiast wybrany format PNG nie wspiera żadnego rodzaju animacji, co jest korzyścią dla GIF. \\
 PNG jest formatem rastrowym co oznacza, że jego strukturę można sprowadzić do dwuwymiarowej tablicy (macierzy) w której komórkach (pikselach) trzymane są wartości dotyczące kolorów. 
 
-\subsection{Struktura formatu}
+\subsection*{Struktura formatu}
 Pliki PNG rozpoczynają się od swojej ``Magic number'' potwierdzającej rodzaj pliku i mającej wartość \textit{137 80 78 71 13 10 26 10}. Następnie czerpiąc inspirację ze struktury IFF \textbf{(Interchange File Format)} plik dzieli się na kawałki (\textit{ang. chunks}) zawierające interesujące nas cenne dane - takie jak szerokość lub wysokość obrazu, dpi, informacje o kolorach, rozmieszczeniu pikseli, etc. \\
 Każda informacja jest włożona pomiędzy parę \textit{IHDR}-\textit{IEND}. Każdy kawałek składając się z długości, typu i danych, a nad jego integralnością sprawuję pieczę suma kontrolna \textit{CRC}. Wszystko to tworzy zwarty format. \\
 Identyfikator typu określa rolę w jakiej przyjdzie służyć kawałkowi. 
@@ -47,7 +47,7 @@ Identyfikator typu określa rolę w jakiej przyjdzie służyć kawałkowi.
 	\caption{Przykładowa struktura pliku PNG [źródło: wikipedia.org]}
 \end{figure}
 
-\subsection{Instrukcja obsługi programu}
+\section{Instrukcja obsługi programu}
 W celu uruchomienia kodu źródłowego będzie niezbędny: 
 \begin{itemize}
 	\item \href{https://www.python.org/}{Python} ($\geq$ 2.7, 32 bit)
@@ -56,6 +56,22 @@ W celu uruchomienia kodu źródłowego będzie niezbędny:
 	\item \href{https://pillow.readthedocs.io/en/stable/}{Pillow} ($\geq$ 6.0.0)
 \end{itemize}
 Uruchomienie programu sprowadza się do użycia komendy \textit{python source.py} w folderze \textit{./Exercises/Source} co spowoduje wygenerowanie się odpowiednich obrazów w folderze \textit{./Exercises/Source/Resources/result}. 
+
+\section{Metody pomocnicze}
+W trakcie cyklu wytwarzania tego oprogramowania zostały napisane funkcje mające na celu przyśpieszyć pracę i ujednolicić pewne operacje. Do przykładu takich operacji może się zaliczać wczytanie obrazu z pliku, tworzenie histogramu lub nawet kompozycja nazwy pliku do zapisu. 
+
+\subsection*{Wczytanie obrazu i jego właściwości}
+Za odczytanie obrazu z pliku i prze-konwertowaniu go do postaci struktury macierzy dwuwymiarowej odpowiada klasa \textbf{ImageDecoder}. W konstruktorze przyjmuje ona ścieżkę do pliku, który ma zostać wczytany i typ obrazu (obrazy szare podają parametr 'L', a kolorowe 'RGB'). \\
+Z pomocą tej klasy możemy odczytać właściwości obrazu, takie jak szerokość (\textbf{getWidth()}) i wysokość (\textbf{getHeight()}) wyrażoną w pikslach. \\
+Najważniejszą metodą jest \textbf{getPixels()}, która zwraca macierz obrazu. 
+\inputpython{../Source/ImageDecoder.py}{1}{26}
+
+\subsection*{Zapisywanie obrazu i histogramu}
+W klasie \textbf{ImageHelper} znajdują się metody statyczne odpowiedzialne za zapisanie wyniku przetwarzania do odpowiedniego folderu w odpowiednim formacie i z właściwą nazwą. \\
+Metoda \textbf{Save()} bierze macierz obrazu i jego rodzaj (obraz szaru lub kolorowy - 'L', 'RGB') w celu zapisu. Inne parametry metody potrzebne są aby skonstruować odpowiednią nazwę. Nazwy są tak dobrane, aby pomimo wielu operacji i ich wykonań żaden wynik nie został nadpisany przez inny. Efekt ten jest uzyskiwany głównie dzięki podaniu nazwy operacji, która stanowi podstawę do której doklejane są dalsze informacje - takie jak nazwa pliku wejściowego, wartość parametru i informacja o wystąpieniu normalizacji. \\
+Dla przykładu nazwa \textit{divide-color-const-coffee-2-norm.png} składa się z nazwy operacji \textit{divide-color-const} co oznacza, że operacją jest dzielenie obrazu barwnego przez stałą. Drugą informacją jest liczba $2$ dzięki której wiemy, że dzielenie odbyło się przez wartość $2$. Na końcu mamy końcówkę \textit{-norm} mówiącą o tym, że normalizacja wystąpiła dla tego obrazu. \\
+Metoda \textbf{SaveGrayHistogram()} i \textbf{SaveColorHistogram()} otrzymuje dane o histogramie i z użyciem biblioteki \textit{matplotlib} tworzy wykres słupkowy. Oprócz argumentóW potrzebnych do utworzenia wykresu należy podać również informacje pozwalające na utworzenie poprawnej nazwy. 
+\inputpython{../Source/ImageHelper.py}{1}{59}
 
 \chapter{Operacje ujednolicania obrazów}
 Ujednolicanie obrazów oznacza sprowadzenie ich do wspólnego gruntu pod względem określonego parametru. W tym wypadku będziemy ujednolicać obrazy pod względem geometrycznym (ilości kolumn i wierszy pikseli) i następnie rozdzielczościowym (wypełnienia pikselami). Sekwencyjność tych operacji jak i one same nie są w stanie spowodować spadku jakości obrazu. 
